@@ -29,5 +29,5 @@ databases:
   - name: sgdic-db
     region: oregon
     plan: free
-    postgresVersion: "16"
+    postgresMajorVersion: "16"
 
