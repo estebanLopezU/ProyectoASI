@@ -27,7 +27,10 @@ media/
 .DS_Store
 Thumbs.db
 
-# Diagnostic scripts (locales)
+# Diagnostic y scripts temporales (locales)
 _diag.ps1
 _smoke.py
 _diag.py
+_vercel_check.ps1
+_git_push.ps1
+_push.sh
