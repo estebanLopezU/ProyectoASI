@@ -11,7 +11,7 @@ whitenoise==6.7.0
 
 # PostgreSQL (para Render) + parser de DATABASE_URL
 psycopg2-binary==2.9.9
-dj-database-url==2.2.5
+dj-database-url==2.3.0
 
 # Opcionales: exportación de reportes a Excel y PDF (RF-46).
 # Si no se instalan, las descargas en esos formatos caen automáticamente a CSV.
