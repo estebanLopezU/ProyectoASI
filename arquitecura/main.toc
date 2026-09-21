@@ -1,0 +1,16 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{Acrónimos y Abreviaturas}{1}{chapter*.2}%
+\contentsline {subsection}{\numberline {0.0.1}OrganizaciÃ³n por roles}{2}{subsection.0.0.1}%
+\contentsline {chapter}{\numberline {1}Arquitectura de Software del Sistema}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Capa de PresentaciÃ³n (Frontend)}{4}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}TecnologÃ­as y lenguajes}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}OrganizaciÃ³n por roles}{4}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Capa de AplicaciÃ³n (Backend con Django)}{5}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Lenguaje y estructura}{6}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Organización por roles}{6}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Capa de Datos (PostgreSQL)}{7}{section.1.3}%
+\contentsline {section}{\numberline {1.4}ComunicaciÃ³n entre Componentes}{8}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Capa AnalÃ­tica y Motor de Soluciones}{9}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Despliegue y OperaciÃ³n}{10}{section.1.6}%
+\contentsline {section}{\numberline {1.7}Seguridad y Control de Acceso}{10}{section.1.7}%
+\contentsline {chapter}{Referencias}{12}{chapter*.33}%

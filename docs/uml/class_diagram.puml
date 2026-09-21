@@ -1,0 +1,205 @@
+@startuml class_diagram
+skinparam backgroundColor #F9F9F9
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+  FontColor #0D47A1
+}
+skinparam abstract {
+  BackgroundColor #E8F5E9
+  BorderColor #388E3C
+  FontColor #1B5E20
+}
+skinparam enum {
+  BackgroundColor #FFF3E0
+  BorderColor #EF6C00
+  FontColor #E65100
+}
+
+abstract class Usuario {
+  - id: String
+  - nombre: String
+  - email: String
+  - telefono: String
+  - password: String
+  + autenticar(): Boolean
+  + actualizarPerfil(): void
+}
+
+class Estudiante {
+  - idEstudiante: String
+  - codigo: String
+  - semestre: Integer
+  - promedio: Double
+  + solicitarCupos(materia): Boolean
+  + enviarMensaje(docente, contenido): Mensaje
+  + calificarDocente(docente, puntuacion, comentario): Calificacion
+  + responderCuestionarioHorario(): CuestionarioHorario
+}
+
+class Docente {
+  - idDocente: String
+  - codigo: String
+  - departamento: String
+  - especialidad: String
+  + registrarFalta(estudiante, fecha, motivo): Falta
+  + crearEditarMateria(materia): Materia
+  + enviarMensaje(estudiante, contenido): Mensaje
+  + recibirEvaluacion(): void
+}
+
+class Secretaria {
+  - idSecretaria: String
+  - area: String
+  + gestionarQuejas(queja): void
+  + coordinarComunicacion(docente, estudiante): void
+  + verificarResultados(): Reporte
+  + generarAnalitica(): Dataset
+}
+
+class Administrador {
+  - idAdmin: String
+  - nivelAcceso: Enum
+  + asignarCupos(): void
+  + generarSolucionRapida(analisis): Recomendacion
+  + publicarResultados(): void
+}
+
+class Materia {
+  - idMateria: String
+  - nombre: String
+  - codigo: String
+  - creditos: Integer
+  - cupoMaximo: Integer
+  - cuposDisponibles: Integer
+  - horarios: List<String>
+  + actualizarCupos(): void
+  + verificarDisponibilidad(): Boolean
+}
+
+class SolicitudCupo {
+  - idSolicitud: String
+  - fecha: Date
+  - estado: Enum {PENDIENTE, APROBADA, RECHAZADA}
+  - prioridad: Integer
+  + procesar(): void
+  + calificar(): void
+}
+
+class Mensaje {
+  - idMensaje: String
+  - contenido: String
+  - fecha: Date
+  - leido: Boolean
+  + marcarLeido(): void
+}
+
+class QuejaSugerencia {
+  - id: String
+  - tipo: Enum {QUEJA, SUGERENCIA}
+  - estado: Enum {ABIERTO, EN_PROCESO, RESUELTO}
+  - prioridad: Enum {BAJA, MEDIA, ALTA}
+  + asignarSecretaria(): void
+  + generarRespuesta(): void
+}
+
+class Calificacion {
+  - id: String
+  - puntuacion: Double
+  - comentario: String
+  - fecha: Date
+  + registrar(): void
+}
+
+class Falta {
+  - id: String
+  - fecha: Date
+  - motivo: String
+  - justificacion: Boolean
+  + registrar(): void
+  + justificar(): void
+}
+
+class CuestionarioHorario {
+  - id: String
+  - fechaAplicacion: Date
+  - horariosPreferidos: List<String>
+  - disponibilidad: Map<String, Boolean>
+  + aplicar(): void
+  + analizarPreferencias(): Dataset
+}
+
+class EvaluacionDocente {
+  - id: String
+  - fecha: Date
+  - puntuacion: Double
+  - comentarios: String
+  - completada: Boolean
+  + registrarTiempo(): Date
+  + generarReporte(): Reporte
+}
+
+class Reporte {
+  - id: String
+  - titulo: String
+  - fechaGeneracion: Date
+  - datos: Dataset
+  + exportarPDF(): void
+  + exportarCSV(): void
+}
+
+class AnaliticaDatos {
+  - dataset: Dataset
+  - metricas: Map<String, Double>
+  + calcularMetricas(): void
+  + detectarAnomalias(): List<Anomalia>
+  + predecir(): ModeloPrediccion
+}
+
+class Recomendacion {
+  - id: String
+  - descripcion: String
+  - prioridad: Integer
+  - confianza: Double
+  + aplicar(): void
+}
+
+class Anomalia {
+  - id: String
+  - tipo: String
+  - descripcion: String
+  - severidad: Integer
+}
+
+' Relaciones de herencia
+Usuario <|-- Estudiante
+Usuario <|-- Docente
+Usuario <|-- Secretaria
+Usuario <|-- Administrador
+
+' Relaciones de asociación
+Estudiante "1" -- "0..*" SolicitudCupo : realiza
+Docente "1" -- "0..*" Materia : imparte
+Materia "1" -- "0..*" SolicitudCupo : recibe
+Estudiante "1" -- "0..*" Mensaje : envia
+Docente "1" -- "0..*" Mensaje : envia
+Estudiante "1" -- "0..*" Calificacion : realiza
+Docente "1" -- "0..*" Calificacion : recibe
+Docente "1" -- "0..*" Falta : registra
+Estudiante "1" -- "0..*" Falta : genera
+Estudiante "1" -- "0..*" QuejaSugerencia : envia
+Secretaria "1" -- "0..*" QuejaSugerencia : gestiona
+Secretaria "1" -- "0..*" Mensaje : gestiona
+Administrador "1" -- "0..*" Materia : administra
+Estudiante "1" -- "0..*" CuestionarioHorario : responde
+Secretaria "1" -- "0..*" CuestionarioHorario : aplica
+Administrador "1" -- "0..*" EvaluacionDocente : supervisa
+Docente "1" -- "0..*" EvaluacionDocente : recibe
+Secretaria "1" -- "0..*" Reporte : genera
+Administrador "1" -- "0..*" AnaliticaDatos : ejecuta
+Administrador "1" -- "0..*" Recomendacion : genera
+AnaliticaDatos "1" -- "0..*" Anomalia : detecta
+AnaliticaDatos "1" -- "0..*" Recomendacion : sugiere
+
+@enduml

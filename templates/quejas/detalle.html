@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block titulo %}{{ queja.consecutivo }}{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h4 class="mb-1">{{ queja.asunto }}</h4>
+    <p class="text-muted small mb-0">
+      Consecutivo {{ queja.consecutivo }} · {{ queja.categoria.nombre }} ·
+      <span class="badge
+        {% if queja.estado == 'RESUELTO' %}bg-success
+        {% elif queja.estado == 'ESCALADO' %}bg-danger
+        {% elif queja.estado == 'EN_PROCESO' %}bg-primary
+        {% elif queja.estado == 'CERRADO' %}bg-secondary
+        {% else %}bg-warning text-dark{% endif %}">{{ queja.get_estado_display }}</span>
+      · Prioridad {{ queja.get_prioridad_display }}
+    </p>
+  </div>
+  {% if propio %}
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'quejas:mis_quejas' %}">Volver</a>
+  {% else %}
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'quejas:panel' %}">Volver al panel</a>
+  {% endif %}
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card mb-3">
+      <div class="card-header">Descripción del caso</div>
+      <div class="card-body">
+        <p>{{ queja.descripcion|linebreaksbr }}</p>
+        <p class="mb-1 small text-muted">
+          Radicada por: {% if propio or not queja.anonima %}{{ queja.identidad_visible }}{% else %}Anónimo (RN-09){% endif %}
+          · {{ queja.creada|date:"d/m/Y H:i" }}
+        </p>
+        {% if queja.evidencia %}
+          <a href="{{ queja.evidencia.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">Ver evidencia</a>
+        {% endif %}
+        {% if queja.solucion %}
+          <hr>
+          <h6>Solución aplicada</h6>
+          <p class="mb-0">{{ queja.solucion|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Trazabilidad del caso (RF-40)</div>
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          {% for paso in seguimientos %}
+            <li class="mb-3 border-start ps-3">
+              <div class="small text-muted">{{ paso.creado|date:"d/m/Y H:i" }} ·
+                {{ paso.get_tipo_display }}
+                {% if paso.autor %}· {{ paso.autor.get_full_name|default:paso.autor.username }}{% endif %}
+              </div>
+              <div>{{ paso.detalle|linebreaksbr }}</div>
+            </li>
+          {% empty %}
+            <li class="text-muted">Sin movimientos registrados.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card mb-3">
+      <div class="card-header">Gestión</div>
+      <div class="card-body">
+        {% if not propio %}
+          <a class="btn btn-primary w-100 mb-2" href="{% url 'quejas:gestionar' queja.pk %}">Gestionar caso</a>
+        {% endif %}
+        <p class="mb-1 small"><strong>Gestor asignado:</strong> {{ queja.gestor|default:"Sin asignar" }}</p>
+        <p class="mb-1 small"><strong>Horas sin gestión:</strong> {{ queja.horas_sin_gestion|floatformat:1 }}</p>
+        <p class="mb-0 small"><strong>Requiere escalamiento:</strong>
+          {% if queja.requiere_escalamiento %}Sí (RN-10){% else %}No{% endif %}</p>
+      </div>
+    </div>
+
+    {% if propio %}
+      <div class="card">
+        <div class="card-header">Confirmación del usuario (RN-12)</div>
+        <div class="card-body">
+          {% if queja.estado == 'RESUELTO' %}
+            <p class="small">El caso fue resuelto. Confirme el cierre o reábralo si el problema persiste.</p>
+            <a class="btn btn-success w-100 mb-2" href="{% url 'quejas:confirmar' queja.pk %}">Confirmar cierre y calificar</a>
+            <form method="post" action="{% url 'quejas:reabrir' queja.pk %}">
+              {% csrf_token %}
+              <textarea name="comentario" class="form-control mb-2" rows="2" placeholder="Explique por qué reabre el caso"></textarea>
+              <button class="btn btn-outline-warning w-100">Reabrir caso</button>
+            </form>
+          {% elif queja.confirmada_por_usuario %}
+            <p class="mb-0 text-success small">Cierre confirmado. Satisfacción: {{ queja.satisfaccion }}/5.</p>
+          {% else %}
+            <p class="mb-0 text-muted small">Podrá confirmar el cierre cuando el caso esté resuelto.</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

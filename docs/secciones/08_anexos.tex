@@ -1,0 +1,120 @@
+% =====================================================================
+% ANEXOS
+% =====================================================================
+\chapter{Instrumentos de Recolección}
+\label{ap:instrumentos}
+
+\section{Cuestionario de Percepción (Estudiantes)}
+
+\begin{table}[H]
+\centering
+\caption{Cuestionario de percepción estudiantil (extracto)}
+\label{tab:cuestionario-estudiante}
+\small
+\begin{tabularx}{\textwidth}{@{}p{1.0cm} X c@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{N.º} & \textbf{Ítem} & \textbf{Escala} \\
+\midrule
+1 & Conozco claramente cómo solicitar un cupo en una materia. & 1--5 \\
+2 & El tiempo que tarda la respuesta a mi solicitud es aceptable. & 1--5 \\
+3 & Puedo comunicarme con mis docentes por un canal institucional. & 1--5 \\
+4 & Recibo notificación oportuna cuando se registra una falta. & 1--5 \\
+5 & La evaluación docente se aplica en un momento útil del periodo. & 1--5 \\
+6 & Confío en que mi evaluación docente es anónima. & 1--5 \\
+7 & Sé a dónde dirigir una queja o sugerencia. & 1--5 \\
+8 & Recibo información sobre el estado de mi queja o sugerencia. & 1--5 \\
+9 & El horario asignado se ajusta a mi disponibilidad real. & 1--5 \\
+10 & Considero que las decisiones del departamento se basan en información. & 1--5 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Guion de Entrevista Semiestructurada (Docentes)}
+
+\begin{enumerate}[leftmargin=1.4cm, itemsep=3pt]
+  \item ¿Cómo gestiona actualmente la solicitud y aprobación de cupos?
+  \item ¿Qué dificultades encuentra al crear o modificar una materia?
+  \item ¿Cómo se comunica con sus estudiantes fuera del aula?
+  \item ¿Qué proceso sigue para registrar y notificar una falta?
+  \item ¿Cómo se entera de las quejas relacionadas con su materia?
+  \item ¿Qué opina sobre la aplicación actual de la evaluación docente?
+  \item ¿Qué información considera que le falta para mejorar su práctica?
+  \item ¿Qué esperaría de un sistema integrado de gestión departamental?
+  \item ¿Qué le preocuparía de un sistema que registre su desempeño?
+  \item ¿Qué funcionalidades priorizaría si solo pudiera elegir tres?
+\end{enumerate}
+
+\section{Ficha de Observación de Procesos}
+
+\begin{table}[H]
+\centering
+\caption{Ficha de observación del proceso de solicitud de cupo}
+\label{tab:ficha-observacion}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Campo} & \textbf{Descripción} \\
+\midrule
+Proceso observado & Solicitud de cupo en una materia del \ac{DIC}. \\
+Fecha y hora & Registro del inicio y fin de la observación. \\
+Actor ejecutor & Estudiante y personal de secretaría involucrado. \\
+Herramientas usadas & Correo, mensajería, hojas de cálculo, documento físico. \\
+Número de pasos & Conteo de acciones manuales requeridas. \\
+Interrupciones & Esperas, retrocesos y solicitudes de información adicional. \\
+Tiempo total & Duración medida desde la solicitud hasta la respuesta. \\
+Puntos de falla & Momentos donde se pierde información o se duplica trabajo. \\
+Observaciones & Comentarios cualitativos del observador. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Cuestionario de Disponibilidad y Preferencia de Horarios}
+
+\begin{table}[H]
+\centering
+\caption{Formato del cuestionario de horarios}
+\label{tab:cuestionario-horario}
+\small
+\begin{tabularx}{\textwidth}{@{}l X c@{}}
+\toprule
+\rowcolor{moradoClaro}
+\textbf{Campo} & \textbf{Descripción} & \textbf{Tipo} \\
+\midrule
+Código de estudiante & Identificador anonimizado & Texto \\
+Semestre & Semestre que cursa & Entero \\
+Materias inscritas & Códigos de materias del periodo & Lista \\
+Disponibilidad & Marca por franja horaria (L--V, 6:00--22:00) & Booleano \\
+Preferencia & Nivel de preferencia por franja & 1--5 \\
+Restricciones & Razones de indisponibilidad (trabajo, transporte) & Categórico \\
+Modalidad & Preferencia presencial / virtual / híbrida & Categórico \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\chapter{Matriz de Requerimientos y Casos de Uso}
+\label{ap:trazabilidad}
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad entre módulos, requerimientos y diagramas}
+\label{tab:trazabilidad-completa}
+\small
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Módulo} & \textbf{Requerimientos} & \textbf{Artefactos de modelado} \\
+\midrule
+Autenticación y roles & RF-01 a RF-04 & Clase \texttt{Usuario} (Fig.~\ref{fig:clases-detalle}) \\
+Cupos & RF-05 a RF-10 & UC1 (Fig.~\ref{fig:casos-uso}), clase \texttt{SolicitudCupo} \\
+Materias & RF-11 a RF-15 & UC2, clase \texttt{Materia} \\
+Mensajería & RF-16 a RF-20 & UC6, UC7, clase \texttt{Mensaje} \\
+Faltas & RF-21 a RF-26 & UC3, clase \texttt{Falta} \\
+Evaluación docente & RF-27 a RF-34 & UC10 (Fig.~\ref{fig:secuencia-evaluacion}) \\
+Quejas y sugerencias & RF-35 a RF-42 & UC8, Figs.~\ref{fig:actividades-quejas} y \ref{fig:estados-queja} \\
+Cuestionarios & RF-43 a RF-48 & UC5, clase \texttt{CuestionarioHorario} \\
+Analítica & RF-49 a RF-56 & Clase \texttt{AnaliticaDatos} (Fig.~\ref{fig:motor-analitico}) \\
+\bottomrule
+\end{tabularx}
+\end{table}

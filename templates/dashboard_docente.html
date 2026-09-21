@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titulo %}Tablero docente{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>Tablero docente</h3>
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Hilos de mensajería activos</h6>
+        <p class="display-6 mb-0">{{ kpis.hilos_activos }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Puntaje de evaluación</h6>
+        <p class="display-6 mb-0">{{ kpis.puntaje_promedio }}</p>
+        <small class="text-muted">Resultados agregados (RN-05)</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Notificaciones sin leer</h6>
+        <p class="display-6 mb-0">{{ kpis.notificaciones }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Tareas del día</div>
+      <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:registrar_asistencia' %}">Registrar asistencia de una sesión</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:revisar_lista' %}">Revisar justificaciones de faltas</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:panel_inasistencia' %}">Consultar inasistencia de mis materias</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'materias:proponer' %}">Proponer una materia nueva</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'mensajes:bandeja' %}">Responder mensajes de estudiantes</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Recordatorios</div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li>Al registrar una falta el estudiante recibe notificación el mismo día (RN-07).</li>
+          <li>Una inasistencia ≥ 20% genera alerta al estudiante, al docente y a secretaría (RN-08).</li>
+          <li>Las quejas sin gestión durante 3 días se escalan al departamento (RN-10).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

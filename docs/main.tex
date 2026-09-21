@@ -1,0 +1,386 @@
+% =====================================================================
+%  DOCUMENTACIÓN DE INVESTIGACIÓN Y PLANIFICACIÓN
+%  Departamento de Informática y Computación
+%  Compilar con: pdflatex -> pdflatex -> pdflatex
+%  Probado en TeXStudio con MiKTeX (pdfLaTeX)
+% =====================================================================
+\documentclass[12pt,letterpaper,oneside]{report}
+
+% ------------------------- Codificación e idioma --------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-nodecimaldot,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ------------------------- Geometría y diseño -----------------------
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=2.5cm,headheight=15pt]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{parskip}
+\onehalfspacing
+
+% ------------------------- Gráficos y diagramas ---------------------
+\usepackage{tikz}
+\usepackage{pgf-umlcd}
+\usepackage{pgfgantt}
+\usepackage{float}
+\usepackage{graphicx}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,
+                decorations.pathreplacing,chains,
+                shapes.geometric,shapes.misc,matrix}
+
+% ------------------------- Tablas -----------------------------------
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+% ------------------------- Cajas de color ---------------------------
+\usepackage[most]{tcolorbox}
+
+% ------------------------- Listas y código --------------------------
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% ------------------------- Utilidades -------------------------------
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{amsmath,amssymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[nohyperlinks]{acronym}
+
+% ------------------------- Colores institucionales ------------------
+\definecolor{azulUC}{RGB}{21,101,192}
+\definecolor{azulOscuro}{RGB}{13,71,161}
+\definecolor{azulClaro}{RGB}{227,242,253}
+\definecolor{verdeUC}{RGB}{56,142,60}
+\definecolor{verdeClaro}{RGB}{232,245,233}
+\definecolor{naranjaUC}{RGB}{239,108,0}
+\definecolor{naranjaClaro}{RGB}{255,243,224}
+\definecolor{moradoUC}{RGB}{173,20,87}
+\definecolor{moradoClaro}{RGB}{243,229,245}
+\definecolor{grisUC}{RGB}{96,96,96}
+\definecolor{grisClaro}{RGB}{245,245,245}
+
+% ------------------------- Hipervínculos ----------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulOscuro,
+    urlcolor=azulUC,
+    citecolor=verdeUC,
+    pdftitle={Documentacion de Investigacion - Departamento de Informatica y Computacion},
+    pdfauthor={Departamento de Informatica y Computacion},
+    pdfsubject={Metodologia de Investigacion, UML y Planificacion},
+    bookmarksnumbered=true,
+    bookmarksopen=true
+}
+
+% ------------------------- Encabezados y pies -----------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{azulOscuro}{\textit{Departamento de Informática y Computación}}}
+\fancyhead[R]{\small\textcolor{azulOscuro}{\thepage}}
+\fancyfoot[C]{\small\textcolor{grisUC}{Documentación de Investigación y Planificación}}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ------------------------- Estilo de capítulos ----------------------
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{azulOscuro}}
+  {\filright\Large\textcolor{azulUC}{\chaptertitlename\ \thechapter}}
+  {12pt}
+  {\Huge}
+  [\vspace{4pt}{\color{azulUC}\titlerule[1.5pt]}]
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{azulOscuro}}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{azulUC}}{\thesubsection}{1em}{}
+
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ------------------------- Captions --------------------------------
+\captionsetup{
+  font=small,
+  labelfont={bf,color=azulOscuro},
+  labelsep=colon,
+  justification=centering
+}
+
+% ------------------------- Estilo de código -------------------------
+\lstdefinestyle{codigo}{
+  backgroundcolor=\color{grisClaro},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{azulOscuro}\bfseries,
+  commentstyle=\color{verdeUC}\itshape,
+  stringstyle=\color{moradoUC},
+  numberstyle=\tiny\color{grisUC},
+  numbers=left,
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{azulUC},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=codigo}
+
+% ------------------------- Cajas personalizadas ---------------------
+\newtcolorbox{cajaObjetivo}[1][]{
+  colback=verdeClaro, colframe=verdeUC, boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=verdeUC, title={#1}
+}
+
+\newtcolorbox{cajaProblema}[1][]{
+  colback=naranjaClaro, colframe=naranjaUC, boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=naranjaUC, title={#1}
+}
+
+\newtcolorbox{cajaNota}[1][]{
+  colback=azulClaro, colframe=azulUC, boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=azulUC, title={#1}
+}
+
+\newtcolorbox{cajaAlgoritmo}[1][]{
+  colback=moradoClaro, colframe=moradoUC, boxrule=0.8pt, arc=3pt,
+  left=6pt, right=6pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=moradoUC, title={#1}
+}
+
+% ------------------------- Estilos TikZ UML ------------------------
+\tikzset{
+  actor/.style={
+    draw=azulOscuro, fill=naranjaClaro, thick, rounded corners=2pt,
+    text=azulOscuro, align=center, font=\small\bfseries,
+    minimum width=2.8cm, minimum height=1cm, inner sep=4pt
+  },
+  caso/.style={
+    draw=moradoUC, fill=moradoClaro, thick, ellipse, aspect=2.6,
+    text=moradoUC!80!black, align=center, font=\scriptsize,
+    minimum width=3.6cm, minimum height=0.85cm, inner sep=2pt
+  },
+  paquete/.style={
+    draw=verdeUC, fill=verdeClaro, thick, rounded corners=4pt,
+    inner sep=10pt
+  },
+  sistema/.style={
+    draw=azulUC, fill=azulClaro!40, thick, rounded corners=6pt,
+    inner sep=14pt
+  },
+  clase/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=3pt,
+    text=azulOscuro, align=center, font=\small,
+    minimum width=3.2cm, minimum height=1cm, inner sep=4pt
+  },
+  claseabs/.style={
+    draw=verdeUC, fill=verdeClaro, thick, dashed, rounded corners=3pt,
+    text=verdeUC!60!black, align=center, font=\small\itshape,
+    minimum width=3.2cm, minimum height=1cm, inner sep=4pt
+  },
+  tabla/.style={
+    draw=grisUC, fill=white, thick, rounded corners=2pt,
+    text=black, align=left, font=\scriptsize, inner sep=4pt
+  },
+  flujo/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=12pt,
+    text=azulOscuro, align=center, font=\scriptsize\bfseries,
+    minimum width=3.4cm, minimum height=0.9cm, inner sep=4pt
+  },
+  decision/.style={
+    draw=naranjaUC, fill=naranjaClaro, thick, diamond, aspect=2.4,
+    text=naranjaUC!70!black, align=center, font=\scriptsize\bfseries,
+    inner sep=1pt
+  },
+  terminal/.style={
+    draw=verdeUC, fill=verdeClaro, thick, rounded corners=14pt,
+    text=verdeUC!60!black, align=center, font=\scriptsize\bfseries,
+    minimum width=3cm, minimum height=0.8cm, inner sep=4pt
+  },
+  flecha/.style={-{Stealth[length=2mm,width=1.4mm]}, thick, color=azulOscuro},
+  generalizacion/.style={-{Stealth[length=3mm,width=3mm]}, thick, color=verdeUC, dashed}
+}
+
+% Nota: pgf-umlcd reconfigura el espacio de claves /tikz, por lo que las
+% relaciones punteadas de los diagramas se dibujan con la sintaxis explicita
+% -{Stealth[...]} directamente en cada \draw.
+
+% ------------------------- Comandos útiles --------------------------
+\newcommand{\sistema}{\textbf{SGDIC}}
+\newcommand{\sgdicshort}{SGDIC}
+
+% =====================================================================
+\begin{document}
+
+% ============================ PORTADA ================================
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+
+\begin{tikzpicture}
+\node[draw=azulUC, fill=azulClaro, rounded corners=8pt, thick,
+      inner sep=18pt, text width=14cm, align=center] {
+  {\small\textcolor{grisUC}{UNIVERSIDAD NACIONAL DE COLOMBIA}}\\[3pt]
+  {\small\textcolor{grisUC}{SEDE MANIZALES}}\\[4pt]
+  {\Large\bfseries\textcolor{azulOscuro}{FACULTAD DE ADMINISTRACIÓN}}\\[4pt]
+  {\large\textcolor{azulUC}{DEPARTAMENTO DE INFORMÁTICA Y COMPUTACIÓN}}
+};
+\end{tikzpicture}
+
+\vspace{1.2cm}
+
+{\Huge\bfseries\textcolor{azulOscuro}{Documentación de Investigación\\[6pt] y Planificación del Sistema}}\\[10pt]
+
+{\large\textcolor{grisUC}{Sistema de Gestión Departamental\\ de Informática y Computación (\sistema)}}
+
+\vspace{1cm}
+
+\begin{tikzpicture}
+\draw[azulUC, line width=2pt] (0,0) -- (13,0);
+\draw[moradoUC, line width=1pt] (0,-0.12) -- (13,-0.12);
+\end{tikzpicture}
+
+\vspace{1cm}
+
+\begin{tabular}{rl}
+\textbf{\textcolor{azulOscuro}{Proyecto:}} & Sistema de Gestión Departamental \\[4pt]
+\textbf{\textcolor{azulOscuro}{Área:}} & Informática y Computación \\[4pt]
+\textbf{\textcolor{azulOscuro}{Versión:}} & 1.0 \\[4pt]
+\textbf{\textcolor{azulOscuro}{Fecha:}} & \today \\
+\end{tabular}
+
+\vfill
+
+{\small\textcolor{grisUC}{Documento elaborado como base metodológica para la planificación\\ y el modelado del sistema propuesto.}}
+\end{titlepage}
+
+% ======================= PÁGINAS PRELIMINARES ========================
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+
+\chapter*{Resumen Ejecutivo}
+\addcontentsline{toc}{chapter}{Resumen Ejecutivo}
+\markboth{Resumen Ejecutivo}{Resumen Ejecutivo}
+
+El presente documento establece la base metodológica, conceptual y de modelado
+para la construcción del \textbf{Sistema de Gestión Departamental de Informática y
+Computación} (\sistema). El problema identificado en el \ac{DIC} se caracteriza por
+una gestión fragmentada de sus procesos académicos y administrativos: las
+solicitudes de cupos, la creación y edición de materias, la comunicación entre
+estudiantes y docentes, el registro de faltas, la calificación de docentes, la
+gestión de quejas y sugerencias, y la verificación de resultados por parte de la
+secretaría se realizan de manera aislada, manual o tardía.
+
+La consecuencia directa es la \textbf{pérdida de oportunidad} en la toma de
+decisiones: las evaluaciones docentes no se completan a tiempo, las quejas no
+llegan al docente responsable en el momento adecuado, y no existe información
+analítica que permita anticipar problemas de disponibilidad de horarios o
+saturación de cupos.
+
+El documento se organiza en siete capítulos: (1) introducción y planteamiento del
+problema, (2) metodología de investigación, (3) misión, visión, objetivos y
+valores, (4) requerimientos funcionales y no funcionales, (5) modelado \ac{UML}
+mediante diagramas de casos de uso, clases, secuencia, actividades y estados,
+(6) propuesta del algoritmo de soluciones rápidas con analítica de datos, y
+(7) cronograma, riesgos y conclusiones.
+
+\begin{cajaNota}[Resultados esperados del proyecto]
+\begin{itemize}[leftmargin=1.2cm, itemsep=2pt]
+  \item Reducción $\geq 60\%$ del tiempo de respuesta a solicitudes de cupos.
+  \item \textbf{100\%} de las evaluaciones docentes completadas dentro del periodo
+        académico establecido.
+  \item Canal unificado de comunicación estudiante--docente--secretaría.
+  \item Trazabilidad completa de quejas y sugerencias con estado y responsable.
+  \item Modelo analítico que recomiende horarios óptimos según preferencias
+        históricas de los estudiantes.
+  \item Tablero (\textit{dashboard}) de verificación de resultados para la
+        secretaría y el departamento.
+\end{itemize}
+\end{cajaNota}
+
+\clearpage
+
+\chapter*{Acrónimos y Abreviaturas}
+\addcontentsline{toc}{chapter}{Acrónimos y Abreviaturas}
+\markboth{Acrónimos y Abreviaturas}{Acrónimos y Abreviaturas}
+
+\begin{acronym}[CRISP-DM]
+  \acro{DIC}{Departamento de Informática y Computación}
+  \acro{SGDIC}{Sistema de Gestión Departamental de Informática y Computación}
+  \acro{UML}{Unified Modeling Language (Lenguaje Unificado de Modelado)}
+  \acro{CRISP-DM}{Cross Industry Standard Process for Data Mining}
+  \acro{RF}{Requerimiento Funcional}
+  \acro{RNF}{Requerimiento No Funcional}
+  \acro{KPI}{Key Performance Indicator (Indicador Clave de Desempeño)}
+  \acro{API}{Application Programming Interface}
+  \acro{RBAC}{Role-Based Access Control (Control de Acceso Basado en Roles)}
+  \acro{ETL}{Extract, Transform, Load}
+  \acro{REST}{Representational State Transfer}
+  \acro{CSV}{Comma-Separated Values}
+  \acro{KNN}{K-Nearest Neighbors}
+  \acro{PII}{Personally Identifiable Information}
+\end{acronym}
+
+\clearpage
+
+% ==================== CONTENIDO PRINCIPAL ===========================
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{secciones/01_introduccion}
+\input{secciones/02_metodologia}
+\input{secciones/03_mision_vision}
+\input{secciones/04_requerimientos}
+\input{secciones/05_diagramas}
+\input{secciones/06_algoritmo}
+\input{secciones/07_cronograma}
+
+% ==================== REFERENCIAS ====================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Referencias}
+
+\bibitem{omg-uml}
+Object Management Group. \textit{OMG Unified Modeling Language (OMG UML), Version 2.5.1}. OMG, 2017.
+
+\bibitem{sommerville}
+Sommerville, I. \textit{Software Engineering}. 10th ed. Pearson, 2016.
+
+\bibitem{pressman}
+Pressman, R. S. y Maxim, B. R. \textit{Software Engineering: A Practitioner's Approach}. 9th ed. McGraw-Hill, 2020.
+
+\bibitem{pmbok}
+Project Management Institute. \textit{A Guide to the Project Management Body of Knowledge (PMBOK Guide)}. 7th ed. PMI, 2021.
+
+\bibitem{crispdm}
+Chapman, P., Clinton, J., Kerber, R., Khabaza, T., Reinartz, T., Shearer, C. y Wirth, R. \textit{CRISP-DM 1.0: Step-by-step Data Mining Guide}. SPSS Inc., 2000.
+
+\bibitem{iso25010}
+International Organization for Standardization. \textit{ISO/IEC 25010: Systems and software engineering --- Systems and software Quality Requirements and Evaluation (SQuaRE)}. ISO, 2011.
+
+\bibitem{iso27001}
+International Organization for Standardization. \textit{ISO/IEC 27001: Information security, cybersecurity and privacy protection --- Information security management systems}. ISO, 2022.
+
+\end{thebibliography}
+
+\end{document}

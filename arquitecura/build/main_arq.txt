@@ -1,0 +1,552 @@
+UNIVERSIDAD NACIONAL DE COLOMBIA
+SEDE MANIZALES
+
+FACULTAD DE ADMINISTRACIÓN
+DEPARTAMENTO DE INFORMÁTICA Y COMPUTACIÓN
+
+Arquitectura Técnica del Sistema
+de Gestión Departamental
+Sistema de Gestión Departamental de Informática y Computación
+(SGDIC)
+
+Proyecto: Sistema de Gestión Departamental
+Área: Informática y Computación
+Versión: 1.0
+Página: 1
+
+Documento técnico que describe la arquitectura de software
+del SGDIC: frontend, backend en Django, base de datos y despliegue.
+
+Índice general
+Acrónimos y Abreviaturas
+0.0.1. OrganizaciÃ3n por roles . . . . . . . . . . . . . . . . . . . . . . . .
+
+1
+2
+
+1. Arquitectura de Software del Sistema
+1.1. Capa de PresentaciÃ3n (Frontend) . . . . . . . . . . . . . . . . . . . . . .
+1.1.1. TecnologÃas y lenguajes . . . . . . . . . . . . . . . . . . . . . . . .
+1.1.2. OrganizaciÃ3n por roles . . . . . . . . . . . . . . . . . . . . . . . .
+1.2. Capa de AplicaciÃ3n (Backend con Django) . . . . . . . . . . . . . . . . .
+1.2.1. Lenguaje y estructura . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.2. Organización por roles . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3. Capa de Datos (PostgreSQL) . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4. ComunicaciÃ3n entre Componentes . . . . . . . . . . . . . . . . . . . . . .
+1.5. Capa AnalÃtica y Motor de Soluciones . . . . . . . . . . . . . . . . . . . .
+1.6. Despliegue y OperaciÃ3n . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.7. Seguridad y Control de Acceso . . . . . . . . . . . . . . . . . . . . . . . . .
+
+3
+4
+4
+4
+5
+6
+6
+7
+8
+9
+10
+10
+
+Referencias
+
+12
+
+i
+
+Acrónimos y Abreviaturas
+SGDIC
+UML
+DJ
+ORM
+API
+REST
+RBAC
+SQL
+HTML
+CSS
+JS
+WSGI
+ACID
+ETL
+KPI
+CI
+CD
+HTTPS
+JSON
+SPA
+MVT
+
+Sistema de Gestión Departamental de Informática y Computación
+Unified Modeling Language (Lenguaje Unificado de Modelado)
+Django
+Object-Relational Mapping (Mapeo Objeto-Relacional)
+Application Programming Interface
+Representational State Transfer
+Role-Based Access Control
+Structured Query Language
+HyperText Markup Language
+Cascading Style Sheets
+JavaScript
+Web Server Gateway Interface
+Atomicity, Consistency, Isolation, Durability
+Extract, Transform, Load (Extracción, Transformación y Carga)
+Key Performance Indicator (Indicador Clave de Desempeño)
+Integración Continua
+Despliegue Continuo
+HyperText Transfer Protocol Secure
+JavaScript Object Notation
+Single Page Application (Aplicación de Página Única)
+Model-View-Template (Modelo-Vista-Plantilla)
+
+1
+
+Universidad Nacional de Colombia – Sede Manizales
+
+0.0.1
+
+2
+
+OrganizaciÃ3n por roles
+
+El backend filtra la informaciÃ3n por rol (Role-Based Access Control (RBAC)) de forma
+transversal: la autenticaciÃ3n y los permisos se gestionan en la app usuario, y cada app
+aplica get_queryset filtrado por el usuario autenticado. AsÃ, el rol estudiante interactÃºa
+con cupos, mensajes y evaluaciones; el rol docente aporta a materias, evaluaciones
+(asistencia, justificaciones, resultados) y mensajes; y la secretarÃa accede a reportes
+(listas de espera, Key Performance Indicator (Indicador Clave de Desempeño) (KPI))
+y quejas, con intervenciÃ3n trazada en hilos escalados. El departamento configura
+parÃ¡metros globales (preguntas de evaluaciÃ3n, KPI) y la app analitica consolida datos
+para el motor de soluciones rÃ¡pidas.
+La figura 1.4 muestra la arquitectura del backend: el servidor de aplicaciones de Django (DJ)
+atiende peticiones Representational State Transfer (REST) desde el frontend, persiste en
+la base de datos y alimenta al motor analÃtico de forma asÃncrona. ï»¿
+
+Facultad de Administración – Departamento de Informática y Computación
+
+Capítulo 1
+
+Arquitectura de Software del Sistema
+El Sistema de Gestión Departamental de Informática y Computación (SGDIC) se diseÃ±a
+bajo una arquitectura de tres capas (presentaciÃ3n, aplicaciÃ3n y datos) sobre la plataforma
+DJ. Esta organizaciÃ3n separa claramente la interfaz de usuario, la lÃ3gica de negocio
+y el acceso a la informaciÃ3n, facilitando mantenimiento, pruebas e incorporaciÃ3n de
+nuevos requerimientos del modelado Unified Modeling Language (Lenguaje Unificado de
+Modelado) (UML) documentado en el informe de planificaciÃ3n del proyecto.
+La figura 1.1 muestra la vista general: cada capa se comunica con la inferior mediante
+Application Programming Interface (API)s de estilo REST, y la capa analÃtica se nutre de
+forma asÃncrona mediante un motor de extracciÃ3n Extract, Transform, Load (Extracción,
+Transformación y Carga) (ETL).
+Cap. presentaciÃ3n
+Frontend
+
+Motor ETL
+
+Cap. aplicaciÃ3n
+
+Cap. datos
+
+Backend Django
+
+PostgreSQL
+
+Repositorio
+analÃtico
+
+Motor de soluciones rÃ¡pidas
+
+Figura 1.1: Vista de capas de la arquitectura del SGDIC
+
+3
+
+Universidad Nacional de Colombia – Sede Manizales
+
+Estudiante
+
+Docente
+
+4
+
+SecretarÃa y
+Departamento
+
+Barra lateral
+responsiva
+Figura 1.2: Roles y visibilidad de la interfaz del SGDIC
+
+1.1
+
+Capa de PresentaciÃ3n (Frontend)
+
+La capa de presentaciÃ3n corresponde al frontend del SGDIC, construido con plantillas
+HyperText Markup Language (HTML) renderizadas por DJ y estilizadas con Cascading
+Style Sheets (CSS) (Bootstrap) y componentes interactivos en JavaScript (JS). La interfaz
+es responsiva y sirve tanto a estudiantes como a docentes, secretarÃa y departamento,
+adaptÃ¡ndose al rol autenticado (RBAC).
+
+1.1.1
+
+TecnologÃas y lenguajes
+
+El cliente se construye con pila web estÃ¡ndar renderizada del lado del servidor (Model-ViewTemplate (Modelo-Vista-Plantilla) (MVT)): HTML5 semÃ¡ntico para la estructura, CSS3
+con Bootstrap 5 (grid, utilidades y componentes responsivos) para el estilo y JS (ES6+)
+para la interactividad ligera. El JS incluye jQuery para manipulaciÃ3n DOM y llamadas
+asÃncronas a la API REST, y Bootstrap JS para componentes dinÃ¡micos (modales,
+tooltips, off-canvas). No se adopta arquitectura Single Page Application (Aplicación de
+Página Única) (SPA); las vistas se renderizan en el servidor y el navegador recibe marcado
+ya armado, lo que favorece el indexado y la carga inicial, manteniendo compatibilidad con
+entornos con soporte limitado.
+
+1.1.2
+
+OrganizaciÃ3n por roles
+
+La interfaz se muestra a partir de los tres roles definidos en el documento de planificaciÃ3n
+(figura 1.2):
+Estudiante portal de cupos en tiempo real, confirmaciÃ3n/rechazo de horarios, presentaciÃ3n de
+cuestionarios, visualizaciÃ3n de faltas y justificaciones, mensajerÃa con docentes y
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+5
+
+autoevaluaciÃ3n histÃ3rica.
+Docente gestiÃ3n de materias y horarios, registro rÃ¡pido de asistencia (lista o cÃ3digo), aprobaciÃ3n/rechazo de justificaciones, envÃo de mensajes masivos e individuales, consulta de
+resultados consolidados y comparativo histÃ3rico.
+
+a/departamento panel de listas de espera, intervenciÃ3n en hilos escalados, tableros consolidados de KPI
+y exportaciÃ3n de reportes a CSV! (CSV!) y PDF! (PDF!).
+La adaptaciÃ3n se realiza mediante RBAC: la barra lateral y el menÃº navegacional sÃ3lo
+muestran los Ãtems autorizados al rol autenticado, y cada app del backend filtra su queryset
+segÃºn el usuario. La misma plantilla se reutiliza para todos los roles; el contenido visible
+depende del contexto que el backend inyecta a la vista.
+La figura 1.3 muestra la arquitectura del cliente: el navegador consume las vistas renderizadas del servidor y, para interacciones en tiempo real, delega en notificaciones push y en la
+API REST del backend. Los recursos estÃ¡ticos (css, js, imÃ¡genes) se entregan comprimidos y con cachÃ© mediante la configuraciÃ3n de archivos STATICFILES y Whitenoise
+(o CDN en despliegue productivo).
+Navegador
+del usuario
+
+peticiÃ3n
+
+Plantillas HTML
+(Django)
+
+Bootstrap CSS
+
+render
+API REST
+del backend
+
+Bootstrap JS
+y jQuery
+
+Whitenoise / CDN
+
+Figura 1.3: Arquitectura del frontend del SGDIC
+
+1.2
+
+Capa de AplicaciÃ3n (Backend con Django)
+
+El backend del SGDIC se implementa con DJ, un framework web de alto nivel escrito
+en Python que provee una arquitectura de aplicaciÃ3n por componentes. El proyecto se
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+6
+
+organiza en apps modulares que agrupan las funcionalidades definidas en los requerimientos
+del CapÃtulo 4 del documento de planificaciÃ3n. Cada app contiene su propio paquete de
+models, views, forms, urls y pruebas, y se comunican entre sÃ a travÃ©s del ORM de DJ
+y de rutas REST bien definidas.
+Las apps principales son:
+usuario
+
+AutenticaciÃ3n, roles (RBAC) y recuperaciÃ3n de cuenta.
+
+cupos
+
+GestiÃ3n de disponibilidad, prerrequisitos y prioridad.
+
+materias
+
+CatÃ¡logo, versiones y flujo de aprobaciÃ3n de materias.
+
+mensajes MensajerÃa trazable y notificaciones automÃ¡ticas.
+evaluaciones Cuestionarios, evaluación docente y registro de faltas.
+quejas
+
+Recepción, clasificación y trazabilidad de quejas.
+
+reportes
+
+Tableros y exportaciones para secretaría y departamento.
+
+analitica
+
+Extracción ETL, KPI y motor de soluciones.
+
+1.2.1
+
+Lenguaje y estructura
+
+El backend se escribe en Python 3.11+ sobre DJ 4.x, siguiendo el patrón MVT (ModelView-Template): los models definen el esquema de la base de datos, las views encapsulan
+la lógica de negocio y los urls enrutan las peticiones REST. Las vistas retornan respuesta
+JavaScript Object Notation (JSON) a la API o renderizan plantillas HTML al frontend,
+según corresponda. El ORM de DJ traduce automáticamente las clases del modelo a consultas
+Structured Query Language (SQL), previniendo inyección y centralizando las reglas de
+integridad en migraciones versionadas.
+
+1.2.2
+
+Organización por roles
+
+El backend filtra la información por rol (RBAC) de forma transversal: la autenticación
+y los permisos se gestionan en la app usuario, y cada app aplica get_queryset filtrado por el usuario autenticado. Así, el rol estudiante interactúa con cupos, mensajes
+y evaluaciones; el rol docente aporta a materias, evaluaciones (asistencia, justificaciones, resultados) y mensajes; y la secretaría accede a reportes (listas de espera,
+KPI) y quejas, con intervención trazada en hilos escalados. El departamento configura
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+7
+
+parámetros globales (preguntas de evaluación, KPI) y la app analitica consolida datos
+para el motor de soluciones rápidas.
+PeticiÃ3n REST
+
+Servidor de Django
+
+WSGI
+ORM de Django
+
+Sesiones / Redis
+
+PostgreSQL
+
+Cola de tareas
+
+Figura 1.4: Arquitectura del backend de Django del SGDIC
+
+1.3
+
+Capa de Datos (PostgreSQL)
+
+La capa de datos se soporta en PostgreSQL, un sistema gestor de bases de datos relacionales
+de cÃ3digo abierto con soporte transaccional Atomicity, Consistency, Isolation, Durability
+(ACID), tipos de datos avanzados y alto desempeÃ±o en cargas concurrentes. La elecciÃ3n
+responde a tres necesidades del SGDIC: integridad referencial estricta para el flujo de cupos
+y matrÃculas, consultas analÃticas sobre histÃ3ricos de varios semestres y capacidad de
+crecimiento horizontal mediante rÃ©plicas de lectura.
+El acceso a la base de datos se realiza exclusivamente a travÃ©s del Object-Relational
+Mapping (Mapeo Objeto-Relacional) (ORM) de DJ, que traduce las clases del modelo
+a tablas y relaciones. Esta decisiÃ3n elimina la construcciÃ3n manual de SQL, previene
+inyecciÃ3n de cÃ3digo y concentra las reglas de integridad en las migraciones versionadas
+del proyecto. Las operaciones de escritura se agrupan en transacciones atÃ3micas (atomic)
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+8
+
+para garantizar que un cambio de cupo y su registro de auditorÃa se confirmen o se
+reviertan en conjunto.
+La figura 1.5 presenta el modelo fÃsico simplificado. Las entidades centrales son el usuario
+y su rol, la asignatura con sus versiones y prerrequisitos, la oferta de cupos por periodo, la
+matrÃcula, la mensajerÃa, la evaluaciÃ3n y la queja. Las tablas de auditorÃa y de eventos
+analÃticos cierran el modelo: la primera registra toda modificaciÃ3n sensible y la segunda
+alimenta el repositorio analÃtico descrito en la SecciÃ3n 1.5.
+Usuario
+
+Rol
+
+Asignatura
+
+MatrÃcula
+
+Oferta de cupos
+
+VersiÃ3n y
+
+AuditorÃa
+
+MensajerÃa
+
+prerrequisito
+
+EvaluaciÃ3n y
+queja
+
+Figura 1.5: Modelo fÃsico simplificado de la base de datos del SGDIC
+
+El esquema se administra con migraciones de DJ versionadas en el repositorio, se respalda
+diariamente con pg_dump y las consultas mÃ¡s frecuentes cuentan con Ãndices sobre llaves
+forÃ¡neas, periodos acadÃ©micos y estados de trÃ¡mite.
+
+1.4
+
+ComunicaciÃ3n entre Componentes
+
+La comunicaciÃ3n sigue el principio de dependencia unidireccional: la capa de presentaciÃ3n
+consume a la de aplicaciÃ3n y esta, a la de datos. El navegador solicita una vista; el servidor
+de DJ la resuelve a travÃ©s de urls, views y templates, consulta el ORM y devuelve
+HTML renderizado o un cuerpo JSON. Las operaciones que requieren actualizar la pantalla
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+9
+
+sin recargar (notificaciones, validaciÃ3n de prerrequisitos, filtros de cupos) usan llamados
+asÃncronos a la API REST con JSON.
+La figura 1.6 resume el ciclo completo de una solicitud tÃpica, desde que el usuario envÃa
+el formulario hasta que recibe la respuesta, incluyendo las tareas que se delegan a la cola
+de procesos en segundo plano.
+6. Respuesta
+
+Frontend
+usuario
+
+1. PeticiÃ3n
+
+Vista
+
+2. Consulta
+
+Modelo
+
+3. SQL
+
+ORM
+
+Django
+
+5. Objetos
+
+Datos
+PostgreSQL
+
+4. Registros
+
+Reglas de la capa de aplicaciÃ3n: validaciÃ3n de permisos por rol, transacciÃ3n atÃ3mica
+para toda escritura, registro en auditorÃa y notificaciÃ3n asÃncrona al interesado mediante
+la cola de tareas.
+
+Figura 1.6: Secuencia de comunicaciÃ3n entre las capas del SGDIC
+
+1.5
+
+Capa AnalÃtica y Motor de Soluciones
+
+La capa analÃtica complementa las tres capas funcionales. Un proceso ETL programado
+extrae de forma periÃ3dica los eventos relevantes (matrÃculas, cancelaciones, reclamaciones,
+respuestas de evaluaciÃ3n), los normaliza y los carga en un repositorio analÃtico separado.
+Sobre ese repositorio se calculan los KPI del departamento y se alimenta el motor de
+soluciones rÃ¡pidas, que sugiere alternativas ante situaciones recurrentes, por ejemplo una
+asignatura con demanda superior a la oferta o un incremento sostenido de quejas por
+periodo.
+El aislamiento del repositorio analÃtico evita que las consultas de reporte compitan con
+las transacciones acadÃ©micas y permite recalcular indicadores sin afectar el servicio.
+
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+1.6
+
+10
+
+Despliegue y OperaciÃ3n
+
+El sistema se despliega con el patrÃ3n de servidor de aplicaciones Web Server Gateway
+Interface (WSGI) detrÃ¡s de un servidor web inverso que termina HyperText Transfer
+Protocol Secure (HTTPS), sirve los archivos estÃ¡ticos y canaliza las peticiones dinÃ¡micas.
+La base de datos PostgreSQL se ejecuta como servicio independiente con acceso restringido
+por red. La figura 1.7 presenta la topologÃa propuesta.
+
+Cliente web
+(navegador)
+
+Django
+
+Servidor
+web inverso
+
+(WSGI)
+
+PostgreSQL
+
+HTTPS y
+estÃ¡ticos
+
+procesos de
+
+datos y respaldo
+
+aplicaciÃ3n
+
+Cola de tareas
+procesos en segundo plano
+
+Figura 1.7: TopologÃa de despliegue del SGDIC
+
+La operaciÃ3n prevÃ© integraciÃ3n y despliegue continuos (Integración Continua (CI) y
+Despliegue Continuo (CD)): cada entrega ejecuta las pruebas automatizadas, aplica las
+migraciones de base de datos y publica la versiÃ3n en el entorno de producciÃ3n, con
+posibilidad de reversiÃ3n ante fallos. Los respaldos diarios, las migraciones versionadas y
+los Ãndices sobre las consultas crÃticas constituyen el plan de contingencia y continuidad
+del servicio.
+
+1.7
+
+Seguridad y Control de Acceso
+
+La seguridad se apoya en cuatro medidas. Primero, autenticaciÃ3n obligatoria con contraseÃ±as almacenadas mediante funciones de derivaciÃ3n de clave y sesiones con expiraciÃ3n.
+Segundo, autorizaciÃ3n por rol (RBAC) aplicada en el servidor: estudiante, docente,
+secretarÃa y administrador acceden Ãºnicamente a las vistas y operaciones que les corresponden. Tercero, trazabilidad completa: toda modificaciÃ3n sensible deja registro en la
+tabla de auditorÃa, con usuario, fecha y valor anterior. Cuarto, protecciÃ3n del canal con
+Facultad de Administración – Departamento de Informática y Computación
+
+Universidad Nacional de Colombia – Sede Manizales
+
+11
+
+HTTPS, validaciÃ3n de formularios contra falsificaciÃ3n de peticiÃ3n y control de acceso a
+los recursos estÃ¡ticos.
+Estas medidas responden a los requerimientos no funcionales de seguridad, trazabilidad y
+disponibilidad del documento de planificaciÃ3n y son condiciÃ3n previa para la puesta en
+producciÃ3n del sistema.
+
+Facultad de Administración – Departamento de Informática y Computación
+
+Bibliografía
+[1] Django
+Software
+Foundation.
+https://docs.djangoproject.com/
+
+Django
+
+[2] PostgreSQL
+Global
+Development
+https://www.postgresql.org/docs/
+
+12
+
+Group.
+
+documentation,
+PostgreSQL
+
+Version
+
+4.2.
+
+Documentation.
+
+

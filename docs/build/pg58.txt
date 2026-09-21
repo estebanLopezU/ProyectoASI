@@ -1,0 +1,32 @@
+                  Departamento de Informática y Computación                                                  48
+                                  Tabla 5.4: Descripción de los componentes de la arquitectura
+                  Componente                        Responsabilidad
+                  Portal Web                        Interfaz principal para estudiantes y docentes (gestión acadé-
+                                                    mica).
+                  Consola Administrativa            ConĄguración, veriĄcación y tableros para secretaría y depar-
+                                                    tamento.
+                  Vista Móvil                       Acceso responsivo optimizado para notiĄcaciones y consultas
+                                                    rápidas.
+                  Servicio de Cupos y Materias      Lógica de disponibilidad, priorización y ciclo de vida de mate-
+                                                    rias.
+                  Servicio de Comunicación          Mensajería trazable y notiĄcaciones automáticas.
+                  Servicio de Evaluación y Quejas   Ventanas de evaluación, cuestionarios y gestión de casos.
+                  Motor ETL                         Extracción, limpieza, transformación y carga de datos al repo-
+                                                    sitorio.
+                  Repositorio Analítico             Almacén consolidado para cálculo de KPI y modelos.
+                  Motor de Soluciones Rápidas       Detección de anomalías, predicciones y generación de recomen-
+                                                    daciones.
+                  API REST Institucional            Integración con matrícula, catálogo oĄcial y autenticación.
+                  Servicio de NotiĄcaciones         Despacho de correos, mensajes internos y recordatorios.
+                  Autenticación Institucional       Validación de credenciales y roles (RBAC).
+                  5.7      Resumen de Diagramas
+                                    Tabla 5.5: Inventario de diagramas UML del documento
+                  Diagrama            Figura    Propósito
+                  Casos de uso        5.1       Funcionalidades y actores del sistema.
+                  Clases (relaciones) 5.2       Estructura estática y asociaciones.
+                  Clases (detalle)    5.3       Atributos y métodos por clase.
+                  Secuencia           5.4       Interacción temporal de la evaluación docente.
+                  Actividades         5.5       Flujo completo de quejas y sugerencias.
+                  Estados             5.6       Ciclo de vida de una queja o sugerencia.
+                  Componentes         5.7       Arquitectura de la solución.
+                                         Documentación de Investigación y PlaniĄcación

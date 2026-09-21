@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block titulo %}Tablero institucional{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>Tablero institucional</h3>
+
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Materias ofertadas</h6>
+        <p class="display-6 mb-0">{{ kpis.materias_activas }}</p>
+        <small class="text-muted">Ocupación promedio: {{ kpis.ocupacion_promedio }}%</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Solicitudes de cupo pendientes</h6>
+        <p class="display-6 mb-0">{{ kpis.solicitudes_pendientes }}</p>
+        <small class="text-muted">En lista de espera: {{ kpis.en_espera }}</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Quejas abiertas</h6>
+        <p class="display-6 mb-0">{{ kpis.abiertos }}</p>
+        <small class="text-muted">Escaladas: {{ kpis.escalados }} · Cierre medio: {{ kpis.horas_promedio_cierre }} h</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Estudiantes en riesgo por inasistencia</h6>
+        <p class="display-6 mb-0">{{ kpis.en_riesgo }}</p>
+        <small class="text-muted">Promedio institucional: {{ kpis.porcentaje_promedio }}%</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Participación en evaluación docente</h6>
+        <p class="mb-1"><strong>{{ kpis.participacion }}%</strong> ({{ kpis.respuestas }} respuestas)</p>
+        <small class="text-muted">Puntaje promedio: {{ kpis.puntaje_promedio }}/5</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Solicitudes de materias</h6>
+        <p class="mb-1">Pendientes: <strong>{{ kpis.pendientes }}</strong> · Aprobadas: {{ kpis.aprobadas }}</p>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{% url 'materias:panel' %}">Revisar solicitudes</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Notificaciones sin leer</h6>
+        <p class="display-6 mb-0">{{ kpis.notificaciones }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Acciones de gestión</div>
+      <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action" href="{% url 'quejas:vencidos' %}">Revisar casos vencidos (RN-10)</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'cupos:procesar_pendientes' %}">Procesar solicitudes de cupo pendientes</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:periodos' %}">Configurar periodo de evaluación docente</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:panel' %}">Generar reportes institucionales</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'analitica:tablero' %}">Priorizar necesidades por score</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Indicadores del proceso de quejas</div>
+      <div class="card-body">
+        <p class="mb-1">En proceso: <strong>{{ kpis.en_proceso }}</strong></p>
+        <p class="mb-1">Resueltos: <strong>{{ kpis.resueltos }}</strong></p>
+        <p class="mb-0">Satisfacción promedio: <strong>{{ kpis.satisfaccion_promedio }}/5</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

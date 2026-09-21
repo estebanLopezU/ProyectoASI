@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Tablero{% endblock %}
+{% block contenido %}
+<h3 class="mb-3">Bienvenido, {{ user.get_full_name|default:user.username }}</h3>
+<p class="text-muted">Seleccione un módulo del menú lateral para continuar.</p>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Notificaciones sin leer</h6>
+        <p class="display-6 mb-0">{{ kpis.notificaciones }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

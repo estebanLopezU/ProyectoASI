@@ -1,0 +1,101 @@
+﻿% =====================================================================
+%  PREAMBULO COMPARTIDO - Documentacion Tecnica de Arquitectura
+%  Universidad Nacional de Colombia, Sede Manizales
+% =====================================================================
+
+\documentclass[12pt,letterpaper,oneside]{report}
+
+% ------------------------- Codificacion e idioma --------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-nodecimaldot,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ------------------------- Diseno y geometria --------------------
+\usepackage[letterpaper,top=3cm,bottom=3cm,left=3cm,right=2.5cm,headheight=15pt]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{parskip}
+\onehalfspacing
+
+% ------------------------- Graficos y diagramas --------------------
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,
+                decorations.pathreplacing,chains,
+                shapes.geometric,shapes.misc,matrix}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+% ------------------------- Tablas --------------------------------
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+% ------------------------- Cajas, listados y acronimos --------------
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{listings}
+\usepackage[printonlyused]{acronym}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+% cleveref debe ir despues de hyperref
+\usepackage[spanish]{cleveref}
+
+% ------------------------- Colores institucionales ------------------
+\definecolor{azulUC}{RGB}{21,101,192}
+\definecolor{azulOscuro}{RGB}{13,71,161}
+\definecolor{azulClaro}{RGB}{227,242,253}
+\definecolor{verdeUC}{RGB}{56,142,60}
+\definecolor{verdeClaro}{RGB}{232,245,233}
+\definecolor{naranjaUC}{RGB}{239,108,0}
+\definecolor{naranjaClaro}{RGB}{255,243,224}
+\definecolor{moradoUC}{RGB}{173,20,87}
+\definecolor{moradoClaro}{RGB}{243,229,245}
+\definecolor{grisUC}{RGB}{96,96,96}
+\definecolor{grisClaro}{RGB}{245,245,245}
+% FIN PARTE 1
+
+% ------------------------- Hipervinculos ----------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulOscuro,
+    urlcolor=azulUC,
+    citecolor=verdeUC,
+    pdftitle={Arquitectura Tecnica del SGDIC - DIC UNC Sede Manizales},
+    pdfauthor={Departamento de Informatica y Computacion},
+    pdfsubject={Arquitectura de software: frontend, backend Django, base de datos y despliegue},
+    bookmarksnumbered=true,
+    bookmarksopen=true}
+
+% ------------------------- Encabezados y pies -----------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{azulOscuro}{\textit{Universidad Nacional de Colombia -- Sede Manizales}}}
+\fancyhead[R]{\small\textcolor{azulOscuro}{\thepage}}
+\fancyfoot[C]{\small\textcolor{grisUC}{Facultad de Administración -- Departamento de Informática y Computación}}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ------------------------- Estilo de capitulos ----------------------
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{azulOscuro}}
+  {\filright\Large\textcolor{azulUC}{\chaptertitlename\ \thechapter}}
+  {12pt}
+  {\Huge}
+  [\vspace{4pt}{\color{azulUC}\titlerule[1.5pt]}]
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{azulOscuro}}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{azulUC}}{\thesubsection}{1em}{}
+
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}

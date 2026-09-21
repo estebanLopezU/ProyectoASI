@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block titulo %}{{ hilo.asunto }}{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h4 class="mb-1">{{ hilo.asunto }}</h4>
+    <p class="text-muted small mb-0">
+      {{ hilo.estudiante.get_full_name|default:hilo.estudiante.username }}
+      ↔ {{ hilo.docente.get_full_name|default:hilo.docente.username }}
+      {% if hilo.materia %}· {{ hilo.materia }}{% endif %}
+      · <span class="badge bg-secondary">{{ hilo.get_tipo_display }}</span>
+      {% if hilo.intervenido_por %}<span class="badge bg-warning text-dark">Intervenido por {{ hilo.intervenido_por.username }}</span>{% endif %}
+    </p>
+  </div>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'mensajes:bandeja' %}">Volver</a>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    {% for mensaje in hilo.mensajes.all %}
+      <div class="burbuja-mensaje {% if mensaje.autor_id == user.pk %}burbuja-propia{% else %}burbuja-ajena{% endif %}">
+        <div class="small text-muted">
+          {{ mensaje.autor.get_full_name|default:mensaje.autor.username }}
+          · {{ mensaje.creado|date:"d/m/Y H:i" }}
+          {% if mensaje.autor_id == user.pk and mensaje.leido %}<i class="bi bi-check2-all"></i>{% endif %}
+        </div>
+        <div>{{ mensaje.contenido|linebreaksbr }}</div>
+      </div>
+    {% empty %}
+      <p class="text-muted mb-0">No hay mensajes en este hilo.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<form method="post" class="mb-3">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary">Responder</button>
+</form>
+
+{% if user.es_secretaria or user.is_superuser %}
+  {% if not hilo.intervenido_por %}
+    <form method="post" action="{% url 'mensajes:intervenir' hilo.pk %}">
+      {% csrf_token %}
+      <button class="btn btn-outline-warning btn-sm">Intervenir el hilo (RF-20)</button>
+    </form>
+  {% endif %}
+{% endif %}
+{% endblock %}

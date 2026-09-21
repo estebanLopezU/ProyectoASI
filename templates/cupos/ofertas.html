@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block titulo %}Ofertas de cupos{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-journal-plus me-2"></i>Ofertas de cupos (RF-05)</h3>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-5">
+    <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Buscar materia">
+  </div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Buscar</button></div>
+</form>
+<div class="row g-3">
+  {% for oferta in ofertas %}
+    <div class="col-md-6 col-xl-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-title mb-1">{{ oferta.materia.nombre }}</h6>
+          <p class="text-muted small mb-2">
+            {{ oferta.materia.codigo }} · {{ oferta.periodo }} · {{ oferta.franja }}
+          </p>
+          <div class="mb-2">
+            <span class="badge bg-primary">{{ oferta.cupos_disponibles }} cupos disponibles</span>
+            <span class="badge bg-secondary">{{ oferta.inscritos }}/{{ oferta.cupo_maximo }} inscritos</span>
+          </div>
+          <div class="progress mb-3" style="height: 6px;">
+            <div class="progress-bar" style="width: {{ oferta.tasa_ocupacion|floatformat:2 }}00%"></div>
+          </div>
+          {% if user.es_estudiante %}
+            <form method="post" action="{% url 'cupos:solicitar' oferta.pk %}">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-primary w-100"
+                {% if oferta.cupos_disponibles == 0 %}title="Se asignará turno en lista de espera"{% endif %}>
+                Solicitar cupo
+              </button>
+            </form>
+          {% else %}
+            <span class="text-muted small">Solo los estudiantes pueden solicitar cupos.</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12"><div class="alert alert-secondary">No hay ofertas activas.</div></div>
+  {% endfor %}
+</div>
+{% if is_paginated %}
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>{% endif %}
+      <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>{% endif %}
+    </ul>
+  </nav>
+{% endif %}
+{% endblock %}

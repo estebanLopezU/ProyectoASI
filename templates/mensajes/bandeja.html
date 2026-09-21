@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}Bandeja de mensajes{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0"><i class="bi bi-envelope me-2"></i>Bandeja de mensajes</h3>
+  {% if user.es_estudiante %}
+    <a class="btn btn-primary btn-sm" href="{% url 'mensajes:nuevo' %}">Nuevo mensaje</a>
+  {% endif %}
+</div>
+<div class="list-group">
+  {% for hilo in hilos %}
+    <a class="list-group-item list-group-item-action" href="{% url 'mensajes:hilo' hilo.pk %}">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ hilo.asunto }}</strong>
+          <span class="badge bg-secondary ms-1">{{ hilo.get_tipo_display }}</span>
+          {% if hilo.intervenido_por %}<span class="badge bg-warning text-dark ms-1">Intervenido</span>{% endif %}
+          {% if hilo.cerrado %}<span class="badge bg-dark ms-1">Cerrado</span>{% endif %}
+          <div class="small text-muted">
+            {{ hilo.estudiante.get_full_name|default:hilo.estudiante.username }}
+            ↔ {{ hilo.docente.get_full_name|default:hilo.docente.username }}
+            {% if hilo.materia %}· {{ hilo.materia }}{% endif %}
+          </div>
+        </div>
+        <div class="text-end">
+          <small class="text-muted">{{ hilo.creado|date:"d/m/Y H:i" }}</small>
+          <div class="small">
+            {% with ultimo=hilo.ultimo_mensaje %}
+              {% if ultimo %}{{ ultimo.contenido|truncatechars:45 }}{% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </a>
+  {% empty %}
+    <div class="list-group-item text-muted">No tiene conversaciones.</div>
+  {% endfor %}
+</div>
+{% if is_paginated %}
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>{% endif %}
+      <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>{% endif %}
+    </ul>
+  </nav>
+{% endif %}
+{% endblock %}

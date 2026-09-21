@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block titulo %}Radicar queja{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-plus-circle me-2"></i>Radicar queja o reclamo (RF-35/RF-36)</h3>
+<div class="row">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3 {% if field.name == 'anonima' %}form-check{% endif %}">
+              {% if field.name == 'anonima' %}
+                {{ field }} <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="form-text">{{ field.help_text }}</div>
+              {% else %}
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+              {% endif %}
+              {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary">Radicar</button>
+          <a class="btn btn-outline-secondary" href="{% url 'quejas:mis_quejas' %}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Categorías y soluciones rápidas (RN-11)</div>
+      <div class="list-group list-group-flush">
+        {% for categoria in categorias %}
+          <div class="list-group-item">
+            <strong>{{ categoria.nombre }}</strong>
+            <div class="small text-muted">{{ categoria.descripcion }}</div>
+            {% if categoria.solucion_rapida %}
+              <div class="small alert alert-light mb-0 mt-2">{{ categoria.solucion_rapida }}</div>
+            {% endif %}
+          </div>
+        {% empty %}
+          <div class="list-group-item text-muted">No hay categorías configuradas.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Periodos de evaluación{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-sliders me-2"></i>Periodos de evaluación docente (RF-27/RF-34)</h3>
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Configurar periodo</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3 form-check-none">
+              {% if field.field.widget.input_type == 'checkbox' %}
+                <div class="form-check">
+                  {{ field }} <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+              {% else %}
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+              {% endif %}
+              {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary w-100">Guardar y generar invitaciones</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover tabla-compacta mb-0">
+          <thead class="table-light">
+            <tr><th>Periodo</th><th>Ventana</th><th>Activo</th><th>Invitaciones</th>
+                <th>Respuestas</th><th>Recordatorios</th></tr>
+          </thead>
+          <tbody>
+            {% for periodo in periodos %}
+              <tr>
+                <td>{{ periodo.nombre }}</td>
+                <td class="small">{{ periodo.fecha_inicio|date:"d/m/Y" }} – {{ periodo.fecha_limite|date:"d/m/Y" }}</td>
+                <td>{% if periodo.habilitado %}<span class="badge bg-success">Habilitado</span>
+                    {% elif periodo.activo %}<span class="badge bg-warning text-dark">Activo fuera de plazo</span>
+                    {% else %}<span class="badge bg-secondary">Inactivo</span>{% endif %}</td>
+                <td>{{ periodo.invitaciones.count }}</td>
+                <td>{{ periodo.respuestas.count }}</td>
+                <td>
+                  <a class="btn btn-sm btn-outline-primary"
+                     href="{% url 'evaluaciones:recordatorios' periodo.pk %}">Notificar pendientes</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="6" class="text-center text-muted py-4">No hay periodos configurados.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="alert alert-info small mt-3 mb-0">
+      Al guardar un periodo activo se generan las invitaciones por estudiante, docente y materia
+      inscrita (RF-29), y se desactivan los demás periodos para evitar solapamientos.
+    </div>
+  </div>
+</div>
+{% endblock %}

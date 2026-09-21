@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block titulo %}Gestión de quejas{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-inboxes me-2"></i>Gestión de quejas (RF-37/RF-41)</h3>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-2"><div class="card tarjeta-kpi"><div class="card-body py-2"><h6 class="text-muted mb-0 small">Total</h6><p class="h4 mb-0">{{ metricas.total }}</p></div></div></div>
+  <div class="col-md-2"><div class="card tarjeta-kpi"><div class="card-body py-2"><h6 class="text-muted mb-0 small">Abiertos</h6><p class="h4 mb-0">{{ metricas.abiertas }}</p></div></div></div>
+  <div class="col-md-2"><div class="card tarjeta-kpi"><div class="card-body py-2"><h6 class="text-muted mb-0 small">En proceso</h6><p class="h4 mb-0">{{ metricas.en_proceso }}</p></div></div></div>
+  <div class="col-md-2"><div class="card tarjeta-kpi"><div class="card-body py-2"><h6 class="text-muted mb-0 small">Escalados</h6><p class="h4 mb-0 semaforo-CRIT">{{ metricas.escaladas }}</p></div></div></div>
+  <div class="col-md-2"><div class="card tarjeta-kpi"><div class="card-body py-2"><h6 class="text-muted mb-0 small">Resueltos</h6><p class="h4 mb-0 semaforo-OK">{{ metricas.resueltas }}</p></div></div></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Casos</span>
+        <form method="get" class="d-flex gap-2">
+          <select name="estado" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="">Todos los estados</option>
+            <option value="ABIERTO" {% if request.GET.estado == 'ABIERTO' %}selected{% endif %}>Abiertos</option>
+            <option value="EN_PROCESO" {% if request.GET.estado == 'EN_PROCESO' %}selected{% endif %}>En proceso</option>
+            <option value="ESCALADO" {% if request.GET.estado == 'ESCALADO' %}selected{% endif %}>Escalados</option>
+            <option value="RESUELTO" {% if request.GET.estado == 'RESUELTO' %}selected{% endif %}>Resueltos</option>
+          </select>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover tabla-compacta mb-0">
+          <thead class="table-light">
+            <tr><th>Consecutivo</th><th>Asunto</th><th>Categoría</th><th>Estudiante</th>
+                <th>Estado</th><th>Gestor</th><th>Horas</th><th></th></tr>
+          </thead>
+          <tbody>
+            {% for queja in quejas %}
+              <tr>
+                <td>{{ queja.consecutivo }}</td>
+                <td>{{ queja.asunto }}</td>
+                <td>{{ queja.categoria.nombre }}</td>
+                <td>{% if queja.anonima %}<em>Anónimo</em>{% else %}{{ queja.radicada_por.get_full_name|default:queja.radicada_por.username }}{% endif %}</td>
+                <td><span class="badge
+                  {% if queja.estado == 'RESUELTO' %}bg-success
+                  {% elif queja.estado == 'ESCALADO' %}bg-danger
+                  {% elif queja.estado == 'EN_PROCESO' %}bg-primary
+                  {% elif queja.estado == 'CERRADO' %}bg-secondary
+                  {% else %}bg-warning text-dark{% endif %}">{{ queja.get_estado_display }}</span></td>
+                <td>{{ queja.gestor.username|default:"—" }}</td>
+                <td>{% if queja.requiere_escalamiento %}<span class="semaforo-CRIT">{{ queja.horas_sin_gestion|floatformat:0 }}</span>
+                    {% else %}{{ queja.horas_sin_gestion|floatformat:0 }}{% endif %}</td>
+                <td>
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'quejas:detalle' queja.pk %}">Ver</a>
+                  <a class="btn btn-sm btn-primary" href="{% url 'quejas:gestionar' queja.pk %}">Gestionar</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="8" class="text-center text-muted py-4">No hay casos para los filtros seleccionados.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">Casos por categoría</div>
+      <ul class="list-group list-group-flush">
+        {% for fila in metricas.por_categoria %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ fila.categoria__nombre }}</span>
+            <span class="badge bg-secondary">{{ fila.total }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">Sin datos.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+@startuml research_flow
+start
+
+:Definición del problema;
+
+partition "Diagnóstico\nDepartamento Informática y Computación" {
+  :Identificación de actores involucrados;
+  :Mapeo de procesos actuales;
+  :Análisis de dolores operacionales;
+}
+
+:Delimitación del alcance;
+
+partition "Metodología de Investigación" {
+  if (Investigación aplicada?) then (sí)
+    :Diseño de estudio de caso;
+  else (no)
+    :Revisión bibliográfica sistemática;
+    :Análisis comparativo de soluciones;
+  endif
+
+  :Recolección de datos cualitativa;
+  :Recolección de datos cuantitativa;
+  :Aplicación de encuestas a estudiantes;
+  :Aplicación de entrevistas a docentes y secretaria;
+}
+
+:Cuestionarios de horarios y materias;
+
+partition "Análisis de Datos" {
+  :Limpieza y preprocesamiento;
+  :Análisis estadístico descriptivo;
+  :Modelado con machine learning;
+  :Detección de anomalías;
+  :Generación de métricas clave;
+}
+
+:Diagnóstico integral;
+
+partition "Diseño de Solución" {
+  :Arquitectura del sistema;
+  :Diagramas UML;
+  :Prototipo funcional;
+  :Validación con usuarios;
+}
+
+:Implementación del prototipo;
+:Pruebas y validación;
+
+if (Resultados validan hipótesis?) then (sí)
+  :Escalamiento de la solución;
+else (no)
+  :Refinamiento iterativo;
+  :Nueva ronda de validación;
+endif
+
+:Generación de reportes de analítica;
+:Publicación de resultados;
+:Recomendaciones para el Departamento;
+
+stop
+@enduml

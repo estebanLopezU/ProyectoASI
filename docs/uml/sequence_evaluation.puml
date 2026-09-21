@@ -1,0 +1,100 @@
+@startuml sequence_evaluation
+title Secuencia: Evaluación Docente Calificada a Tiempo
+
+skinparam backgroundColor #F9F9F9
+skinparam shadowing false
+skinparam sequence {
+  ActorBorderColor #1565C0
+  ActorBackgroundColor #E3F2FD
+  ActorFontColor #0D47A1
+  ParticipantBackgroundColor #E8F5E9
+  ParticipantBorderColor #388E3C
+  ParticipantFontColor #1B5E20
+}
+
+actor "Administrador" as Admin
+participant "Sistema\nGestión" as System
+participant "Base de Datos" as DB
+participant "Servicio de\nNotificaciones" as Notif
+participant "Docente" as Docente
+participant "Secretaria" as Secretaria
+
+Admin -> System: Programar evaluación (fecha límite)
+System -> DB: Guardar configuración evaluación
+activate DB
+DB --> System: Confirmación
+deactivate DB
+
+System -> Notif: Notificar fecha inicio
+activate Notif
+Notif -> Docente: Email/SMS — Evaluación disponible
+activate Docente
+Docente -> System: Acceder a formulario de evaluación
+activate System
+System -> DB: Cargar preguntas
+activate DB
+DB --> System: Lista de preguntas
+deactivate DB
+System --> Docente: Formulario renderizado
+deactivate System
+deactivate Docente
+
+Docente -> System: Enviar evaluación (respuesta)
+activate System
+System -> DB: Almacenar respuestas + timestamp
+activate DB
+DB --> System: Confirmación guardado
+deactivate DB
+System -> Notif: Notificar recepción
+activate Notif
+Notif --> Docente: Confirmación recepción
+deactivate Notif
+deactivate System
+
+== Verificación en tiempo real ==
+
+loop Cada minuto
+  System -> DB: Consultar evaluaciones pendientes
+  activate DB
+  DB --> System: Lista pendientes
+  deactivate DB
+  System -> Notif: Notificar recordatorio a pendientes
+  activate Notif
+  Notif -> Docente: Recordatorio evaluación pendiente
+  activate Docente
+  deactivate Docente
+  deactivate Notif
+end
+
+== Cierre y reporte ==
+
+System -> System: Verificar fecha límite alcanzada
+System -> DB: Recopilar todas las evaluaciones
+activate DB
+DB --> System: Dataset completo
+deactivate DB
+
+System -> System: Calcular resultados (analítica)
+System -> DB: Guardar resultados
+activate DB
+DB --> System: Confirmación
+deactivate DB
+
+System -> Notif: Notificar resultados publicados
+activate Notif
+Notif -> Docente: Resultados disponibles
+Notif -> Secretaria: Resultados disponibles para verificación
+Notif -> Admin: Reporte generado
+deactivate Notif
+
+Secretaria -> System: Solicitar reporte detallado
+activate System
+System -> DB: Extraer datos verídicos
+activate DB
+DB --> System: Datos
+deactivate DB
+System -> System: Aplicar algoritmo de soluciones rápidas
+System --> Secretaria: Reporte con recomendaciones
+deactivate System
+
+@enduml

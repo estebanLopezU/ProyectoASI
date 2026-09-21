@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Detectar necesidades{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-search me-2"></i>Detección de necesidades (RF-51/RF-52)</h3>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <p class="text-muted small">
+          El motor analiza los datos operativos del SGDIC y genera necesidades priorizadas
+          con el modelo <code>(I × U) / (E + ε)</code>.
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="id_periodo">Periodo académico (opcional)</label>
+            <input type="text" name="periodo" id="id_periodo" class="form-control" placeholder="Ej. 2026-1">
+          </div>
+          <button class="btn btn-primary">Ejecutar detección</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Fuentes analizadas</div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li><strong>Quejas recurrentes:</strong> categorías con 3 o más casos y baja satisfacción.</li>
+          <li><strong>Demanda insatisfecha:</strong> materias con 5 o más solicitudes en lista de espera.</li>
+          <li><strong>Inasistencia elevada:</strong> resúmenes en riesgo crítico (RN-08).</li>
+          <li><strong>Evaluación docente:</strong> promedios inferiores al umbral con respuestas suficientes (RN-05).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <div class="card-header">Factores del modelo</div>
+      <div class="card-body">
+        <p class="mb-1"><strong>Impacto (I):</strong>
+          {% for clave, valor in factores_impacto.items %}{{ clave }}={{ valor }} {% endfor %}</p>
+        <p class="mb-0"><strong>Urgencia (U):</strong>
+          {% for clave, valor in factores_urgencia.items %}{{ clave }}={{ valor }} {% endfor %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

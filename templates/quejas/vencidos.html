@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block titulo %}Escalamientos{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-alarm me-2"></i>Casos vencidos y escalamiento (RF-38/RN-10)</h3>
+<p class="text-muted">Se escalan al departamento los casos sin gestión durante {{ dias }} días.</p>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header">Casos vencidos ({{ vencidos|length }})</div>
+      <div class="table-responsive">
+        <table class="table tabla-compacta mb-0">
+          <thead class="table-light"><tr><th>Consecutivo</th><th>Asunto</th><th>Estado</th><th>Horas sin gestión</th></tr></thead>
+          <tbody>
+            {% for queja in vencidos %}
+              <tr>
+                <td>{{ queja.consecutivo }}</td>
+                <td>{{ queja.asunto }}</td>
+                <td>{{ queja.get_estado_display }}</td>
+                <td class="semaforo-CRIT">{{ queja.horas_sin_gestion|floatformat:1 }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="text-center text-muted py-4">No hay casos vencidos.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Escalamiento masivo</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Casos a escalar</label>
+            <div style="max-height: 260px; overflow-y: auto;">
+              {% for checkbox in form.casos %}
+                <div class="form-check">{{ checkbox.tag }}
+                  <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                </div>
+              {% empty %}
+                <p class="text-muted small mb-0">No hay casos abiertos.</p>
+              {% endfor %}
+            </div>
+          </div>
+          <button class="btn btn-danger w-100">Escalar seleccionados</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

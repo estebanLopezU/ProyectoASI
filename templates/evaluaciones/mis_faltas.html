@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo %}Mis faltas{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-calendar-x me-2"></i>Mis faltas (RF-21 a RF-26)</h3>
+
+<div class="row g-3 mb-3">
+  {% for resumen in resumenes %}
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="mb-1">{{ resumen.oferta.materia }}</h6>
+          <p class="text-muted small mb-1">{{ resumen.oferta.periodo }} · {{ resumen.total_sesiones }} sesiones</p>
+          <p class="mb-1">
+            <span class="semaforo-{{ resumen.riesgo }}">{{ resumen.porcentaje }}%</span>
+            de inasistencia ({{ resumen.faltas }} faltas)
+          </p>
+          <small class="text-muted">{{ resumen.get_riesgo_display }}</small>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12"><div class="alert alert-secondary mb-0">No tiene sessiones registradas.</div></div>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover tabla-compacta mb-0">
+      <thead class="table-light">
+        <tr><th>Fecha</th><th>Materia</th><th>Tema</th><th>Motivo</th>
+            <th>Estado</th><th>Evidencia</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        {% for falta in faltas %}
+          <tr>
+            <td>{{ falta.sesion.fecha|date:"d/m/Y" }}</td>
+            <td>{{ falta.materia }}</td>
+            <td class="small">{{ falta.sesion.tema|default:"—" }}</td>
+            <td class="small">{{ falta.motivo|default:"—" }}</td>
+            <td>
+              <span class="badge
+                {% if falta.estado == 'JUSTIFICADA' %}bg-success
+                {% elif falta.estado == 'RECHAZADA' %}bg-danger
+                {% else %}bg-warning text-dark{% endif %}">{{ falta.get_estado_display }}</span>
+            </td>
+            <td>{% if falta.evidencia %}<a href="{{ falta.evidencia.url }}" target="_blank">Ver</a>{% else %}—{% endif %}</td>
+            <td>
+              {% if falta.estado != 'JUSTIFICADA' %}
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'evaluaciones:justificar' falta.pk %}">Justificar</a>
+              {% else %}<span class="text-muted small">—</span>{% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="text-center text-muted py-4">No tiene faltas registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="alert alert-info small mt-3 mb-0">
+  El umbral de inasistencia del departamento es del 20% (RN-08). Al superarlo se genera
+  alerta al estudiante, al docente y a secretaría.
+</div>
+{% endblock %}

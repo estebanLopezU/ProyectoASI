@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Responder evaluación{% endblock %}
+{% block contenido %}
+<h3 class="mb-1"><i class="bi bi-star me-2"></i>Evaluar a {{ invitacion.docente.get_full_name|default:invitacion.docente.username }}</h3>
+<p class="text-muted">{{ invitacion.materia }} · {{ invitacion.periodo.nombre }}</p>
+<div class="alert alert-secondary small">
+  Su identidad no se registra con las respuestas (RN-05). Escala: 1 = muy deficiente, 5 = excelente.
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-4">
+              <label class="form-label fw-semibold">{{ field.label }}</label>
+              {% if field.name == 'comentario' %}
+                {{ field }}
+              {% else %}
+                <div class="d-flex gap-3">
+                  {% for radio in field %}
+                    <div class="form-check form-check-inline">
+                      {{ radio.tag }} <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary">Enviar evaluación anónima</button>
+          <a class="btn btn-outline-secondary" href="{% url 'evaluaciones:mis_invitaciones' %}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

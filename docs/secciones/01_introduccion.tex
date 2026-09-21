@@ -1,0 +1,267 @@
+% =====================================================================
+% CAPÍTULO 1: INTRODUCCIÓN Y PLANTEAMIENTO DEL PROBLEMA
+% =====================================================================
+\chapter{Introducción y Planteamiento del Problema}
+\label{ch:introduccion}
+
+\section{Contexto Institucional}
+
+El \ac{DIC} es la unidad académica responsable de la formación profesional en las
+áreas de informática, computación, desarrollo de software y tecnologías de la
+información. Su operación diaria involucra cuatro actores fundamentales:
+
+\begin{itemize}[leftmargin=1.4cm, itemsep=4pt]
+  \item \textbf{Estudiantes:} demandan cupos, consultan horarios, califican
+        docentes, reportan faltas y presentan quejas o sugerencias.
+  \item \textbf{Docentes:} administran materias, registran asistencia y faltas,
+        se comunican con estudiantes y responden evaluaciones.
+  \item \textbf{Secretaría:} recibe, canaliza y da seguimiento a solicitudes,
+        quejas y sugerencias; coordina la comunicación entre las partes.
+  \item \textbf{Departamento (Dirección/Administración):} verifica resultados,
+        analiza información y toma decisiones académicas.
+\end{itemize}
+
+A pesar de la naturaleza tecnológica del departamento, sus procesos
+administrativos y académicos no cuentan con un sistema integrado que articule
+estos actores, lo cual genera reprocesos, demoras y pérdida de información.
+
+\section{Descripción del Problema}
+
+\begin{cajaProblema}[Problema central]
+El \ac{DIC} carece de un mecanismo unificado, trazable y analítico para gestionar
+la comunicación, las solicitudes y las evaluaciones entre estudiantes, docentes,
+secretaría y dirección, lo que provoca demoras en la respuesta, evaluaciones
+incompletas, quejas sin seguimiento y decisiones tomadas sin evidencia.
+\end{cajaProblema}
+
+A partir del levantamiento inicial de necesidades se identificaron los siguientes
+problemas específicos:
+
+\begin{enumerate}[leftmargin=1.4cm, itemsep=5pt]
+  \item \textbf{Solicitud de cupos.} El proceso se realiza de forma manual o por
+        canales informales (correo, mensajería, presencial), sin control de
+        disponibilidad en tiempo real ni criterios de priorización transparentes.
+
+  \item \textbf{Creación y edición de materias.} Las materias nuevas o sus
+        modificaciones (contenido, prerrequisitos, créditos, horarios) no siguen
+        un flujo formal de solicitud--aprobación--publicación.
+
+  \item \textbf{Comunicación estudiante $\rightarrow$ docente.} No existe un canal
+        institucional que garantice que el mensaje llegue, sea leído y tenga
+        respuesta dentro de un plazo razonable.
+
+  \item \textbf{Comunicación docente $\rightarrow$ estudiante.} Las notificaciones
+        sobre faltas, cambios de horario o novedades académicas dependen de
+        medios externos y no quedan registradas.
+
+  \item \textbf{Registro y notificación de faltas.} Las faltas se registran de
+        forma tardía y el estudiante se entera cuando el acumulado ya afecta su
+        situación académica.
+
+  \item \textbf{Evaluación de docentes por estudiantes.} La evaluación no se
+        aplica a tiempo, la participación es baja y los resultados se consolidan
+        tarde, cuando ya no permiten retroalimentación oportuna.
+
+  \item \textbf{Quejas y sugerencias.} Se reciben por canales dispersos, sin
+        categorización, sin responsable asignado y sin trazabilidad de estado.
+
+  \item \textbf{Efectividad de la secretaría.} La secretaría actúa como cuello de
+        botella: recibe las quejas y solicitudes, pero no cuenta con herramientas
+        para priorizar, delegar y comunicarse formalmente con el docente.
+
+  \item \textbf{Verificación de resultados.} La secretaría y el departamento no
+        disponen de tableros que les permitan verificar resultados, quejas y
+        evaluaciones de forma consolidada.
+
+  \item \textbf{Asignación de horarios.} Los horarios se construyen sin conocer
+        las preferencias reales de los estudiantes, generando baja asistencia y
+        conflictos de disponibilidad.
+
+  \item \textbf{Ausencia de analítica.} No se explotan los datos históricos para
+        anticipar saturación de cupos, docentes con bajo desempeño o patrones de
+        quejas recurrentes.
+\end{enumerate}
+
+\section{Formulación del Problema}
+
+\begin{cajaNota}[Pregunta de investigación principal]
+¿Cómo puede un sistema integrado de gestión, comunicación y analítica de datos
+mejorar la oportunidad, la trazabilidad y la calidad de las decisiones en el
+\ac{DIC}?
+\end{cajaNota}
+
+De la pregunta principal se derivan las siguientes preguntas específicas:
+
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item ¿Cuáles son los procesos críticos del \ac{DIC} que presentan mayor
+        demora y menor trazabilidad?
+  \item ¿Qué arquitectura de información permite unificar la comunicación entre
+        estudiantes, docentes y secretaría sin duplicar canales?
+  \item ¿Cómo diseñar un mecanismo de evaluación docente que garantice el
+        \textbf{100\%} de aplicación dentro del periodo?
+  \item ¿Qué variables predicen la preferencia de horarios de los estudiantes y
+        cómo pueden usarse para optimizar la programación académica?
+  \item ¿Qué modelo analítico permite detectar anomalías (quejas recurrentes,
+        cupos saturados, docentes con baja evaluación) y generar soluciones
+        rápidas accionables?
+  \item ¿Cómo verificar la efectividad de las acciones tomadas por la secretaría
+        y el departamento?
+\end{itemize}
+
+\section{Justificación}
+
+\subsection{Justificación académica}
+Un departamento de informática debe ser el primer ejemplo de digitalización
+institucional. Diseñar y documentar este sistema constituye un caso de estudio
+aplicado sobre arquitectura de software, modelado \ac{UML} e ingeniería de datos.
+
+\subsection{Justificación operativa}
+La automatización de solicitudes de cupos, la edición de materias, el registro
+de faltas y la gestión de quejas reduce el trabajo manual de la secretaría,
+elimina el retrabajo y libera tiempo para actividades de mayor valor.
+
+\subsection{Justificación estratégica}
+La incorporación de analítica de datos y de un algoritmo de soluciones rápidas
+convierte la operación cotidiana en información accionable: permite anticipar
+problemas, priorizar intervenciones y medir el impacto de las decisiones.
+
+\subsection{Justificación social}
+Un canal formal, trazable y confidencial para quejas y sugerencias mejora la
+convivencia académica, protege al estudiante y ofrece al docente
+retroalimentación oportuna y justa.
+
+\section{Objetivos}
+
+\subsection{Objetivo general}
+\begin{cajaObjetivo}[Objetivo general]
+Diseñar la documentación metodológica, funcional y de modelado del \ac{SGDIC},
+que integre la gestión de cupos, materias, comunicación, faltas, evaluación
+docente, quejas y sugerencias, junto con un componente de analítica de datos que
+genere soluciones rápidas y verificables para el \ac{DIC}.
+\end{cajaObjetivo}
+
+\subsection{Objetivos específicos}
+\begin{enumerate}[leftmargin=1.4cm, itemsep=4pt]
+  \item Documentar el problema y los procesos actuales del \ac{DIC} mediante
+        técnicas de investigación cualitativa y cuantitativa.
+  \item Definir la misión, visión, valores y objetivos estratégicos del sistema.
+  \item Especificar los requerimientos funcionales y no funcionales por actor.
+  \item Modelar el sistema mediante diagramas \ac{UML}: casos de uso, clases,
+        secuencia, actividades y estados.
+  \item Diseñar el mecanismo de evaluación docente con control de plazos que
+        garantice su aplicación a tiempo.
+  \item Diseñar el módulo de cuestionarios de materias y horarios, y el modelo de
+        preferencias por probabilidad.
+  \item Proponer el algoritmo de soluciones rápidas basado en analítica de datos.
+  \item Definir el modelo de verificación de resultados para la secretaría y el
+        departamento.
+  \item Establecer el cronograma, los riesgos y los indicadores de éxito.
+\end{enumerate}
+
+\section{Alcance y Delimitaciones}
+
+\subsection{Alcance}
+El proyecto cubre el análisis, la metodología de investigación, la especificación
+de requerimientos y el modelado completo del sistema, así como la definición del
+algoritmo analítico y del modelo de verificación institucional. Incluye:
+
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item Los cuatro actores: estudiante, docente, secretaría y departamento.
+  \item Los once procesos problemáticos identificados en la sección anterior.
+  \item Los diagramas \ac{UML} de casos de uso, clases, secuencia, actividades y
+        estados, embebidos en este documento.
+  \item La especificación del algoritmo de soluciones rápidas y las métricas.
+\end{itemize}
+
+\subsection{Delimitaciones}
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item No se incluye la implementación completa del sistema productivo, sino su
+        documentación y modelado.
+  \item El análisis se limita al \ac{DIC}; otras unidades académicas podrían
+        requerir adaptaciones.
+  \item Los datos usados en los ejemplos son sintéticos y anonimizados, en
+        cumplimiento de las normas de protección de datos personales (\ac{PII}).
+  \item La integración con el sistema central de la universidad se especifica a
+        nivel de interfaz (\ac{API} \ac{REST}), sin detallar su implementación.
+\end{itemize}
+
+\section{Hipótesis}
+
+\begin{enumerate}[leftmargin=1.4cm, itemsep=4pt]
+  \item \textbf{H1.} Un canal unificado de comunicación reduce en al menos
+        $60\%$ el tiempo de respuesta a solicitudes y mensajes respecto al
+        proceso manual actual.
+  \item \textbf{H2.} Un mecanismo de evaluación con recordatorios automáticos,
+        plazos visibles e incentivos incrementa la tasa de respuesta docente
+        a más del $90\%$ dentro del periodo.
+  \item \textbf{H3.} Un modelo de preferencias por probabilidad sobre los
+        cuestionarios de horarios permite asignar horarios con mayor nivel de
+        aceptación por parte de los estudiantes.
+  \item \textbf{H4.} Un algoritmo de priorización basado en analítica reduce el
+        tiempo de resolución de quejas críticas y mejora la percepción de
+        efectividad de la secretaría.
+  \item \textbf{H5.} La trazabilidad completa (estado, responsable, fechas)
+        aumenta la confianza institucional y la participación en los canales
+        formales.
+\end{enumerate}
+
+\section{Metodología Resumida}
+
+La investigación se aborda con un enfoque \textbf{mixto} (cualitativo y
+cuantitativo) y un diseño de \textbf{investigación aplicada} complementado con el
+ciclo \ac{CRISP-DM} para el componente de analítica de datos. El detalle completo
+se presenta en el Capítulo~\ref{ch:metodologia}.
+
+\section{Estructura del Documento}
+
+\begin{table}[H]
+\centering
+\caption{Estructura de la documentación}
+\label{tab:estructura}
+\begin{tabularx}{\textwidth}{@{}c l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Cap.} & \textbf{Título} & \textbf{Contenido principal} \\
+\midrule
+1 & Introducción y planteamiento del problema &
+    Contexto, problema, preguntas, justificación, objetivos, alcance, hipótesis. \\
+2 & Metodología de investigación &
+    Enfoque mixto, diseño, población, instrumentos, CRISP-DM, validez y ética. \\
+3 & Misión, visión y objetivos &
+    Misión, visión, valores, objetivos estratégicos, \ac{KPI} y mapa estratégico. \\
+4 & Requerimientos &
+    Actores, requerimientos funcionales y no funcionales, reglas de negocio. \\
+5 & Modelado \ac{UML} &
+    Casos de uso, clases, secuencia, actividades y estados (diagramas embebidos). \\
+6 & Algoritmo de soluciones rápidas &
+    Analítica de datos, priorización, predicción de horarios, verificación. \\
+7 & Planificación &
+    Cronograma, recursos, riesgos, indicadores y conclusiones. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Glosario de Términos del Dominio}
+
+\begin{table}[H]
+\centering
+\caption{Glosario del dominio académico}
+\label{tab:glosario}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Término} & \textbf{Definición} \\
+\midrule
+Cupo & Plaza disponible de un estudiante en una materia para un periodo académico. \\
+Materia & Unidad curricular con código, créditos, prerrequisitos y horario. \\
+Falta & Inasistencia de un estudiante a una sesión de clase programada. \\
+Queja & Manifestación formal de insatisfacción sobre un servicio o persona. \\
+Sugerencia & Propuesta de mejora no vinculada a una inconformidad. \\
+Evaluación docente & Instrumento mediante el cual el estudiante valora el desempeño. \\
+Cuestionario de horario & Instrumento que captura preferencias y disponibilidad. \\
+Solución rápida & Recomendación accionable generada por el motor analítico. \\
+Verificación & Contraste de resultados, quejas y evaluaciones por secretaría y dirección. \\
+Trazabilidad & Conocer el estado, responsable e historial de un caso. \\
+\bottomrule
+\end{tabularx}
+\end{table}

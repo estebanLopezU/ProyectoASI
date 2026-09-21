@@ -1,0 +1,27 @@
+                      Departamento de Informática y Computación                                                                          39
+                                             SGDIC Ů Sistema de Gestión Departamental
+                                                               Gestión Académica
+                                                                   ≪include≫                          Evaluación
+                                                       Solicitar cupos      Crear/editar           docente a tiempo
+                                                                              materias
+                         Estudiante                   Registrar faltas     Cuestionario de             VeriĄcar
+                                                                         horarios y materias           resultados
+                                                               CaliĄcar docentes                    Ver tableros de   Secretaría
+                                                                                                       analítica
+                                                       Comunicación y Retroalimentación                  Analítica
+                                                                                                         y
+                           Docente                     Enviar mensaje      Enviar mensaje         Generar soluciones
+                                                    estudiante → docendotecente → estudiante            rápidas
+                                                                                                         eriĄcación
+                                                                                                         V
+                                                           Quejas y         NotiĄcaciones
+                                                         sugerencias         automáticas               Optimizar
+                                                                                                         aluación,
+                                                                                                        horarios
+                                                                                                         Ev        Departamento
+                                                                                                       Gestionar (Administrador)
+                                                                                                    actas y reportes
+                                                                                                      Administrar
+                                                                                                        catálogo
+                                                  Figura 5.1: Diagrama de casos de uso del SGDIC
+                                                    Documentación de Investigación y PlaniĄcación

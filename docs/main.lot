@@ -1,0 +1,51 @@
+\babel@toc {spanish}{}\relax 
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces Estructura de la documentación}}{7}{table.caption.6}%
+\contentsline {table}{\numberline {1.2}{\ignorespaces Glosario del dominio académico}}{8}{table.caption.7}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Componentes del enfoque mixto}}{9}{table.caption.8}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Fases de la metodología de investigación}}{12}{table.caption.10}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Distribución de la muestra por actor}}{13}{table.caption.11}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces Técnicas e instrumentos de recolección de datos}}{14}{table.caption.12}%
+\contentsline {table}{\numberline {2.5}{\ignorespaces Escala Likert utilizada en los cuestionarios}}{14}{table.caption.13}%
+\contentsline {table}{\numberline {2.6}{\ignorespaces Operacionalización de variables}}{15}{table.caption.14}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces Aplicación de \ac {CRISP-DM} al \ac {SGDIC}}}{16}{table.caption.16}%
+\contentsline {table}{\numberline {2.8}{\ignorespaces Técnicas de análisis por tipo de dato}}{18}{table.caption.17}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Componentes de la misión}}{20}{table.caption.18}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Metas cuantificables asociadas a la visión}}{21}{table.caption.19}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Valores y su manifestación en el sistema}}{21}{table.caption.20}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces Indicadores clave de desempeño (\ac {KPI})}}{23}{table.caption.21}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Beneficios esperados por actor involucrado}}{24}{table.caption.23}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Definición de actores del \ac {SGDIC}}}{25}{table.caption.24}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Requerimientos funcionales --- autenticación y roles}}{26}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Requerimientos funcionales --- gestión de cupos}}{26}{table.4.3}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Requerimientos funcionales --- materias}}{27}{table.4.4}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Requerimientos funcionales --- mensajería}}{28}{table.4.5}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Requerimientos funcionales --- registro de faltas}}{28}{table.4.6}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Requerimientos funcionales --- evaluación docente}}{29}{table.4.7}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Requerimientos funcionales --- quejas y sugerencias}}{30}{table.4.8}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Requerimientos funcionales --- cuestionarios}}{31}{table.4.9}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Requerimientos funcionales --- analítica}}{32}{table.4.10}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Requerimientos no funcionales}}{33}{table.caption.25}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Reglas de negocio del \ac {DIC}}}{34}{table.caption.26}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Trazabilidad entre objetivos estratégicos y requerimientos}}{35}{table.caption.27}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Especificación del caso de uso: Solicitar cupo (UC1)}}{38}{table.caption.29}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Especificación del caso de uso: Gestión de queja o sugerencia (UC8)}}{38}{table.caption.30}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Especificación del caso de uso: Evaluación docente a tiempo (UC10)}}{39}{table.caption.31}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Descripción de los componentes de la arquitectura}}{46}{table.caption.38}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Inventario de diagramas \ac {UML} del documento}}{46}{table.caption.39}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Etapas del algoritmo de soluciones rápidas}}{49}{table.caption.41}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Modelos analíticos aplicados por tipo de problema}}{52}{table.caption.42}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Catálogo de soluciones rápidas por anomalía detectada}}{53}{table.caption.43}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Componentes del tablero de verificación}}{54}{table.caption.45}%
+\contentsline {table}{\numberline {6.5}{\ignorespaces Métricas de desempeño del motor analítico}}{55}{table.caption.46}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {7.1}{\ignorespaces Riesgos, impacto y plan de mitigación}}{57}{table.caption.48}%
+\contentsline {table}{\numberline {7.2}{\ignorespaces Recursos humanos, técnicos y de infraestructura}}{58}{table.caption.49}%
+\contentsline {table}{\numberline {7.3}{\ignorespaces Presupuesto estimado del proyecto}}{58}{table.caption.50}%
+\contentsline {table}{\numberline {7.4}{\ignorespaces Criterios de aceptación del proyecto}}{59}{table.caption.51}%
+\contentsline {table}{\numberline {7.5}{\ignorespaces Líneas de trabajo futuro}}{62}{table.caption.52}%

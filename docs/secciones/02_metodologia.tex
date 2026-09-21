@@ -1,0 +1,416 @@
+% =====================================================================
+% CAPÍTULO 2: METODOLOGÍA DE INVESTIGACIÓN
+% =====================================================================
+\chapter{Metodología de Investigación}
+\label{ch:metodologia}
+
+\section{Enfoque de Investigación}
+
+La presente investigación adopta un enfoque \textbf{mixto} (cualitativo y
+cuantitativo) con alcance \textbf{descriptivo, explicativo y propositivo}. Se
+eligió este enfoque porque el problema del \ac{DIC} combina dimensiones humanas
+(percepciones, comunicación, conflictos) con dimensiones medibles (tiempos de
+respuesta, tasas de respuesta, frecuencias de quejas, disponibilidad horaria).
+
+\begin{table}[H]
+\centering
+\caption{Componentes del enfoque mixto}
+\label{tab:enfoque-mixto}
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Dimensión} & \textbf{Enfoque cualitativo} & \textbf{Enfoque cuantitativo} \\
+\midrule
+Propósito & Comprender el problema y sus causas & Medir magnitud, frecuencia e impacto \\
+Técnicas & Entrevistas, observación, análisis documental & Encuestas, registro de tiempos, analítica \\
+Instrumentos & Guion de entrevista, ficha de observación & Cuestionario estructurado, \ac{ETL} de logs \\
+Muestra & 8--12 informantes clave & Muestreo probabilístico por estrato \\
+Análisis & Codificación temática & Estadística descriptiva e inferencial \\
+Resultado & Marco interpretativo del problema & Indicadores y modelos predictivos \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tipo y Diseño de Investigación}
+
+\subsection{Tipo}
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item \textbf{Investigación aplicada:} busca resolver un problema concreto del
+        \ac{DIC} mediante una solución tecnológica documentada.
+  \item \textbf{Estudio de caso:} el \ac{DIC} se analiza como unidad integral,
+        considerando sus procesos, actores y datos.
+  \item \textbf{Investigación--acción:} se iteran ciclos de diagnóstico, diseño,
+        validación y refinamiento con participación de los actores.
+\end{itemize}
+
+\subsection{Diseño}
+Se emplea un diseño \textbf{transversal} para el diagnóstico (una medición
+completa del estado actual) y \textbf{longitudinal} para la validación (mediciones
+del antes y después de la implementación de los módulos).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.55cm and 1.1cm, every node/.style={font=\scriptsize}]
+
+\node[terminal] (inicio) {Inicio};
+\node[flujo, below=of inicio] (f1) {Diagnóstico del\\estado actual};
+\node[flujo, below=of f1] (f2) {Recolección cualitativa\\y cuantitativa};
+\node[flujo, below=of f2] (f3) {Análisis y\\codificación};
+\node[decision, below=of f3, yshift=-0.35cm] (d1) {¿Problema\\validado?};
+\node[flujo, left=of d1, xshift=-0.9cm] (f4) {Ampliar\\muestra};
+\node[flujo, below=of d1, yshift=-0.5cm] (f5) {Diseño de\\la solución};
+\node[flujo, below=of f5] (f6) {Prototipo y\\validación};
+\node[decision, below=of f6, yshift=-0.35cm] (d2) {¿Hipótesis\\aceptada?};
+\node[flujo, right=of d2, xshift=0.9cm] (f7) {Refinar\\iterativamente};
+\node[terminal, below=of d2, yshift=-0.5cm] (fin) {Documentación\\final};
+
+\draw[flecha] (inicio) -- (f1);
+\draw[flecha] (f1) -- (f2);
+\draw[flecha] (f2) -- (f3);
+\draw[flecha] (f3) -- (d1);
+\draw[flecha] (d1) -- node[above, font=\tiny]{No} (f4);
+\draw[flecha] (f4) |- (f2);
+\draw[flecha] (d1) -- node[right, font=\tiny]{Sí} (f5);
+\draw[flecha] (f5) -- (f6);
+\draw[flecha] (f6) -- (d2);
+\draw[flecha] (d2) -- node[above, font=\tiny]{No} (f7);
+\draw[flecha] (f7) |- (f5);
+\draw[flecha] (d2) -- node[right, font=\tiny]{Sí} (fin);
+
+\end{tikzpicture}
+\caption{Ciclo metodológico de investigación--acción aplicado al \ac{DIC}}
+\label{fig:ciclo-metodologico}
+\end{figure}
+
+\section{Fases de la Metodología}
+
+La metodología se estructura en ocho fases, cada una con entradas, actividades y
+entregables explícitos.
+
+\begin{table}[H]
+\centering
+\caption{Fases de la metodología de investigación}
+\label{tab:fases}
+\small
+\begin{tabularx}{\textwidth}{@{}c l X l@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Fase} & \textbf{Nombre} & \textbf{Actividades principales} & \textbf{Duración} \\
+\midrule
+F1 & Definición del problema &
+    Identificación de síntomas, delimitación del alcance, formulación de preguntas
+    e hipótesis. & 2 sem. \\
+F2 & Revisión de literatura &
+    Búsqueda de antecedentes en gestión académica, analítica educativa, sistemas
+    de quejas y evaluación docente. & 3 sem. \\
+F3 & Diseño metodológico &
+    Selección de técnicas, definición de población y muestra, construcción de
+    instrumentos. & 2 sem. \\
+F4 & Recolección de datos &
+    Entrevistas, encuestas, observación de procesos, extracción de datos
+    históricos del \ac{DIC}. & 4 sem. \\
+F5 & Análisis de datos &
+    Transcripción y codificación, estadística descriptiva, análisis de
+    correlaciones, preparación del dataset. & 3 sem. \\
+F6 & Diseño de la solución &
+    Arquitectura, modelado \ac{UML}, especificación de requerimientos y del
+    algoritmo de soluciones rápidas. & 4 sem. \\
+F7 & Validación &
+    Validación de instrumentos, validación del modelo con expertos, prueba piloto
+    del prototipo. & 3 sem. \\
+F8 & Documentación y difusión &
+    Redacción del informe, tableros de resultados, socialización con la comunidad
+    académica. & 3 sem. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Población y Muestra}
+
+\subsection{Población}
+La población objeto de estudio está conformada por los integrantes del \ac{DIC}:
+
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item \textbf{Estudiantes:} matriculados en materias del departamento en el
+        periodo académico vigente.
+  \item \textbf{Docentes:} adscritos al departamento.
+  \item \textbf{Personal de secretaría:} responsable de la atención de
+        solicitudes, quejas y sugerencias.
+  \item \textbf{Directivos:} dirección y coordinación académica del departamento.
+\end{itemize}
+
+\subsection{Tamaño de muestra}
+Para la encuesta a estudiantes se utiliza muestreo probabilístico estratificado
+por semestre, con un nivel de confianza del $95\%$ y un margen de error del $5\%$:
+
+\begin{equation}
+n = \frac{N \cdot Z^{2} \cdot p \cdot q}{e^{2}(N-1) + Z^{2} \cdot p \cdot q}
+\label{eq:muestra}
+\end{equation}
+
+donde $N$ es el tamaño de la población, $Z = 1.96$, $p = q = 0.5$ y
+$e = 0.05$. Para el resto de actores se emplea \textbf{muestreo no probabilístico
+por conveniencia}, dado el tamaño reducido de la población (docentes, secretaría
+y directivos).
+
+\begin{table}[H]
+\centering
+\caption{Distribución de la muestra por actor}
+\label{tab:muestra}
+\begin{tabularx}{\textwidth}{@{}l c c X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Actor} & \textbf{Población} & \textbf{Muestra} & \textbf{Técnica principal} \\
+\midrule
+Estudiantes & $N$ (variable) & $n$ calculado & Encuesta estructurada \\
+Docentes & 20--40 & 12--20 & Entrevista semiestructurada \\
+Secretaría & 2--4 & 2--4 & Entrevista + observación de procesos \\
+Directivos & 2--3 & 2--3 & Entrevista en profundidad \\
+Datos históricos & Registros del \ac{DIC} & Censo & Extracción y \ac{ETL} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Técnicas e Instrumentos de Recolección}
+
+\begin{table}[H]
+\centering
+\caption{Técnicas e instrumentos de recolección de datos}
+\label{tab:instrumentos}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.4cm} p{4.9cm} X@{}}
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{Técnica} & \textbf{Instrumento} & \textbf{Propósito} \\
+\midrule
+Encuesta & Cuestionario de 25 ítems (escala Likert 1--5) &
+    Medir percepción de tiempos, satisfacción con comunicación y utilidad percibida \\
+Entrevista semiestructurada & Guion de 15 preguntas &
+    Comprender causas del retraso, sobrecarga operativa y expectativas \\
+Observación no participante & Ficha de registro de procesos &
+    Cronometrar el flujo real de una solicitud de cupo y de una queja \\
+Análisis documental & Ficha de revisión normativa &
+    Identificar reglas de negocio y criterios de asignación vigentes \\
+Cuestionario de horarios & Formulario de disponibilidad y preferencia &
+    Capturar datos para el modelo probabilístico de horarios \\
+Extracción de datos & Consultas sobre registros históricos &
+    Construir el dataset para analítica de datos \\
+Grupo focal & Guion de discusión (6--8 estudiantes) &
+    Validar hallazgos y priorizar funcionalidades \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Escala de medición}
+Se emplea una escala Likert de cinco niveles para las variables perceptuales:
+
+\begin{table}[H]
+\centering
+\caption{Escala Likert utilizada en los cuestionarios}
+\label{tab:likert}
+\begin{tabular}{@{}c l@{}}
+\toprule
+\rowcolor{moradoClaro}
+\textbf{Valor} & \textbf{Significado} \\
+\midrule
+5 & Totalmente de acuerdo / Muy satisfecho \\
+4 & De acuerdo / Satisfecho \\
+3 & Neutral / Indiferente \\
+2 & En desacuerdo / Insatisfecho \\
+1 & Totalmente en desacuerdo / Muy insatisfecho \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Operacionalización de variables}
+\begin{table}[H]
+\centering
+\caption{Operacionalización de variables}
+\label{tab:variables}
+\small
+\begin{tabularx}{\textwidth}{@{}l l l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Variable} & \textbf{Tipo} & \textbf{Indicador} & \textbf{Instrumento} \\
+\midrule
+Tiempo de respuesta & Cuantitativa continua & Horas promedio & Observación, logs \\
+Tasa de respuesta docente & Cuantitativa discreta & Porcentaje & Registro del sistema \\
+Satisfacción comunicacional & Cualitativa ordinal & Índice 1--5 & Encuesta \\
+Frecuencia de quejas & Cuantitativa discreta & N.º por periodo & Registro del sistema \\
+Preferencia de horario & Cualitativa nominal & Probabilidad $P(h_i)$ & Cuestionario de horarios \\
+Desempeño docente & Cuantitativa continua & Puntaje 0--5 & Evaluación docente \\
+Efectividad secretaría & Cuantitativa continua & $\%$ casos resueltos & Tablero verificación \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Metodología CRISP-DM para la Analítica de Datos}
+
+Para el componente de analítica de datos y el algoritmo de soluciones rápidas se
+adopta el estándar \ac{CRISP-DM}, que organiza el trabajo de datos en seis fases
+iterativas.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  fase/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=6pt,
+    text=azulOscuro, align=center, font=\small\bfseries,
+    minimum width=3.2cm, minimum height=1.1cm, inner sep=4pt
+  },
+  node distance=0.7cm and 0.9cm
+]
+
+\node[fase] (f1) {1. Comprensión\\del negocio};
+\node[fase, right=of f1] (f2) {2. Comprensión\\de los datos};
+\node[fase, right=of f2] (f3) {3. Preparación\\de los datos};
+\node[fase, below=of f3] (f4) {4. Modelado};
+\node[fase, left=of f4] (f5) {5. Evaluación};
+\node[fase, left=of f5] (f6) {6. Despliegue};
+
+\draw[flecha] (f1) -- (f2);
+\draw[flecha] (f2) -- (f3);
+\draw[flecha] (f3) -- (f4);
+\draw[flecha] (f4) -- (f5);
+\draw[flecha] (f5) -- (f6);
+\draw[flecha] (f6) -- (f1);
+\draw[-{Stealth[length=2mm,width=1.4mm]}, thick, dashed, color=moradoUC, bend right=35]
+      (f4) to node[below, font=\tiny]{iterar} (f3);
+\draw[-{Stealth[length=2mm,width=1.4mm]}, thick, dashed, color=moradoUC, bend left=35]
+      (f5) to node[above, font=\tiny]{refinar} (f2);
+
+\end{tikzpicture}
+\caption{Ciclo \ac{CRISP-DM} adaptado a la analítica del \ac{SGDIC}}
+\label{fig:crispdm}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Aplicación de \ac{CRISP-DM} al \ac{SGDIC}}
+\label{tab:crispdm}
+\small
+\begin{tabularx}{\textwidth}{@{}c l X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Fase} & \textbf{Nombre} & \textbf{Aplicación concreta en el \ac{DIC}} \\
+\midrule
+1 & Comprensión del negocio &
+    Objetivos: reducir tiempos de respuesta, asegurar evaluación docente
+    oportuna, priorizar quejas. Definición de \ac{KPI}. \\
+2 & Comprensión de los datos &
+    Fuentes: registros de cupos, mensajes, faltas, evaluaciones, quejas,
+    cuestionarios de horarios. \\
+3 & Preparación de los datos &
+    Limpieza, normalización de fechas y categorías, anonimización de \ac{PII},
+    construcción de variables derivadas. \\
+4 & Modelado &
+    Modelos de clasificación de quejas, predicción de demanda de cupos,
+    probabilidad de preferencia de horario, detección de anomalías. \\
+5 & Evaluación &
+    Validación cruzada, matrices de confusión, comparación contra línea base,
+    revisión con expertos del departamento. \\
+6 & Despliegue &
+    Integración de las recomendaciones en el tablero de verificación y en el
+    motor de soluciones rápidas. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Validez y Confiabilidad}
+
+\subsection{Validez de contenido}
+Los instrumentos se someten a \textbf{juicio de expertos} (tres docentes con
+experiencia en metodología de investigación y dos directivos del \ac{DIC}), con
+una rúbrica de evaluación de claridad, pertinencia y suficiencia.
+
+\subsection{Validez de constructo}
+Se aplica \textbf{análisis factorial exploratorio} para verificar que los ítems
+del cuestionario agrupan las dimensiones previstas: comunicación, oportunidad,
+trazabilidad y satisfacción.
+
+\subsection{Confiabilidad}
+La consistencia interna se mide con el coeficiente \textbf{alfa de Cronbach}:
+
+\begin{equation}
+\alpha = \frac{k}{k-1}\left(1 - \frac{\sum_{i=1}^{k} \sigma^{2}_{i}}{\sigma^{2}_{T}}\right)
+\label{eq:cronbach}
+\end{equation}
+
+donde $k$ es el número de ítems, $\sigma^{2}_{i}$ la varianza de cada ítem y
+$\sigma^{2}_{T}$ la varianza total. Se considera aceptable un valor
+$\alpha \geq 0.70$.
+
+\subsection{Validez de la analítica}
+Para los modelos de datos se emplea \textbf{validación cruzada de $k$ particiones}
+($k=10$) y se reportan exactitud, precisión, exhaustividad y $F_1$:
+
+\begin{equation}
+F_1 = 2 \cdot \frac{\text{Precisión} \cdot \text{Exhaustividad}}
+{\text{Precisión} + \text{Exhaustividad}}
+\label{eq:f1}
+\end{equation}
+
+\section{Consideraciones Éticas}
+
+\begin{cajaNota}[Principios éticos del estudio]
+\begin{itemize}[leftmargin=1.2cm, itemsep=3pt]
+  \item \textbf{Consentimiento informado:} todos los participantes conocen el
+        propósito del estudio y autorizan su participación.
+  \item \textbf{Confidencialidad:} las respuestas de estudiantes sobre docentes
+        se anonimizan; ningún docente conoce la identidad de quien lo califica.
+  \item \textbf{No represalia:} se garantiza que reportar una queja o una
+        evaluación negativa no genere consecuencias académicas adversas.
+  \item \textbf{Minimización de datos:} solo se recolectan los datos necesarios
+        para cada objetivo declarado.
+  \item \textbf{Transparencia algorítmica:} los criterios del algoritmo de
+        priorización son públicos y auditables por la comunidad académica.
+  \item \textbf{Revisión institucional:} el protocolo se somete al comité de
+        ética o instancia equivalente de la facultad.
+\end{itemize}
+\end{cajaNota}
+
+\section{Análisis de Datos Previsto}
+
+\begin{table}[H]
+\centering
+\caption{Técnicas de análisis por tipo de dato}
+\label{tab:analisis}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.4cm} p{5.4cm} X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Tipo de dato} & \textbf{Técnica} & \textbf{Resultado esperado} \\
+\midrule
+Respuestas Likert & Estadística descriptiva (media, mediana, desviación) &
+    Índice de satisfacción por dimensión \\
+Comparación antes/después & Prueba $t$ para muestras relacionadas &
+    Significancia del cambio en tiempos de respuesta \\
+Datos categóricos de quejas & Tablas de contingencia, $\chi^{2}$ &
+    Asociación entre tipo de queja y área responsable \\
+Series temporales de cupos & Suavizado exponencial, ARIMA &
+    Pronóstico de demanda por materia \\
+Preferencias de horario & Frecuencias y probabilidad condicional &
+    $P(\text{horario} \mid \text{perfil del estudiante})$ \\
+Texto libre de quejas & PLN (bolsa de palabras) &
+    Categorización automática y temas recurrentes \\
+Registros de evaluación & Tendencia y control estadístico &
+    Detección de docentes con desempeño atípico \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Limitaciones Metodológicas}
+
+\begin{itemize}[leftmargin=1.4cm, itemsep=3pt]
+  \item \textbf{Sesgo de autoselección:} quienes responden encuestas pueden tener
+        opiniones más extremas que quienes no participan.
+  \item \textbf{Deseabilidad social:} los estudiantes podrían suavizar sus
+        evaluaciones por temor a represalias, mitigado con anonimato estricto.
+  \item \textbf{Datos históricos incompletos:} los registros previos pueden ser
+        fragmentarios, lo que obliga a imputar o descartar observaciones.
+  \item \textbf{Estacionalidad académica:} los patrones de quejas y demanda de
+        cupos varían según el calendario académico, lo que exige comparar
+        periodos equivalentes.
+  \item \textbf{Generalización:} los hallazgos describen el \ac{DIC} y no se
+        extrapolan automáticamente a otras unidades académicas.
+\end{itemize}

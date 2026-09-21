@@ -1,0 +1,407 @@
+% =====================================================================
+% CAPÍTULO 6: ALGORITMO DE SOLUCIONES RÁPIDAS Y ANALÍTICA DE DATOS
+% =====================================================================
+\chapter{Algoritmo de Soluciones Rápidas y Analítica de Datos}
+\label{ch:algoritmo}
+
+\section{Definición de Solución Rápida}
+
+\begin{cajaAlgoritmo}[Definición]
+Una \textbf{solución rápida} es una recomendación accionable, priorizada y
+trazable que el motor analítico del \ac{SGDIC} genera para resolver una
+situación detectada (saturación de cupos, queja recurrente, acumulación de
+inasistencia, desempeño docente atípico o conflicto de horarios), indicando
+\textbf{qué hacer, quién es el responsable, en qué plazo y con qué impacto
+esperado}.
+\end{cajaAlgoritmo}
+
+\section{Arquitectura del Motor Analítico}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.6cm and 0.8cm, every node/.style={font=\scriptsize}]
+
+\node[terminal] (datos) {Datos operativos del \ac{SGDIC}};
+\node[flujo, below=of datos] (etl) {1. Extracción y limpieza (\ac{ETL})};
+\node[flujo, below=of etl] (feat) {2. Ingeniería de variables};
+\node[flujo, below=of feat] (modelos) {3. Modelos analíticos};
+
+\node[flujo, below left=1.0cm and 0.5cm of modelos] (m1) {Clasificación\\de quejas};
+\node[flujo, below=1.0cm of modelos] (m2) {Predicción de\\demanda de cupos};
+\node[flujo, below right=1.0cm and 0.5cm of modelos] (m3) {Preferencia de\\horarios};
+
+\node[flujo, below=3.0cm of modelos] (prior) {4. Motor de priorización\\\scriptsize (impacto $\times$ urgencia $\div$ esfuerzo)};
+\node[flujo, below=of prior] (rec) {5. Generación de\\soluciones rápidas};
+\node[decision, below=of rec] (val) {¿Recomendación\\validada?};
+\node[flujo, right=1.6cm of val] (ajuste) {Ajustar\\parámetros};
+\node[terminal, below=of val] (tablero) {6. Tablero de\\verificación};
+
+\draw[flecha] (datos) -- (etl);
+\draw[flecha] (etl) -- (feat);
+\draw[flecha] (feat) -- (modelos);
+\draw[flecha] (modelos) -- (m1);
+\draw[flecha] (modelos) -- (m2);
+\draw[flecha] (modelos) -- (m3);
+\draw[flecha] (m1) -- (prior);
+\draw[flecha] (m2) -- (prior);
+\draw[flecha] (m3) -- (prior);
+\draw[flecha] (prior) -- (rec);
+\draw[flecha] (rec) -- (val);
+\draw[flecha] (val) -- node[right, font=\tiny]{Sí} (tablero);
+\draw[flecha] (val) -- node[above, font=\tiny]{No} (ajuste);
+\draw[flecha] (ajuste) |- (modelos);
+\draw[flecha] (tablero.east) -- ++(1.6,0) |- node[near start, right, font=\tiny]{retroalimentación} (feat.east);
+
+\end{tikzpicture}%
+}
+\caption{Arquitectura del motor analítico y de soluciones rápidas}
+\label{fig:motor-analitico}
+\end{figure}
+
+\section{Descripción del Algoritmo}
+
+\subsection{Vista general}
+El algoritmo consta de seis etapas que transforman datos operativos en
+recomendaciones priorizadas.
+
+\begin{table}[H]
+\centering
+\caption{Etapas del algoritmo de soluciones rápidas}
+\label{tab:etapas-algoritmo}
+\small
+\begin{tabularx}{\textwidth}{@{}c l X@{}}
+\toprule
+\rowcolor{moradoClaro}
+\textbf{Etapa} & \textbf{Nombre} & \textbf{Operación} \\
+\midrule
+1 & Ingesta y limpieza &
+    Consolidación de datos de cupos, mensajes, faltas, evaluaciones, quejas y
+    cuestionarios; eliminación de duplicados y normalización. \\
+2 & Ingeniería de variables &
+    Cálculo de variables derivadas: tasa de ocupación, tiempo medio de
+    respuesta, índice de inasistencia, sentimiento de quejas, frecuencia
+    histórica de preferencia horaria. \\
+3 & Modelado &
+    Ejecución de modelos de clasificación, regresión y probabilidad según el
+    tipo de problema detectado. \\
+4 & Detección de anomalías &
+    Identificación de desviaciones significativas respecto al comportamiento
+    histórico esperado. \\
+5 & Priorización &
+    Ordenamiento de hallazgos según impacto potencial, urgencia y esfuerzo de
+    implementación. \\
+6 & Generación y despliegue &
+    Construcción del texto de la recomendación, asignación de responsable,
+    plazo sugerido y publicación en el tablero. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Pseudocódigo del algoritmo}
+
+\begin{lstlisting}[language=Python, caption={Algoritmo de generación de soluciones rápidas}, label={lst:algoritmo}]
+ALGORITMO GenerarSolucionesRapidas(periodo):
+
+    # Etapa 1: ingesta y limpieza
+    D <- ExtraerDatos(periodo)
+    D <- LimpiarYNormalizar(D)
+    D <- Anonimizar(D)
+
+    # Etapa 2: ingenieria de variables
+    V <- CalcularVariables(D)
+
+    # Etapa 3: modelado
+    M_quejas  <- ModeloClasificacionQuejas(V.quejas)
+    M_demanda <- ModeloPrediccionCupos(V.cupos)
+    M_horario <- ModeloProbabilidadHorario(V.cuestionarios)
+    M_desemp  <- ModeloDesempenoDocente(V.evaluaciones)
+
+    # Etapa 4: deteccion de anomalias
+    A <- []
+    PARA CADA materia m EN V.materias HACER
+        SI tasa_ocupacion(m) > 0.90 ENTONCES
+            A.agregar(Anomalia("SATURACION_CUPOS", m))
+        FIN SI
+    FIN PARA
+
+    PARA CADA docente d EN V.docentes HACER
+        SI puntaje(d) < umbral_bajo(d) ENTONCES
+            A.agregar(Anomalia("DESEMPENO_ATIPICO", d))
+        FIN SI
+    FIN PARA
+
+    PARA CADA patron p EN DetectarPatrones(V.quejas) HACER
+        SI p.frecuencia > umbral_frecuencia ENTONCES
+            A.agregar(Anomalia("QUEJA_RECURRENTE", p))
+        FIN SI
+    FIN PARA
+
+    # Etapa 5: priorizacion
+    PARA CADA anomalia a EN A HACER
+        a.esfuerzo <- EstimarEsfuerzo(a)
+        a.score    <- (EstimarImpacto(a) * EstimarUrgencia(a))
+                      / (a.esfuerzo + EPSILON)
+    FIN PARA
+    A <- OrdenarDescendente(A, por=a.score)
+
+    # Etapa 6: generacion de recomendaciones
+    R <- []
+    PARA CADA anomalia a EN A HACER
+        r <- ConstruirRecomendacion(a)
+        r.responsable <- AsignarResponsable(a)
+        r.plazo       <- CalcularPlazo(EstimarUrgencia(a))
+        r.confianza   <- CalcularConfianza(a)
+        r.estado      <- "PENDIENTE"
+        R.agregar(r)
+    FIN PARA
+
+    PublicarEnTablero(R)
+    RETORNAR R
+
+FIN ALGORITMO
+\end{lstlisting}
+
+\subsection{Fórmula de priorización}
+
+La puntuación de prioridad de cada recomendación se calcula como:
+
+\begin{equation}
+\text{Score} = \frac{I \cdot U}{E + \varepsilon}
+\label{eq:score}
+\end{equation}
+
+donde $I \in [1,5]$ es el impacto estimado, $U \in [1,5]$ la urgencia,
+$E \in [1,5]$ el esfuerzo de implementación y $\varepsilon$ un valor pequeño
+que evita la división por cero. Este criterio favorece las acciones de alto
+impacto y alta urgencia con bajo esfuerzo, es decir, las soluciones rápidas
+propiamente dichas.
+
+\subsection{Modelo de preferencia de horarios por probabilidad}
+
+El módulo de cuestionarios de materias y horarios alimenta el modelo
+probabilístico de preferencia horaria. Para cada combinación de perfil de
+estudiante $p$ y franja horaria $h_i$, se estima la probabilidad:
+
+\begin{equation}
+P(h_i \mid p) =
+\frac{P(p \mid h_i) \cdot P(h_i)}{P(p)}
+= \frac{N_{p,h_i} + \alpha}{N_{h_i} + \alpha \cdot |P|}
+\label{eq:prob-horario}
+\end{equation}
+
+donde $N_{p,h_i}$ es el número de estudiantes del perfil $p$ que prefirieron la
+franja $h_i$, $N_{h_i}$ el total de preferencias de esa franja, $|P|$ el número
+de perfiles y $\alpha$ un parámetro de suavizado de Laplace que evita
+probabilidades nulas para franjas sin observaciones.
+
+La preferencia esperada total de una franja se calcula como el promedio
+ponderado sobre los perfiles de la población objetivo:
+
+\begin{equation}
+P(h_i) = \sum_{p \in P} P(h_i \mid p) \cdot w_p
+\label{eq:prob-total}
+\end{equation}
+
+donde $w_p$ es el peso relativo del perfil $p$ en la matrícula. La asignación de
+horario se resuelve como un problema de optimización que maximiza la aceptación
+esperada:
+
+\begin{equation}
+\max \sum_{i=1}^{n} P(h_i) \cdot x_i
+\quad \text{sujeto a} \quad \sum_{i=1}^{n} x_i = 1, \; x_i \in \{0,1\}
+\label{eq:optimizacion}
+\end{equation}
+
+donde $x_i = 1$ indica que la franja $h_i$ es seleccionada para la materia.
+
+\section{Modelos Analíticos por Tipo de Problema}
+
+\begin{table}[H]
+\centering
+\caption{Modelos analíticos aplicados por tipo de problema}
+\label{tab:modelos}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.2cm} p{6.6cm} X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Problema} & \textbf{Modelo} & \textbf{Salida} \\
+\midrule
+Clasificación de quejas &
+  Clasificación supervisada (Naive Bayes / \ac{KNN}) sobre el texto de la queja &
+  Categoría, área responsable y urgencia sugerida \\
+Predicción de demanda de cupos &
+  Series temporales (suavizado exponencial / ARIMA) por materia y periodo &
+  Demanda esperada y riesgo de saturación \\
+Preferencia de horarios &
+  Probabilidad condicional con suavizado de Laplace &
+  $P(h_i \mid p)$ y ranking de franjas preferidas \\
+Desempeño docente atípico &
+  Control estadístico de procesos ($\mu \pm 2\sigma$) &
+  Docentes con puntaje fuera del rango esperado \\
+Reincidencia de inasistencia &
+  Regresión logística sobre historial de faltas &
+  Probabilidad de superar el umbral permitido \\
+Tiempo de respuesta &
+  Estadística descriptiva y percentiles &
+  Materias y actores con tiempos sobre el objetivo \\
+Temas recurrentes en quejas &
+  Procesamiento de lenguaje natural (frecuencia de términos) &
+  Temas emergentes y su evolución temporal \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Reglas de Generación de Soluciones Rápidas}
+
+\begin{table}[H]
+\centering
+\caption{Catálogo de soluciones rápidas por anomalía detectada}
+\label{tab:catalogo-soluciones}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.2cm} X p{3.0cm}@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Anomalía} & \textbf{Solución rápida sugerida} & \textbf{Responsable} \\
+\midrule
+Saturación de cupos ($>90\%$) &
+  Abrir una sección adicional o ampliar el cupo máximo; notificar a los
+  estudiantes en lista de espera con horario alternativo. & Departamento \\
+Demanda proyectada creciente &
+  Planificar apertura de sección antes del inicio del periodo de matrícula. &
+  Departamento \\
+Queja recurrente en una materia &
+  Reunión formal con el docente, revisión del plan de asignatura y plan de
+  mejoramiento con seguimiento quincenal. & Secretaría + Departamento \\
+Queja crítica sin atender ($>3$ días) &
+  Escalamiento inmediato a dirección y notificación al responsable con plazo
+  de 24 horas. & Dirección \\
+Desempeño docente atípico &
+  Activar plan de acompañamiento pedagógico y observación de clase. &
+  Departamento \\
+Inasistencia acumulada $>20\%$ &
+  Alerta al estudiante con plan de recuperación y citación a tutoría. &
+  Docente + Secretaría \\
+Evaluación docente incompleta &
+  Recordatorio intensivo y habilitación de tiempo protegido en clase. &
+  Docente + Sistema \\
+Conflicto de horarios frecuente &
+  Reubicar la materia a la franja con mayor $P(h_i)$ estimada. & Departamento \\
+Mensajes sin respuesta $>48$ h &
+  Recordatorio automático al destinatario y copia a la secretaría. & Sistema \\
+Tiempo de respuesta a cupos elevado &
+  Redistribuir la carga de revisión entre el personal de secretaría. &
+  Secretaría \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tablero de Verificación de Resultados}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.45cm and 0.5cm, every node/.style={font=\scriptsize}]
+
+\node[flujo, minimum width=3.4cm] (tab) at (0,0) {Tablero de\\Verificación};
+
+\node[flujo, below left=1.0cm and 0.3cm of tab] (t1) {Resultados\\académicos};
+\node[flujo, below=1.0cm of tab] (t2) {Quejas y\\sugerencias};
+\node[flujo, below right=1.0cm and 0.3cm of tab] (t3) {Evaluación\\docente};
+
+\node[flujo, below=1.0cm of t1] (v1) {Ocupación de cupos\\Tiempo de respuesta};
+\node[flujo, below=1.0cm of t2] (v2) {Tasa de cierre\\Tiempo por caso};
+\node[flujo, below=1.0cm of t3] (v3) {Participación\\Puntaje promedio};
+
+\node[decision, below=1.0cm of v2] (dec) {¿Meta\\alcanzada?};
+\node[terminal, left=1.6cm of dec] (ok) {Reportar\\logro};
+\node[flujo, right=1.6cm of dec] (no) {Generar acción\\correctiva};
+
+\draw[flecha] (tab) -- (t1);
+\draw[flecha] (tab) -- (t2);
+\draw[flecha] (tab) -- (t3);
+\draw[flecha] (t1) -- (v1);
+\draw[flecha] (t2) -- (v2);
+\draw[flecha] (t3) -- (v3);
+\draw[flecha] (v1) |- (dec);
+\draw[flecha] (v3) |- (dec);
+\draw[flecha] (v2) -- (dec);
+\draw[flecha] (dec) -- node[above, font=\tiny]{Sí} (ok);
+\draw[flecha] (dec) -- node[above, font=\tiny]{No} (no);
+\draw[flecha] (no) |- (tab);
+
+\end{tikzpicture}
+\caption{Estructura del tablero de verificación de resultados}
+\label{fig:tablero}
+\end{figure}
+
+\subsection{Elementos del tablero}
+\begin{table}[H]
+\centering
+\caption{Componentes del tablero de verificación}
+\label{tab:tablero}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.3cm} X p{3.1cm}@{}}
+\toprule
+\rowcolor{moradoClaro}
+\textbf{Sección} & \textbf{Contenido} & \textbf{Usuario} \\
+\midrule
+Panel de cupos & Ocupación por materia, lista de espera, tiempo de respuesta. & Secretaría, Departamento \\
+Panel de quejas & Casos abiertos, vencidos, por categoría y responsable. & Secretaría, Dirección \\
+Panel de evaluación & Participación por materia, puntajes agregados, alertas. & Departamento, Docente \\
+Panel de comunicación & Mensajes sin respuesta, tiempos promedio, escalamientos. & Secretaría \\
+Panel de faltas & Estudiantes en riesgo, alertas por umbral, justificaciones pendientes. & Docente, Secretaría \\
+Panel de soluciones & Recomendaciones activas, aplicadas y su efecto medido. & Departamento \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Métricas de Evaluación del Algoritmo}
+
+\begin{table}[H]
+\centering
+\caption{Métricas de desempeño del motor analítico}
+\label{tab:metricas-algoritmo}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.6cm} X c@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Métrica} & \textbf{Definición} & \textbf{Meta} \\
+\midrule
+Exactitud & $\frac{TP+TN}{TP+TN+FP+FN}$ & $> 0.85$ \\
+Precisión & $\frac{TP}{TP+FP}$ & $> 0.80$ \\
+Exhaustividad & $\frac{TP}{TP+FN}$ & $> 0.80$ \\
+$F_1$ & Media armónica de precisión y exhaustividad & $> 0.80$ \\
+Error absoluto medio & $\frac{1}{n}\sum |y_i - \hat{y}_i|$ (demanda de cupos) & $< 10\%$ \\
+Tasa de aceptación & Recomendaciones aplicadas / generadas & $> 70\%$ \\
+Efectividad & Mejora medida tras la aplicación & $> 60\%$ \\
+Cobertura & Anomalías detectadas / anomalías reales & $> 85\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Ejemplo de Aplicación}
+
+\begin{cajaAlgoritmo}[Ejemplo: quejas recurrentes en una materia de programación]
+\textbf{Datos observados:} 18 quejas en el periodo correspondiente a la materia
+\textit{Programación II}, 14 de ellas con el término ``avance'' y ``ritmo'';
+la tasa de inasistencia del grupo es del 24\%; el tiempo medio de respuesta del
+docente es de 96 horas.
+
+\vspace{4pt}
+\textbf{Hallazgos del motor:}
+\begin{itemize}[leftmargin=1.0cm, itemsep=2pt]
+  \item Anomalía \texttt{QUEJA\_RECURRENTE} (frecuencia $>$ umbral).
+  \item Anomalía \texttt{INASISTENCIA\_ALTA} ($24\% > 20\%$).
+  \item Anomalía \texttt{RESPUESTA\_LENTA} ($96$ h $> 48$ h).
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Priorización:} impacto $I=5$, urgencia $U=4$, esfuerzo $E=2$
+$\Rightarrow$ Score $= (5 \times 4)/(2 + 0.01) \approx 9.95$ (prioridad alta).
+
+\vspace{4pt}
+\textbf{Solución rápida generada:} reunión formal entre secretaría, docente y
+coordinación académica en un plazo de 3 días; revisión del cronograma del plan
+de asignatura; tutoría de refuerzo semanal; recordatorios automáticos al docente
+sobre mensajes pendientes.
+\end{cajaAlgoritmo}

@@ -1,0 +1,19 @@
+# SGDIC — dependencias (Python 3.10+ · probado con 3.12)
+# Instalación: pip install -r requirements.txt
+Django==4.2.30
+asgiref==3.12.1
+sqlparse==0.6.0
+tzdata==2026.4
+
+# Servidor WSGI y servir estáticos en producción (Vercel)
+gunicorn==23.0.0
+whitenoise==6.7.0
+
+# PostgreSQL (para Render)
+psycopg2-binary==2.9.9
+
+# Opcionales: exportación de reportes a Excel y PDF (RF-46).
+# Si no se instalan, las descargas en esos formatos caen automáticamente a CSV.
+# openpyxl>=3.1
+# reportlab>=4.0
+

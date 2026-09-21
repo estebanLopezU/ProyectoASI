@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Revisar justificación{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-clipboard-check me-2"></i>Revisar justificación (RF-24)</h3>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mb-3">
+      <div class="card-header">Detalle de la falta</div>
+      <div class="card-body">
+        <p class="mb-1"><strong>Estudiante:</strong> {{ falta.estudiante }}</p>
+        <p class="mb-1"><strong>Materia:</strong> {{ falta.materia }}</p>
+        <p class="mb-1"><strong>Fecha:</strong> {{ falta.sesion.fecha|date:"d/m/Y" }}</p>
+        <p class="mb-1"><strong>Justificación:</strong> {{ falta.comentario_justificacion|default:"—" }}</p>
+        <p class="mb-0"><strong>Evidencia:</strong>
+          {% if falta.evidencia %}<a href="{{ falta.evidencia.url }}" target="_blank">Descargar</a>
+          {% else %}—{% endif %}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Decisión</div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-check mb-3">
+            {{ form.aprobada }}
+            <label class="form-check-label" for="{{ form.aprobada.id_for_label }}">Aprobar justificación</label>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.comentario.id_for_label }}">Comentario (opcional)</label>
+            {{ form.comentario }}
+          </div>
+          <button class="btn btn-primary">Guardar decisión</button>
+          <a class="btn btn-outline-secondary" href="{% url 'evaluaciones:revisar_lista' %}">Volver</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

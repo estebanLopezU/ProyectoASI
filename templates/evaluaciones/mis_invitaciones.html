@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Evaluar docentes{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-clipboard-check me-2"></i>Evaluación docente (RF-28 a RF-32)</h3>
+{% if periodo %}
+  <div class="alert alert-info">
+    Periodo vigente: <strong>{{ periodo.nombre }}</strong> · plazo hasta {{ periodo.fecha_limite|date:"d/m/Y" }}.
+    Sus respuestas son <strong>anónimas</strong> y los resultados se publican con al menos
+    {{ periodo.umbral_participacion }}% de participación y 5 respuestas por docente (RN-05).
+  </div>
+{% endif %}
+<div class="card mb-3">
+  <div class="table-responsive">
+    <table class="table table-hover tabla-compacta mb-0">
+      <thead class="table-light">
+        <tr><th>Periodo</th><th>Docente</th><th>Materia</th><th>Estado</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        {% for invitacion in invitaciones %}
+          <tr>
+            <td>{{ invitacion.periodo.nombre }}</td>
+            <td>{{ invitacion.docente.get_full_name|default:invitacion.docente.username }}</td>
+            <td>{{ invitacion.materia }}</td>
+            <td>
+              {% if invitacion.completada %}<span class="badge bg-success">Respondida</span>
+              {% else %}<span class="badge bg-warning text-dark">Pendiente</span>{% endif %}
+            </td>
+            <td>
+              {% if not invitacion.completada and invitacion.periodo.activo %}
+                <a class="btn btn-sm btn-primary" href="{% url 'evaluaciones:responder' invitacion.pk %}">Evaluar</a>
+              {% else %}<span class="text-muted small">—</span>{% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted py-4">No tiene evaluaciones asignadas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="text-muted small">Evaluaciones pendientes: {{ pendientes|length }}</p>
+{% endblock %}

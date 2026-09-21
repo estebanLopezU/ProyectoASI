@@ -1,0 +1,33 @@
+# Entorno virtual
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de datos local (en producción la BD está en Render)
+db.sqlite3
+*.sqlite3
+
+# Archivos estáticos recopilados
+staticfiles/
+
+# Medios subidos por usuarios
+media/
+
+# Entornos
+.env
+*.log
+
+# VS Code
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Diagnostic scripts (locales)
+_diag.ps1
+_smoke.py
+_diag.py

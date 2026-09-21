@@ -1,0 +1,380 @@
+% =====================================================================
+% CAPÍTULO 4: REQUERIMIENTOS
+% =====================================================================
+\chapter{Requerimientos del Sistema}
+\label{ch:requerimientos}
+
+\section{Actores del Sistema}
+
+\begin{table}[H]
+\centering
+\caption{Definición de actores del \ac{SGDIC}}
+\label{tab:actores}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Actor} & \textbf{Descripción y responsabilidades} \\
+\midrule
+Estudiante &
+  Usuario final que solicita cupos, consulta horarios, envía y recibe mensajes,
+  responde cuestionarios de horario y de materias, califica docentes, recibe
+  notificaciones de faltas y presenta quejas o sugerencias. \\
+Docente &
+  Gestiona sus materias y horarios, registra faltas, se comunica con estudiantes
+  y con la secretaría, recibe evaluaciones consolidadas. \\
+Secretaría &
+  Recibe y clasifica quejas y solicitudes, asigna responsables, coordina la
+  comunicación con docentes, verifica resultados y mantiene la trazabilidad. \\
+Departamento &
+  Administra el catálogo de materias y cupos, configura periodos de evaluación,
+  consulta analítica, verifica resultados y aprueba decisiones académicas. \\
+Sistema de notificaciones &
+  Actor secundario que despacha correos, mensajes internos y recordatorios. \\
+Sistema central universitario &
+  Actor secundario que provee la matrícula, catálogo oficial y autenticación. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Requerimientos Funcionales}
+
+\subsection{Módulo de autenticación y roles}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- autenticación y roles}
+\label{tab:rf-auth}\\
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-01 & El sistema debe autenticar usuarios mediante correo institucional y contraseña o credencial institucional. & Todos \\
+RF-02 & El sistema debe asignar permisos según el rol (\ac{RBAC}): estudiante, docente, secretaría, departamento. & Todos \\
+RF-03 & El sistema debe permitir la recuperación de contraseña sin intervención de la secretaría. & Todos \\
+RF-04 & El sistema debe registrar bitácora de accesos y operaciones críticas. & Departamento \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de cupos}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- gestión de cupos}
+\label{tab:rf-cupos}\\
+\toprule
+\rowcolor{verdeClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{verdeClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-05 & El estudiante debe poder solicitar cupo en una materia mostrando la disponibilidad en tiempo real. & Estudiante \\
+RF-06 & El sistema debe validar prerrequisitos, créditos y conflictos de horario antes de aceptar la solicitud. & Sistema \\
+RF-07 & El sistema debe aplicar una regla de priorización configurable (promedio, avance curricular, orden de solicitud). & Departamento \\
+RF-08 & El sistema debe notificar al estudiante el resultado de la solicitud (aprobada, en lista de espera, rechazada). & Sistema \\
+RF-09 & El sistema debe liberar automáticamente cupos de solicitudes no confirmadas en el plazo definido. & Sistema \\
+RF-10 & La secretaría debe poder ver y gestionar la lista de espera por materia. & Secretaría \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de materias}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- materias}
+\label{tab:rf-materias}\\
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-11 & El docente debe poder proponer la creación de una materia nueva con su justificación. & Docente \\
+RF-12 & El docente debe poder solicitar la edición de una materia existente (contenido, créditos, prerrequisitos, horario). & Docente \\
+RF-13 & El sistema debe gestionar el flujo de aprobación: propuesta, revisión del departamento, aprobación o rechazo, publicación. & Departamento \\
+RF-14 & El sistema debe mantener historial de versiones de cada materia con autor y fecha del cambio. & Sistema \\
+RF-15 & El sistema debe publicar automáticamente las materias aprobadas en el catálogo visible para los estudiantes. & Sistema \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de mensajería}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- mensajería}
+\label{tab:rf-mensajes}\\
+\toprule
+\rowcolor{moradoClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{moradoClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-16 & El estudiante debe poder enviar mensajes a docentes de las materias en las que está inscrito. & Estudiante \\
+RF-17 & El docente debe poder enviar mensajes masivos o individuales a los estudiantes de sus materias. & Docente \\
+RF-18 & El sistema debe registrar estado del mensaje: enviado, entregado y leído. & Sistema \\
+RF-19 & El sistema debe alertar cuando un mensaje no tenga respuesta en el plazo configurado. & Sistema \\
+RF-20 & La secretaría debe poder intervenir en un hilo cuando el caso escale. & Secretaría \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de faltas}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- registro de faltas}
+\label{tab:rf-faltas}\\
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-21 & El docente debe poder registrar la asistencia por sesión de clase de forma rápida (lista o código). & Docente \\
+RF-22 & El sistema debe notificar al estudiante el mismo día en que se registra su falta. & Sistema \\
+RF-23 & El estudiante debe poder presentar una justificación adjuntando evidencia. & Estudiante \\
+RF-24 & El docente debe poder aprobar o rechazar la justificación con comentario. & Docente \\
+RF-25 & El sistema debe calcular el porcentaje de inasistencia acumulado por materia. & Sistema \\
+RF-26 & El sistema debe alertar al estudiante, docente y secretaría cuando el acumulado supere el umbral permitido. & Sistema \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de evaluación docente}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- evaluación docente}
+\label{tab:rf-evaluacion}\\
+\toprule
+\rowcolor{verdeClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{verdeClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-27 & El departamento debe poder configurar el periodo, las preguntas y la fecha límite de la evaluación docente. & Departamento \\
+RF-28 & El sistema debe habilitar la evaluación automáticamente al inicio del periodo configurado. & Sistema \\
+RF-29 & El sistema debe enviar recordatorios automáticos a los estudiantes que no hayan completado la evaluación. & Sistema \\
+RF-30 & El sistema debe garantizar el anonimato total del evaluador. & Sistema \\
+RF-31 & El sistema debe bloquear servicios académicos hasta completar la evaluación, si así se configura. & Sistema \\
+RF-32 & El sistema debe consolidar resultados y publicarlos solo al cumplirse la fecha límite o el umbral de participación. & Sistema \\
+RF-33 & El docente debe poder consultar su resultado consolidado y su comparación histórica. & Docente \\
+RF-34 & El departamento debe poder identificar docentes con resultados atípicos y generar planes de acompañamiento. & Departamento \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de quejas y sugerencias}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- quejas y sugerencias}
+\label{tab:rf-quejas}\\
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-35 & Cualquier actor debe poder registrar una queja o sugerencia con categoría y descripción. & Todos \\
+RF-36 & El sistema debe clasificar automáticamente el caso por categoría, urgencia y área responsable. & Sistema \\
+RF-37 & La secretaría debe poder asignar responsable, plazo y estado a cada caso. & Secretaría \\
+RF-38 & La secretaría debe poder comunicarse formalmente con el docente involucrado dentro del caso. & Secretaría \\
+RF-39 & El sistema debe notificar al solicitante cada cambio de estado del caso. & Sistema \\
+RF-40 & El sistema debe permitir el cierre con evidencia de la acción tomada y encuesta de satisfacción. & Secretaría \\
+RF-41 & El sistema debe permitir el anonimato del denunciante cuando la naturaleza del caso lo requiera. & Sistema \\
+RF-42 & El sistema debe impedir el cierre de un caso sin acción registrada. & Sistema \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de cuestionarios de materias y horarios}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- cuestionarios}
+\label{tab:rf-cuestionarios}\\
+\toprule
+\rowcolor{moradoClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{moradoClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-43 & El sistema debe aplicar un cuestionario de disponibilidad horaria por estudiante y periodo. & Estudiante \\
+RF-44 & El sistema debe aplicar un cuestionario de preferencia y evaluación de materias cursadas. & Estudiante \\
+RF-45 & El sistema debe calcular la probabilidad de preferencia por cada franja horaria disponible. & Sistema \\
+RF-46 & El sistema debe recomendar una asignación de horario que maximice la aceptación esperada. & Departamento \\
+RF-47 & El sistema debe mostrar al departamento escenarios alternativos de horario con su impacto estimado. & Departamento \\
+RF-48 & El sistema debe permitir al estudiante confirmar o rechazar el horario sugerido. & Estudiante \\
+\bottomrule
+\end{longtable}
+
+\subsection{Módulo de analítica y soluciones rápidas}
+
+\begin{longtable}{@{}p{1.5cm} p{6.5cm} p{4.5cm}@{}}
+\caption{Requerimientos funcionales --- analítica}
+\label{tab:rf-analitica}\\
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{azulClaro}
+\textbf{ID} & \textbf{Requerimiento} & \textbf{Actor} \\
+\midrule
+\endhead
+RF-49 & El sistema debe alimentar un repositorio analítico con los datos de todos los módulos. & Sistema \\
+RF-50 & El sistema debe calcular los \ac{KPI} definidos en el Capítulo~\ref{ch:mision-vision}. & Sistema \\
+RF-51 & El sistema debe detectar anomalías: cupos saturados, quejas recurrentes, docentes con baja evaluación, inasistencia atípica. & Sistema \\
+RF-52 & El sistema debe generar recomendaciones accionables priorizadas por impacto y esfuerzo. & Sistema \\
+RF-53 & El sistema debe estimar la demanda futura de cupos por materia. & Departamento \\
+RF-54 & La secretaría y el departamento deben verificar resultados, quejas y evaluaciones en tableros consolidados. & Secretaría, Departamento \\
+RF-55 & El sistema debe exportar reportes a \ac{CSV} y \ac{PDF}. & Secretaría, Departamento \\
+RF-56 & El sistema debe registrar si la recomendación fue aplicada y medir su efecto posterior. & Sistema \\
+\bottomrule
+\end{longtable}
+
+\section{Requerimientos No Funcionales}
+
+\begin{table}[H]
+\centering
+\caption{Requerimientos no funcionales}
+\label{tab:rnf}
+\small
+\begin{tabularx}{\textwidth}{@{}p{1.5cm} l X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+\midrule
+RNF-01 & Usabilidad &
+    Interfaz responsiva, accesible desde móvil, con un máximo de tres clics
+    para completar cualquier operación frecuente. \\
+RNF-02 & Rendimiento &
+    Tiempo de respuesta menor a 2 segundos en el 95\% de las peticiones. \\
+RNF-03 & Disponibilidad &
+    Disponibilidad mínima del 99.5\% en horario académico (06:00--22:00). \\
+RNF-04 & Seguridad &
+    Cifrado en tránsito (TLS) y en reposo, autenticación multifactor para roles
+    administrativos. \\
+RNF-05 & Privacidad &
+    Anonimización de evaluaciones y quejas sensibles; cumplimiento de normas de
+    protección de datos personales. \\
+RNF-06 & Escalabilidad &
+    Soporte para el crecimiento de usuarios y datos sin rediseño estructural. \\
+RNF-07 & Mantenibilidad &
+    Arquitectura modular con separación de responsabilidades e interfaces
+    documentadas. \\
+RNF-08 & Interoperabilidad &
+    \ac{API} \ac{REST} documentada para integrarse con el sistema central
+    universitario. \\
+RNF-09 & Trazabilidad &
+    Registro de auditoría inmutable de cada transición de estado. \\
+RNF-10 & Compatibilidad &
+    Funcionamiento en navegadores modernos (Chrome, Edge, Firefox, Safari). \\
+RNF-11 & Accesibilidad &
+    Cumplimiento de pautas WCAG 2.1 nivel AA. \\
+RNF-12 & Localización &
+    Interfaz en español con soporte de zona horaria y formatos locales. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Reglas de Negocio}
+
+\begin{table}[H]
+\centering
+\caption{Reglas de negocio del \ac{DIC}}
+\label{tab:reglas}
+\small
+\begin{tabularx}{\textwidth}{@{}p{1.3cm} l X@{}}
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{ID} & \textbf{Nombre} & \textbf{Regla} \\
+\midrule
+RN-01 & Prerrequisitos &
+    No se puede otorgar cupo si el estudiante no ha aprobado los prerrequisitos
+    declarados en la materia. \\
+RN-02 & Cupo máximo &
+    El número de cupos asignados nunca puede superar el cupo máximo definido
+    para la materia y el periodo. \\
+RN-03 & Conflicto horario &
+    No se puede asignar cupo si el horario de la materia se solapa con otra
+    materia ya inscrita por el estudiante. \\
+RN-04 & Priorización &
+    Ante escasez de cupos, se aplica prioridad por avance curricular, luego por
+    promedio acumulado y finalmente por orden cronológico de la solicitud. \\
+RN-05 & Anonimato de evaluación &
+    El docente nunca accede a la identidad de quien lo evaluó; solo a resultados
+    agregados con un mínimo de cinco respuestas. \\
+RN-06 & Ventana de evaluación &
+    La evaluación docente solo puede diligenciarse dentro del periodo
+    configurado; fuera de él, el formulario se bloquea. \\
+RN-07 & Notificación de falta &
+    Toda falta registrada debe generar notificación al estudiante el mismo día. \\
+RN-08 & Umbral de inasistencia &
+    Al superar el 20\% de inasistencia en una materia, se genera alerta
+    automática al estudiante, al docente y a la secretaría. \\
+RN-09 & Cierre de queja &
+    Una queja no puede cerrarse sin registrar la acción realizada y la fecha de
+    cierre. \\
+RN-10 & Escalamiento &
+    Una queja crítica sin atender en 3 días se escala automáticamente a la
+    dirección del departamento. \\
+RN-11 & Edición de materia &
+    Toda modificación curricular requiere revisión y aprobación del departamento
+    antes de su publicación. \\
+RN-12 & Cobertura de horario &
+    Un horario solo se publica si alcanza el umbral mínimo de aceptación
+    estimada definido por el departamento. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Matriz de Trazabilidad Objetivos--Requerimientos}
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad entre objetivos estratégicos y requerimientos}
+\label{tab:trazabilidad}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{moradoClaro}
+\textbf{Objetivo} & \textbf{Requerimientos asociados} \\
+\midrule
+OE1 (Cupos) & RF-05, RF-06, RF-07, RF-08, RF-09, RF-10, RN-01, RN-02, RN-03, RN-04 \\
+OE2 (Materias) & RF-11, RF-12, RF-13, RF-14, RF-15, RN-11 \\
+OE3 (Comunicación) & RF-16, RF-17, RF-18, RF-19, RF-20 \\
+OE4 (Faltas) & RF-21, RF-22, RF-23, RF-24, RF-25, RF-26, RN-07, RN-08 \\
+OE5 (Evaluación) & RF-27 a RF-34, RN-05, RN-06 \\
+OE6 (Quejas) & RF-35 a RF-42, RN-09, RN-10 \\
+OE7 (Secretaría) & RF-10, RF-20, RF-37, RF-38, RF-40, RF-54, RF-55 \\
+OE8 (Horarios) & RF-43, RF-44, RF-45, RF-46, RF-47, RF-48, RN-12 \\
+OE9 (Verificación) & RF-50, RF-54, RF-55, RF-56 \\
+OE10 (Analítica) & RF-49, RF-51, RF-52, RF-53, RF-56 \\
+\bottomrule
+\end{tabularx}
+\end{table}

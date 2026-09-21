@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Tablero de estudiante{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>Mi tablero</h3>
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Inscripciones activas</h6>
+        <p class="display-6 mb-0">{{ kpis.inscripciones_activas }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Evaluaciones pendientes</h6>
+        <p class="display-6 mb-0">{{ kpis.evaluaciones_pendientes }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Notificaciones sin leer</h6>
+        <p class="display-6 mb-0">{{ kpis.notificaciones }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Accesos rápidos</div>
+      <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action" href="{% url 'cupos:ofertas' %}">Solicitar cupos de materias</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:mis_invitaciones' %}">Evaluar a mis docentes</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:mis_faltas' %}">Consultar mis faltas y justificar</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'mensajes:nuevo' %}">Enviar mensaje a un docente</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'quejas:radicar' %}">Radicar una queja o reclamo</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Recordatorios del sistema</div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li>Las evaluaciones docentes son <strong>anónimas</strong>: se publican con un mínimo de 5 respuestas (RN-05).</li>
+          <li>Puede justificar una falta con evidencia dentro de los plazos del reglamento.</li>
+          <li>El umbral de inasistencia del departamento es del 20% (RN-08).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

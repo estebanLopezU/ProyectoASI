@@ -1,0 +1,95 @@
+@startuml use_case_diagram
+left to right direction
+skinparam backgroundColor #F9F9F9
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+  FontColor #0D47A1
+}
+skinparam package {
+  BackgroundColor #E8F5E9
+  BorderColor #388E3C
+  FontColor #1B5E20
+}
+skinparam actor {
+  BackgroundColor #FFF3E0
+  BorderColor #EF6C00
+  FontColor #E65100
+}
+skinparam usecase {
+  BackgroundColor #F3E5F5
+  BorderColor #AD1457
+  FontColor #4A148C
+}
+
+rectangle "Sistema de Gestión Departamental\nDepartamento de Informática y Computación" {
+  package "Gestión Académica" {
+    (Solicitar cupos) as UC1
+    (Crear/Editar materias) as UC2
+    (Registrar faltas de estudiantes) as UC3
+    (Calificar docentes) as UC4
+    (Aplicar cuestionarios de horario) as UC5
+  }
+
+  package "Comunicación y Retroalimentación" {
+    (Enviar mensaje estudiante → docente) as UC6
+    (Enviar mensaje docente → estudiante) as UC7
+    (Enviar quejas y sugerencias) as UC8
+    (Recibir notificaciones) as UC9
+  }
+
+  package "Gestión de Evaluación y Análisis" {
+    (Evaluar docente a tiempo) as UC10
+    (Verificar resultados) as UC11
+    (Visualizar analítica de datos) as UC12
+    (Generar soluciones rápidas) as UC13
+  }
+}
+
+actor "Estudiante" as Estudiante
+actor "Docente" as Docente
+actor "Secretaria" as Secretaria
+actor "Departamento\nInformática y C.\n(Administrador)" as Admin
+
+' Relaciones Estudiante
+Estudiante --> UC1
+Estudiante --> UC4
+Estudiante --> UC5
+Estudiante --> UC6
+Estudiante --> UC8
+Estudiante --> UC9
+
+' Relaciones Docente
+Docente --> UC2
+Docente --> UC6 : recibe
+Docente --> UC7
+Docente --> UC3
+Docente --> UC9
+Docente --> UC8 : responde
+
+' Relaciones Secretaria
+Secretaria --> UC6 : gestiona
+Secretaria --> UC7 : gestiona
+Secretaria --> UC8 : gestiona y responde
+Secretaria --> UC11
+Secretaria --> UC12
+Secretaria --> UC9
+
+' Relaciones Administrador
+Admin --> UC2 : administra
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC9
+
+' Relaciones entre casos de uso
+UC1 .> UC2 : <<include>> (ver materia disponible)
+UC3 .> UC10 : <<include>> (registrar observación)
+UC4 .> UC10 : <<include>> (evaluación docente)
+UC8 .> UC9 : <<extend>>
+UC6 .> UC9 : <<extend>>
+UC7 .> UC9 : <<extend>>
+
+@enduml

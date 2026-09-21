@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Listas de espera{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0"><i class="bi bi-people me-2"></i>Listas de espera y solicitudes (RF-10)</h3>
+  <form method="post" action="{% url 'cupos:procesar_pendientes' %}">
+    {% csrf_token %}
+    <button class="btn btn-sm btn-primary">Procesar pendientes por prioridad (RN-04)</button>
+  </form>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover tabla-compacta mb-0">
+      <thead class="table-light">
+        <tr><th>Oferta</th><th>Estudiante</th><th>Estado</th><th>Prioridad</th>
+            <th>Justificación</th><th>Fecha</th></tr>
+      </thead>
+      <tbody>
+        {% for solicitud in solicitudes %}
+          <tr>
+            <td>{{ solicitud.oferta.materia }} · {{ solicitud.oferta.periodo }}
+                <br><small class="text-muted">{{ solicitud.oferta.franja }} ·
+                {{ solicitud.oferta.cupos_disponibles }} disponibles</small></td>
+            <td>{{ solicitud.estudiante.get_full_name|default:solicitud.estudiante.username }}</td>
+            <td>
+              <span class="badge
+                {% if solicitud.estado == 'APROBADA' %}bg-success
+                {% elif solicitud.estado == 'RECHAZADA' %}bg-danger
+                {% elif solicitud.estado == 'EN_ESPERA' %}bg-warning text-dark
+                {% else %}bg-secondary{% endif %}">{{ solicitud.get_estado_display }}</span>
+            </td>
+            <td>{{ solicitud.prioridad }}</td>
+            <td class="small">{{ solicitud.justificacion_estado }}</td>
+            <td>{{ solicitud.creada|date:"d/m/Y H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-center text-muted py-4">Sin solicitudes registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

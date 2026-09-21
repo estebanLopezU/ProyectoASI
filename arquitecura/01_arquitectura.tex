@@ -1,0 +1,446 @@
+﻿\subsection{Organización por roles}
+\label{sec:backend-rol}
+
+El backend filtra la información por rol (\ac{RBAC}) de forma transversal:
+la autenticación y los permisos se gestionan en la app \texttt{usuario}, y
+cada app aplica \texttt{get\_queryset} filtrado por el usuario autenticado.
+Así, el rol \textbf{estudiante} interactúa con \texttt{cupos},
+\texttt{mensajes} y \texttt{evaluaciones}; el rol \textbf{docente} aporta a
+\texttt{materias}, \texttt{evaluaciones} (asistencia, justificaciones,
+resultados) y \texttt{mensajes}; y la \textbf{secretaría} accede a
+\texttt{reportes} (listas de espera, \ac{KPI}) y \texttt{quejas}, con
+intervención trazada en hilos escalados. El \textbf{departamento}
+configura parámetros globales (preguntas de evaluación, \ac{KPI}) y la app
+\texttt{analitica} consolida datos para el motor de soluciones rápidas.
+
+La \figureref{fig:backend} muestra la arquitectura del backend: el servidor
+de aplicaciones de \ac{DJ} atiende peticiones \ac{REST} desde el frontend,
+persiste en la base de datos y alimenta al motor analítico de forma
+asíncrona.
+﻿% =====================================================================
+%  CAPITULO 1: ARQUITECTURA DE SOFTWARE DEL SGDIC
+%  Universidad Nacional de Colombia, Sede Manizales
+% =====================================================================
+
+\chapter{Arquitectura de Software del Sistema}
+\label{ch:arquitectura}
+
+El \ac{SGDIC} se diseña bajo una arquitectura de tres capas
+\textit{(presentación, aplicación y datos)} sobre la plataforma
+\ac{DJ}. Esta organización separa claramente la interfaz de usuario, la
+lógica de negocio y el acceso a la información, facilitando mantenimiento,
+pruebas e incorporación de nuevos requerimientos del modelado \ac{UML}
+documentado en el informe de planificación del proyecto.
+
+La figura~\ref{fig:arquitectura-capas} muestra la vista general: cada capa
+se comunica con la inferior mediante \ac{API}s de estilo \ac{REST}, y la
+capa analítica se nutre de forma asíncrona mediante un motor de extracción
+\ac{ETL}.
+
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[node distance=1.5cm and 0.9cm]
+  \node[nodoAplicacion, text width=3.7cm, minimum height=1.5cm] (fe) {\textbf{Cap. presentación}\\[2pt]\textit{Frontend}};
+  \node[nodoAplicacion, text width=3.7cm, minimum height=1.5cm, right=1.1cm of fe] (be) {\textbf{Cap. aplicación}\\[2pt]\textit{Backend Django}};
+  \node[nodoAplicacion, text width=3.7cm, minimum height=1.5cm, right=1.1cm of be] (ce) {\textbf{Cap. datos}\\[2pt]\textit{PostgreSQL}};
+  \node[infra, text width=3.1cm, minimum height=1.2cm, below=1.6cm of fe] (etl) {Motor ETL};
+  \node[infra, text width=3.1cm, minimum height=1.2cm, right=1.1cm of etl] (dwh) {Repositorio analítico};
+  \node[infra, text width=3.1cm, minimum height=1.2cm, right=1.1cm of dwh] (ml) {Motor de soluciones rápidas};
+  \draw[flecha] (fe) -- (be);
+  \draw[flecha] (be) -- (ce);
+  \draw[flechaS] (ce) -- (etl);
+  \draw[flechaS] (etl) -- (dwh);
+  \draw[flechaS] (dwh) -- (ml);
+  \draw[flechaV, dashed] (ml.north) to[bend left=18] (be.south);
+\end{tikzpicture}
+}%
+\caption{Vista de capas de la arquitectura del \ac{SGDIC}}
+\label{fig:arquitectura-capas}
+\end{figure}
+
+\noindent\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  node distance=1.0cm and 0.9cm,
+  rol/.style={compApp, text width=3.1cm, minimum height=1.0cm,
+    align=center, inner sep=5pt, font=\small},
+  permiso/.style={infra, text width=3.1cm, minimum height=0.9cm,
+    align=center, inner sep=5pt, font=\small}
+]
+  \node[rol, compWeb] (e) {Estudiante};
+  \node[rol, right=of e] (d) {Docente};
+  \node[rol, right=of d] (s) {Secretaría y\\Departamento};
+  \node[permiso, below=1.1cm of e] (nav) {Barra lateral\\responsiva};
+  \draw[flecha] (e.south) -- (nav.north);
+  \draw[flecha] (d.south) -- (nav.north);
+  \draw[flecha] (s.south) -- (nav.north);
+\end{tikzpicture}
+}%
+\caption{Roles y visibilidad de la interfaz del \ac{SGDIC}}
+\label{fig:roles-cap}
+\end{figure}
+
+\section{Capa de Presentación (Frontend)}
+\label{sec:frontend}
+
+La capa de presentación corresponde al \textit{frontend} del \ac{SGDIC},
+construido con plantillas \ac{HTML} renderizadas por \ac{DJ} y estilizadas con
+\ac{CSS} (Bootstrap) y componentes interactivos en \ac{JS}. La interfaz es
+responsiva y sirve tanto a estudiantes como a docentes, secretaría y
+departamento, adaptándose al rol autenticado (\ac{RBAC}).
+
+\subsection{Tecnologías y lenguajes}
+\label{sec:frontend-tecnologias}
+
+El cliente se construye con pila web estándar renderizada del lado del
+servidor (\ac{MVT}): \ac{HTML}5 semántico para la estructura, \ac{CSS}3 con
+Bootstrap 5 (\textit{grid}, utilidades y componentes responsivos) para el
+estilo y \ac{JS} (ES6+) para la interactividad ligera. El \ac{JS} incluye
+jQuery para manipulación DOM y llamadas asíncronas a la \ac{API} \ac{REST},
+y Bootstrap JS para componentes dinámicos (modales, tooltips,
+off-canvas). No se adopta arquitectura \ac{SPA}; las vistas se renderizan en
+el servidor y el navegador recibe marcado ya armado, lo que favorece el
+indexado y la carga inicial, manteniendo compatibilidad con entornos con
+soporte limitado.
+
+\subsection{Organización por roles}
+\label{sec:frontend-rol}
+
+La interfaz se muestra a partir de los tres roles definidos en el
+documento de planificación (\cref{fig:roles-cap}):
+\begin{itemize}[label=-- , leftmargin=*]
+  \item[\textbf{Estudiante}] portal de cupos en tiempo real,
+  confirmación/rechazo de horarios, presentación de cuestionarios,
+  visualización de faltas y justificaciones, mensajería con docentes y
+  autoevaluación histórica.
+  \item[\textbf{Docente}] gestión de materias y horarios, registro rápido de
+  asistencia (lista o código), aprobación/rechazo de justificaciones,
+  envío de mensajes masivos e individuales, consulta de resultados
+  consolidados y comparativo histórico.
+  \item[\textbf{Secretaría/departamento}] panel de listas de espera,
+  intervención en hilos escalados, tableros consolidados de \ac{KPI} y
+  exportación de reportes a \ac{CSV} y \ac{PDF}.
+\end{itemize}
+
+La adaptación se realiza mediante \ac{RBAC}: la barra lateral y el menú
+navegacional sólo muestran los ítems autorizados al rol autenticado, y
+cada app del backend filtra su queryset según el usuario. La misma
+plantilla se reutiliza para todos los roles; el contenido visible depende
+del contexto que el backend inyecta a la vista.
+
+La \figureref{fig:frontend} muestra la arquitectura del cliente: el navegador
+consume las vistas renderizadas del servidor y, para interacciones en
+tiempo real, delega en notificaciones push y en la API REST del
+backend. Los recursos estáticos (\texttt{css}, \texttt{js}, imágenes) se
+entregan comprimidos y con caché mediante la configuración de archivos
+\texttt{STATICFILES} y \texttt{Whitenoise} (o CDN en despliegue productivo).
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  node distance=1.2cm and 1.5cm,
+  nodo/.style={compApp, text width=3.0cm, minimum height=1.3cm,
+    align=center, inner sep=6pt, font=\small}
+]
+  % Fila 1: cliente y capa de presentacion servida
+  \node[nodo, compWeb] (nav) {Navegador del usuario};
+  \node[nodo, right=2.6cm of nav] (tmpl) {Plantillas HTML\\(Django)};
+  \node[nodo, right=of tmpl] (css) {Bootstrap CSS};
+  \node[nodo, below=1.5cm of css] (js) {Bootstrap JS\\y jQuery};
+  \node[nodo, compApi, below=1.5cm of tmpl] (api) {API REST del backend};
+  \node[nodo, infra, below=1.5cm of js] (static) {Whitenoise / CDN};
+  % Flujo principal (azul)
+  \draw[flecha] (nav.east) -- node[above, font=\scriptsize]{petición} (tmpl.west);
+  \draw[flecha] (tmpl.south) -- node[right, font=\scriptsize]{render} (api.north);
+  % Tecnologias del cliente
+  \draw[flecha] (tmpl.east) -- (css.west);
+  \draw[flecha] (css.south) -- (js.north);
+  % Recursos estaticos
+  \draw[flechaS, dashed] (static.west) -- ++(-0.8,0) |- (js.south west);
+  \draw[flechaS, dashed] (static.north) -- (api.south east);
+\end{tikzpicture}
+}%
+\caption{Arquitectura del frontend del \ac{SGDIC}}
+\label{fig:frontend}
+\end{figure}
+
+\section{Capa de Aplicación (Backend con Django)}
+\label{sec:backend}
+
+El \textit{backend} del \ac{SGDIC} se implementa con \ac{DJ}, un framework
+web de alto nivel escrito en Python que provee una arquitectura
+de aplicación por componentes. El proyecto se organiza en apps modulares que
+agrupan las funcionalidades definidas en los requerimientos del Capítulo~4
+del documento de planificación. Cada app contiene su propio paquete de
+\texttt{models}, \texttt{views}, \texttt{forms}, \texttt{urls} y pruebas,
+y se comunican entre sí a través del \texttt{ORM} de \ac{DJ} y de rutas
+\ac{REST} bien definidas.
+
+Las apps principales son:
+
+\begin{description}[leftmargin=2.2cm, labelwidth=2cm]
+  \item[usuario] Autenticación, roles (\ac{RBAC}) y recuperación de cuenta.
+  \item[cupos] Gestión de disponibilidad, prerrequisitos y prioridad.
+  \item[materias] Catálogo, versiones y flujo de aprobación de materias.
+  \item[mensajes] Mensajería trazable y notificaciones automáticas.
+  \item[evaluaciones] Cuestionarios, evaluacinn docente y registro de faltas.
+  \item[quejas] Recepcinn, clasificacinn y trazabilidad de quejas.
+  \item[reportes] Tableros y exportaciones para secretarna y departamento.
+  \item[analitica] Extraccinn \ac{ETL}, \ac{KPI} y motor de soluciones.
+\end{description}
+
+\subsection{Lenguaje y estructura}
+\label{sec:backend-lenguaje}
+
+El backend se escribe en \textbf{Python 3.11+} sobre \ac{DJ} 4.x, siguiendo el
+patrnn \ac{MVT} (\textit{Model-View-Template}): los \texttt{models} definen el
+esquema de la base de datos, las \texttt{views} encapsulan la lngica de
+negocio y los \texttt{urls} enrutan las peticiones \ac{REST}. Las vistas
+retornan respuesta \ac{JSON} a la API o renderizan plantillas \ac{HTML} al
+frontend, segnn corresponda. El \texttt{ORM} de \ac{DJ} traduce
+automnticamente las clases del modelo a consultas \ac{SQL}, previniendo
+inyeccinn y centralizando las reglas de integridad en migraciones versionadas.
+
+\subsection{Organizacinn por roles}
+\label{sec:backend-rol}
+
+El backend filtra la informacinn por rol (\ac{RBAC}) de forma transversal: la
+autenticacinn y los permisos se gestionan en la app \texttt{usuario}, y cada
+app aplica \texttt{get\_queryset} filtrado por el usuario autenticado. Asn, el
+rol \textbf{estudiante} interactna con \texttt{cupos}, \texttt{mensajes} y
+\texttt{evaluaciones}; el rol \textbf{docente} aporta a \texttt{materias},
+\texttt{evaluaciones} (asistencia, justificaciones, resultados) y
+\texttt{mensajes}; y la \textbf{secretarna} accede a \texttt{reportes}
+(listas de espera, \ac{KPI}) y \texttt{quejas}, con intervencinn trazada en
+hilos escalados. El \textbf{departamento} configura parnmetros globales
+(preguntas de evaluacinn, \ac{KPI}) y la app \texttt{analitica} consolida
+datos para el motor de soluciones rnpidas.
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  node distance=1.5cm and 1.5cm,
+  nodo/.style={compApp, minimum width=3.4cm, minimum height=1.25cm,
+    align=center, inner sep=6pt, font=\small}
+]
+  \node[nodo, compApi, minimum width=4.0cm] (req) {Petición REST};
+  \node[nodo, nodoServidor, below=1.5cm of req, minimum width=5.4cm] (dj) {Servidor de Django};
+  \node[nodo, below=1.8cm of dj, xshift=-2.8cm, minimum width=3.3cm] (orm) {ORM de Django};
+  \node[nodo, infra, right=2.2cm of orm, minimum width=3.2cm] (ses) {Sesiones / Redis};
+  \node[nodo, db, below=1.8cm of orm] (db) {PostgreSQL};
+  \node[nodo, infra, below=1.8cm of ses] (notif) {Cola de tareas};
+  \draw[flecha] (req) -- (dj);
+  \draw[flecha] (dj.south) -- ++(0,-0.75) -| (orm.north);
+  \draw[flecha] (dj.south) -- ++(0,-0.75) -| (ses.north);
+  \draw[flecha] (orm) -- (db);
+  \draw[flecha] (ses) -- (notif);
+  \draw[flechaS] (db.east) -- ++(1.1,0) |- (notif.west);
+  \node[draw=grisUC, dashed, fit={(orm)(ses)}, inner sep=8pt,
+    rounded corners=4pt, label={[font=\small\bfseries]above:WSGI}] {};
+\end{tikzpicture}
+}%
+\caption{Arquitectura del backend de Django del \ac{SGDIC}}
+\label{fig:backend}
+\end{figure}
+
+\section{Capa de Datos (PostgreSQL)}
+\label{sec:datos}
+
+La capa de datos se soporta en PostgreSQL, un sistema gestor de bases de datos
+relacionales de código abierto con soporte transaccional \ac{ACID}, tipos de
+datos avanzados y alto desempeño en cargas concurrentes. La elección responde a
+tres necesidades del \ac{SGDIC}: integridad referencial estricta para el flujo de
+cupos y matrículas, consultas analíticas sobre históricos de varios semestres y
+capacidad de crecimiento horizontal mediante réplicas de lectura.
+
+El acceso a la base de datos se realiza exclusivamente a través del \ac{ORM} de
+\ac{DJ}, que traduce las clases del modelo a tablas y relaciones. Esta decisión
+elimina la construcción manual de \ac{SQL}, previene inyección de código y
+concentra las reglas de integridad en las migraciones versionadas del proyecto.
+Las operaciones de escritura se agrupan en transacciones atómicas
+(\texttt{atomic}) para garantizar que un cambio de cupo y su registro de auditoría
+se confirmen o se reviertan en conjunto.
+
+La figura~\ref{fig:datos} presenta el modelo físico simplificado. Las entidades
+centrales son el usuario y su rol, la asignatura con sus versiones y
+prerrequisitos, la oferta de cupos por periodo, la matrícula, la mensajería, la
+evaluación y la queja. Las tablas de auditoría y de eventos analíticos cierran el
+modelo: la primera registra toda modificación sensible y la segunda alimenta el
+repositorio analítico descrito en la Sección~\ref{sec:analitica}.
+
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  nodo/.style={db, minimum width=3.2cm, minimum height=1.1cm, align=center,
+    inner sep=6pt, font=\small},
+  nodol/.style={nodo, minimum width=4.6cm},
+  node distance=2.2cm and 2.0cm
+]
+  \node[nodo] (usuario) {Usuario};
+  \node[nodo, right=of usuario] (rol) {Rol};
+  \node[nodol, right=of rol] (asignatura) {Asignatura};
+  \node[nodo, below=of usuario] (matricula) {Matrícula};
+  \node[nodo, below=of rol] (cupo) {Oferta de cupos};
+  \node[nodol, below=of asignatura] (version) {Versión y\\[1pt]prerrequisito};
+  \node[nodo, below=of matricula] (auditoria) {Auditoría};
+  \node[nodo, below=of cupo] (mensaje) {Mensajería};
+  \node[nodol, below=of version] (evaluacion) {Evaluación y\\[1pt]queja};
+  \draw[flecha] (usuario) -- (rol);
+  \draw[flecha] (rol) -- (asignatura);
+  \draw[flecha] (usuario) -- (matricula);
+  \draw[flecha] (matricula) -- (cupo);
+  \draw[flecha] (asignatura) -- (version);
+  \draw[flecha] (matricula) -- (auditoria);
+  \draw[flecha] (cupo) -- (mensaje);
+  \draw[flecha] (version) -- (evaluacion);
+\end{tikzpicture}
+}%
+\caption{Modelo físico simplificado de la base de datos del \ac{SGDIC}}
+\label{fig:datos}
+\end{figure}
+
+El esquema se administra con migraciones de \ac{DJ} versionadas en el
+repositorio, se respalda diariamente con \texttt{pg\_dump} y las consultas más
+frecuentes cuentan con índices sobre llaves foráneas, periodos académicos y
+estados de trámite.
+
+\section{Comunicación entre Componentes}
+\label{sec:comunicacion}
+
+La comunicación sigue el principio de dependencia unidireccional: la capa de
+presentación consume a la de aplicación y esta, a la de datos. El navegador
+solicita una vista; el servidor de \ac{DJ} la resuelve a través de
+\texttt{urls}, \texttt{views} y \texttt{templates}, consulta el \ac{ORM} y
+devuelve \ac{HTML} renderizado o un cuerpo \ac{JSON}. Las operaciones que
+requieren actualizar la pantalla sin recargar (notificaciones, validación de
+prerrequisitos, filtros de cupos) usan llamados asíncronos a la API REST
+con \ac{JSON}.
+
+La figura~\ref{fig:secuencia} resume el ciclo completo de una solicitud típica,
+desde que el usuario envía el formulario hasta que recibe la respuesta,
+incluyendo las tareas que se delegan a la cola de procesos en segundo plano.
+
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  node distance=1.9cm and 1.3cm,
+  caja/.style={compApp, text width=2.55cm, align=center, minimum height=1.9cm,
+    inner sep=6pt, font=\small},
+  cajaweb/.style={caja, compWeb},
+  cajaapi/.style={caja, compApi},
+  cajadb/.style={caja, db},
+  etiqueta/.style={font=\tiny, align=center, inner sep=2pt,
+    fill=white, fill opacity=0.95, text opacity=1},
+  etiquetaAlta/.style={etiqueta, above=7pt},
+  etiquetaBaja/.style={etiqueta, below=7pt}
+]
+  \node[cajaweb] (u) {Frontend\\[2pt]\textit{usuario}};
+  \node[cajaapi, right=of u] (v) {Vista\\[2pt]\textit{Django}};
+  \node[caja, right=of v] (m) {Modelo\\[2pt]\textit{ORM}};
+  \node[cajadb, right=of m] (d) {Datos\\[2pt]\textit{PostgreSQL}};
+  \draw[flecha] (u) -- node[etiquetaAlta]{1.~Petición} (v);
+  \draw[flecha] (v) -- node[etiquetaAlta]{2.~Consulta} (m);
+  \draw[flecha] (m) -- node[etiquetaAlta]{3.~SQL} (d);
+  \draw[flechaS] (d) to[out=-50, in=-130, looseness=1.5]
+    node[etiquetaBaja, pos=0.5]{4.~Registros} (m);
+  \draw[flechaS] (m) to[out=-50, in=-130, looseness=1.5]
+    node[etiquetaBaja, pos=0.5]{5.~Objetos} (v);
+  \draw[flechaV] (v) to[out=70, in=110, looseness=1.6]
+    node[etiquetaAlta, pos=0.5]{6.~Respuesta} (u);
+  \node[legenda, below=5.2cm of u, text width=14.0cm, font=\footnotesize,
+        align=justify, inner sep=8pt] {
+    \textbf{Reglas de la capa de aplicación:} validación de permisos por rol,
+    transacción atómica para toda escritura, registro en auditoría y
+    notificación asíncrona al interesado mediante la cola de tareas.
+  };
+\end{tikzpicture}
+}%
+\caption{Secuencia de comunicación entre las capas del \ac{SGDIC}}
+\label{fig:secuencia}
+\end{figure}
+
+\section{Capa Analítica y Motor de Soluciones}
+\label{sec:analitica}
+
+La capa analítica complementa las tres capas funcionales. Un proceso \ac{ETL}
+programado extrae de forma periódica los eventos relevantes (matrículas,
+cancelaciones, reclamaciones, respuestas de evaluación), los normaliza y los
+carga en un repositorio analítico separado. Sobre ese repositorio se calculan
+los \ac{KPI} del departamento y se alimenta el motor de soluciones rápidas, que
+sugiere alternativas ante situaciones recurrentes, por ejemplo una asignatura
+con demanda superior a la oferta o un incremento sostenido de quejas por
+periodo.
+
+El aislamiento del repositorio analítico evita que las consultas de reporte
+compitan con las transacciones académicas y permite recalcular indicadores sin
+afectar el servicio.
+
+\section{Despliegue y Operación}
+\label{sec:despliegue}
+
+El sistema se despliega con el patrón de servidor de aplicaciones \ac{WSGI}
+detrás de un servidor web inverso que termina \ac{HTTPS}, sirve los archivos
+estáticos y canaliza las peticiones dinámicas. La base de datos PostgreSQL se
+ejecuta como servicio independiente con acceso restringido por red. La
+figura~\ref{fig:despliegue} presenta la topología propuesta.
+
+\begin{figure}[H]
+\centering
+\adjustbox{max width=\linewidth}{%
+\begin{tikzpicture}[
+  node distance=2.3cm and 1.7cm,
+  nodo/.style={compApp, text width=2.55cm, align=center, minimum height=2.0cm,
+    inner sep=7pt, font=\small},
+  nodoweb/.style={nodo, compWeb},
+  nodoinfra/.style={nodo, infra},
+  nododb/.style={nodo, db},
+  nodoapi/.style={nodo, compApi}
+]
+  \node[nodoweb] (cliente) {Cliente web\\[2pt]\textit{(navegador)}};
+  \node[nodoinfra, right=of cliente] (proxy) {Servidor web inverso\\[2pt]\textit{HTTPS y estáticos}};
+  \node[nodo, right=of proxy] (app) {Django (WSGI)\\[2pt]\textit{procesos de aplicación}};
+  \node[nododb, right=of app] (bd) {PostgreSQL\\[2pt]\textit{datos y respaldo}};
+  \node[nodoapi, below=2.6cm of proxy, text width=4.6cm] (cola) {Cola de tareas\\[2pt]\textit{procesos en segundo plano}};
+  \draw[flecha] (cliente) -- (proxy);
+  \draw[flecha] (proxy) -- (app);
+  \draw[flecha] (app) -- (bd);
+  \draw[flechaS] (app.south) |- (cola.east);
+  \draw[flechaV, dashed] (cola.west) -| (cliente.south);
+\end{tikzpicture}
+}%
+\caption{Topología de despliegue del \ac{SGDIC}}
+\label{fig:despliegue}
+\end{figure}
+
+La operación prevé integración y despliegue continuos (\ac{CI} y \ac{CD}):\ cada
+entrega ejecuta las pruebas automatizadas, aplica las migraciones de base de
+datos y publica la versión en el entorno de producción, con posibilidad de
+reversión ante fallos. Los respaldos diarios, las migraciones versionadas y los
+índices sobre las consultas críticas constituyen el plan de contingencia y
+continuidad del servicio.
+
+\section{Seguridad y Control de Acceso}
+\label{sec:seguridad}
+
+La seguridad se apoya en cuatro medidas. Primero, autenticación obligatoria con
+contraseñas almacenadas mediante funciones de derivación de clave y sesiones
+con expiración. Segundo, autorización por rol (\ac{RBAC}) aplicada en el
+servidor: estudiante, docente, secretaría y administrador acceden únicamente a
+las vistas y operaciones que les corresponden. Tercero, trazabilidad completa:
+toda modificación sensible deja registro en la tabla de auditoría, con usuario,
+fecha y valor anterior. Cuarto, protección del canal con \ac{HTTPS}, validación
+de formularios contra falsificación de petición y control de acceso a los
+recursos estáticos.
+
+Estas medidas responden a los requerimientos no funcionales de seguridad,
+trazabilidad y disponibilidad del documento de planificación y son condición
+previa para la puesta en producción del sistema.
+
+
+
+
+

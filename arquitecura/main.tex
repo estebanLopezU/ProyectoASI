@@ -1,0 +1,66 @@
+﻿
+% =====================================================================
+%  DOCUMENTACION TECNICA DE ARQUITECTURA
+%  Universidad Nacional de Colombia, Sede Manizales
+%  Facultad de Administracion / Departamento de Informatica y Computacion
+%  Compilar con: pdflatex -> pdflatex -> pdflatex  (carpeta: arquitecura/)
+% =====================================================================
+
+% --- Pre-amblea compartido (colores, cajas, TikZ, encabezados) ---
+\input{preambulo.tex}
+
+% --- Acronimos propios del documento tecnico ---
+\chapter*{Acrónimos y Abreviaturas}
+\addcontentsline{toc}{chapter}{Acrónimos y Abreviaturas}
+\markboth{Acrónimos y Abreviaturas}{Acrónimos y Abreviaturas}
+
+\begin{acronym}[CRISP-DM]
+  \acro{DIC}{Departamento de Informática y Computación}
+  \acro{SGDIC}{Sistema de Gestión Departamental de Informática y Computación}
+  \acro{UML}{Unified Modeling Language (Lenguaje Unificado de Modelado)}
+  \acro{DJ}{Django}
+  \acro{ORM}{Object-Relational Mapping (Mapeo Objeto-Relacional)}
+  \acro{API}{Application Programming Interface}
+  \acro{REST}{Representational State Transfer}
+  \acro{RBAC}{Role-Based Access Control}
+  \acro{SQL}{Structured Query Language}
+  \acro{HTML}{HyperText Markup Language}
+  \acro{CSS}{Cascading Style Sheets}
+  \acro{JS}{JavaScript}
+  \acro{WSGI}{Web Server Gateway Interface}
+  \acro{ACID}{Atomicity, Consistency, Isolation, Durability}
+  \acro{ETL}{Extract, Transform, Load (Extracción, Transformación y Carga)}
+  \acro{KPI}{Key Performance Indicator (Indicador Clave de Desempeño)}
+  \acro{CI}{Integración Continua}
+  \acro{CD}{Despliegue Continuo}
+  \acro{HTTPS}{HyperText Transfer Protocol Secure}
+  \acro{JWT}{JSON Web Token}
+  \acro{JSON}{JavaScript Object Notation}
+  \acro{TLS}{Transport Layer Security (Seguridad de la Capa de Transporte)}
+  \acro{UI}{User Interface (Interfaz de Usuario)}
+  \acro{UX}{User Experience (Experiencia de Usuario)}
+  \acro{SPA}{Single Page Application (Aplicación de Página Única)}
+  \acro{MVT}{Model-View-Template (Modelo-Vista-Plantilla)}
+  \acro{CDN}{Content Delivery Network (Red de Distribución de Contenido)}
+  \acro{VPS}{Virtual Private Server (Servidor Privado Virtual)}
+\end{acronym}
+
+\clearpage
+% --- Capitulos ---
+\input{01_arquitectura}
+
+% --- Referencias (estilo simple) ---
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Referencias}
+
+\bibitem{django}
+Django Software Foundation. \textit{Django documentation, Version 4.2}. https://docs.djangoproject.com/
+
+\bibitem{pg}
+PostgreSQL Global Development Group. \textit{PostgreSQL Documentation}. https://www.postgresql.org/docs/
+
+\end{thebibliography}
+
+\end{document}
+
+% FIN DE main.tex

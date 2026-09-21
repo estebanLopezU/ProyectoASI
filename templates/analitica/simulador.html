@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Simulador de score{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-calculator me-2"></i>Simulador del score (RF-56)</h3>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="get">
+          <div class="mb-3">
+            <label class="form-label" for="id_impacto">Impacto (I)</label>
+            <select name="impacto" id="id_impacto" class="form-select">
+              {% for clave, valor in factores_impacto.items %}
+                <option value="{{ clave }}" {% if datos.impacto == clave %}selected{% endif %}>{{ clave }} ({{ valor }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="id_urgencia">Urgencia (U)</label>
+            <select name="urgencia" id="id_urgencia" class="form-select">
+              {% for clave, valor in factores_urgencia.items %}
+                <option value="{{ clave }}" {% if datos.urgencia == clave %}selected{% endif %}>{{ clave }} ({{ valor }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="id_esfuerzo">Esfuerzo estimado (E, horas)</label>
+            <input type="number" step="0.5" min="0" name="esfuerzo" id="id_esfuerzo"
+                   class="form-control" value="{{ datos.esfuerzo }}">
+          </div>
+          <button class="btn btn-primary">Calcular score</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Resultado</div>
+      <div class="card-body">
+        <p class="display-4 mb-1">{{ score|floatformat:3 }}</p>
+        <p class="mb-2">
+          Prioridad:
+          <span class="badge
+            {% if nivel == 'CRITICA' %}bg-danger
+            {% elif nivel == 'ALTA' %}bg-warning text-dark
+            {% elif nivel == 'MEDIA' %}bg-info text-dark
+            {% else %}bg-secondary{% endif %}">{{ nivel }}</span>
+        </p>
+        <p class="small text-muted mb-3">
+          Fórmula aplicada: (I × U) / (E + ε) con ε = {{ epsilon }}.
+        </p>
+        <div class="alert alert-light mb-0">{{ recomendacion }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

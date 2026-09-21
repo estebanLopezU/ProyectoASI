@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Gestionar caso{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-tools me-2"></i>Gestionar {{ queja.consecutivo }}</h3>
+<div class="row">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.accion.id_for_label }}">Acción</label>
+            {{ form.accion }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.gestor.id_for_label }}">Gestor (para asignación)</label>
+            {{ form.gestor }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.detalle.id_for_label }}">Detalle o solución</label>
+            {{ form.detalle }}
+          </div>
+          <button class="btn btn-primary">Aplicar</button>
+          <a class="btn btn-outline-secondary" href="{% url 'quejas:detalle' queja.pk %}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Resumen del caso</div>
+      <div class="card-body">
+        <p class="mb-1"><strong>Asunto:</strong> {{ queja.asunto }}</p>
+        <p class="mb-1"><strong>Categoría:</strong> {{ queja.categoria.nombre }}</p>
+        <p class="mb-1"><strong>Estado:</strong> {{ queja.get_estado_display }}</p>
+        <p class="mb-1"><strong>Prioridad:</strong> {{ queja.get_prioridad_display }}</p>
+        <p class="mb-1"><strong>Horas sin gestión:</strong> {{ queja.horas_sin_gestion|floatformat:1 }}</p>
+        {% if queja.categoria.solucion_rapida %}
+          <div class="alert alert-light small mb-0">
+            <strong>Solución rápida sugerida (RN-11):</strong><br>{{ queja.categoria.solucion_rapida }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

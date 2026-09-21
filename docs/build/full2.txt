@@ -1,0 +1,1822 @@
+                                  UNIVERSIDAD NACIONAL DE COLOMBIA
+                                             SEDE MANIZALES
+                          FACULTADDEADMINISTRACIÓN
+                    DEPARTAMENTODEINFORMÁTICAYCOMPUTACIÓN
+                    Documentación de Investigación
+                          y PlaniĄcación del Sistema
+                                   Sistema de Gestión Departamental
+                                de Informática y Computación (SGDIC)
+                                Proyecto: Sistema de Gestión Departamental
+                                    Área: Informática y Computación
+                                  Versión:  1.0
+                                    Fecha: 16 de septiembre de 2026
+                          Documento elaborado como base metodológica para la planiĄcación
+                                      y el modelado del sistema propuesto.
+                   Índice general
+                   Resumen Ejecutivo                                                                               viii
+                   Acrónimos y Abreviaturas                                                                          ix
+                   1. Introducción y Planteamiento del Problema                                                       1
+                       1.1. Contexto Institucional . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          1
+                       1.2. Descripción del Problema        . . . . . . . . . . . . . . . . . . . . . . . . . . .     2
+                       1.3. Formulación del Problema . . . . . . . . . . . . . . . . . . . . . . . . . . .            3
+                       1.4. JustiĄcación . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        4
+                             1.4.1.  JustiĄcación académica . . . . . . . . . . . . . . . . . . . . . . . . .         4
+                             1.4.2.  JustiĄcación operativa . . . . . . . . . . . . . . . . . . . . . . . . .         4
+                             1.4.3.  JustiĄcación estratégica     . . . . . . . . . . . . . . . . . . . . . . . .     4
+                             1.4.4.  JustiĄcación social    . . . . . . . . . . . . . . . . . . . . . . . . . . .     4
+                       1.5. Objetivos     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     4
+                             1.5.1.  Objetivo general     . . . . . . . . . . . . . . . . . . . . . . . . . . . .     5
+                             1.5.2.  Objetivos especíĄcos . . . . . . . . . . . . . . . . . . . . . . . . . .         5
+                       1.6. Alcance y Delimitaciones . . . . . . . . . . . . . . . . . . . . . . . . . . . .          5
+                             1.6.1.  Alcance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        5
+                             1.6.2.  Delimitaciones . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       6
+                       1.7. Hipótesis . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       6
+                       1.8. Metodología Resumida . . . . . . . . . . . . . . . . . . . . . . . . . . . . .            7
+                       1.9. Estructura del Documento . . . . . . . . . . . . . . . . . . . . . . . . . . .            7
+                       1.10. Glosario de Términos del Dominio . . . . . . . . . . . . . . . . . . . . . . .           8
+                   2. Metodología de Investigación                                                                    9
+                       2.1. Enfoque de Investigación . . . . . . . . . . . . . . . . . . . . . . . . . . . .          9
+                       2.2. Tipo y Diseĳo de Investigación . . . . . . . . . . . . . . . . . . . . . . . . .          9
+                             2.2.1.  Tipo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       9
+                             2.2.2.  Diseĳo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     10
+                       2.3. Fases de la Metodología       . . . . . . . . . . . . . . . . . . . . . . . . . . . .   11
+                                                                     i
+                   Departamento de Informática y Computación                                                         ii
+                       2.4. Población y Muestra . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         12
+                             2.4.1.  Población . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      12
+                             2.4.2.  Tamaĳo de muestra . . . . . . . . . . . . . . . . . . . . . . . . . . .        13
+                       2.5. Técnicas e Instrumentos de Recolección . . . . . . . . . . . . . . . . . . . .          14
+                             2.5.1.  Escala de medición . . . . . . . . . . . . . . . . . . . . . . . . . . .       14
+                             2.5.2.  Operacionalización de variables . . . . . . . . . . . . . . . . . . . .        15
+                       2.6. Metodología CRISP-DM para la Analítica de Datos . . . . . . . . . . . . .               15
+                       2.7. Validez y ConĄabilidad . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        16
+                             2.7.1.  Validez de contenido . . . . . . . . . . . . . . . . . . . . . . . . . .       16
+                             2.7.2.  Validez de constructo . . . . . . . . . . . . . . . . . . . . . . . . . .      17
+                             2.7.3.  ConĄabilidad . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       17
+                             2.7.4.  Validez de la analítica    . . . . . . . . . . . . . . . . . . . . . . . . .   17
+                       2.8. Consideraciones Éticas . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        18
+                       2.9. Análisis de Datos Previsto . . . . . . . . . . . . . . . . . . . . . . . . . . .        19
+                       2.10. Limitaciones Metodológicas       . . . . . . . . . . . . . . . . . . . . . . . . . .   20
+                   3. Misión, Visión, Valores y Objetivos                                                           21
+                       3.1. Identidad del Sistema . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       21
+                       3.2. Misión . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      21
+                             3.2.1.  Desglose de la misión . . . . . . . . . . . . . . . . . . . . . . . . . .      22
+                       3.3. Visión . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      22
+                             3.3.1.  Metas de la visión . . . . . . . . . . . . . . . . . . . . . . . . . . . .     23
+                       3.4. Valores Institucionales . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       23
+                       3.5. Objetivos Estratégicos . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        23
+                       3.6. Indicadores Clave de Desempeĳo          . . . . . . . . . . . . . . . . . . . . . . .   25
+                       3.7. Mapa Estratégico . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        25
+                       3.8. BeneĄcios Esperados por Actor . . . . . . . . . . . . . . . . . . . . . . . .           26
+                   4. Requerimientos del Sistema                                                                    27
+                       4.1. Actores del Sistema . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       27
+                       4.2. Requerimientos Funcionales . . . . . . . . . . . . . . . . . . . . . . . . . .          27
+                             4.2.1.  Módulo de autenticación y roles . . . . . . . . . . . . . . . . . . . .        27
+                             4.2.2.  Módulo de cupos . . . . . . . . . . . . . . . . . . . . . . . . . . . .        28
+                             4.2.3.  Módulo de materias . . . . . . . . . . . . . . . . . . . . . . . . . . .       29
+                             4.2.4.  Módulo de mensajería . . . . . . . . . . . . . . . . . . . . . . . . .         30
+                                            Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                         iii
+                             4.2.5.  Módulo de faltas . . . . . . . . . . . . . . . . . . . . . . . . . . . .       30
+                             4.2.6.  Módulo de evaluación docente . . . . . . . . . . . . . . . . . . . . .         31
+                             4.2.7.  Módulo de quejas y sugerencias . . . . . . . . . . . . . . . . . . . .         32
+                             4.2.8.  Módulo de cuestionarios de materias y horarios          . . . . . . . . . . .  33
+                             4.2.9.  Módulo de analítica y soluciones rápidas . . . . . . . . . . . . . . .         33
+                       4.3. Requerimientos No Funcionales . . . . . . . . . . . . . . . . . . . . . . . .           35
+                       4.4. Reglas de Negocio . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       36
+                       4.5. Matriz de Trazabilidad ObjetivosŰRequerimientos . . . . . . . . . . . . . .             37
+                   5. Modelado UML del Sistema                                                                      38
+                       5.1. Diagrama de Casos de Uso . . . . . . . . . . . . . . . . . . . . . . . . . . .          38
+                             5.1.1.  Descripción general . . . . . . . . . . . . . . . . . . . . . . . . . . .      38
+                             5.1.2.  EspeciĄcación de casos de uso principales . . . . . . . . . . . . . . .        40
+                       5.2. Diagrama de Clases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        41
+                             5.2.1.  Descripción general . . . . . . . . . . . . . . . . . . . . . . . . . . .      41
+                             5.2.2.  Diagrama de clases detallado       . . . . . . . . . . . . . . . . . . . . .   42
+                       5.3. Diagrama de Secuencia: Evaluación Docente . . . . . . . . . . . . . . . . .             43
+                       5.4. Diagrama de Actividades: Gestión de Quejas y Sugerencias . . . . . . . . .              44
+                       5.5. Diagrama de Estados: Ciclo de Vida de una Queja . . . . . . . . . . . . . .             46
+                       5.6. Diagrama de Componentes y Arquitectura . . . . . . . . . . . . . . . . . .              47
+                       5.7. Resumen de Diagramas . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          48
+                   6. Algoritmo de Soluciones Rápidas y Analítica de Datos                                          49
+                       6.1. DeĄnición de Solución Rápida . . . . . . . . . . . . . . . . . . . . . . . . .          49
+                       6.2. Arquitectura del Motor Analítico . . . . . . . . . . . . . . . . . . . . . . .          50
+                       6.3. Descripción del Algoritmo . . . . . . . . . . . . . . . . . . . . . . . . . . .         50
+                             6.3.1.  Vista general    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   51
+                             6.3.2.  Pseudocódigo del algoritmo . . . . . . . . . . . . . . . . . . . . . .         51
+                             6.3.3.  Fórmula de priorización      . . . . . . . . . . . . . . . . . . . . . . . .   53
+                             6.3.4.  Modelo de preferencia de horarios por probabilidad . . . . . . . . .           53
+                       6.4. Modelos Analíticos por Tipo de Problema . . . . . . . . . . . . . . . . . .             55
+                       6.5. Reglas de Generación de Soluciones Rápidas . . . . . . . . . . . . . . . . .            57
+                       6.6. Tablero de VeriĄcación de Resultados . . . . . . . . . . . . . . . . . . . . .          58
+                             6.6.1.  Elementos del tablero . . . . . . . . . . . . . . . . . . . . . . . . . .      58
+                       6.7. Métricas de Evaluación del Algoritmo . . . . . . . . . . . . . . . . . . . . .          59
+                                            Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                     iv
+                      6.8. Ejemplo de Aplicación . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     59
+                  7. PlaniĄcación, Cronograma y Conclusiones                                                   60
+                      7.1. Cronograma General del Proyecto . . . . . . . . . . . . . . . . . . . . . . .       60
+                      7.2. Plan de Mitigación de Riesgos . . . . . . . . . . . . . . . . . . . . . . . . .     61
+                      7.3. Recursos Requeridos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     62
+                      7.4. Presupuesto Estimado . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      62
+                      7.5. Criterios de Aceptación . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   63
+                      7.6. Conclusiones . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  64
+                      7.7. Recomendaciones . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     65
+                      7.8. Trabajo Futuro . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    66
+                  Referencias                                                                                  67
+                                          Documentación de Investigación y PlaniĄcación
+                   Índice de tablas
+                       1.1. Estructura de la documentación . . . . . . . . . . . . . . . . . . . . . . . .            7
+                       1.2. Glosario del dominio académico . . . . . . . . . . . . . . . . . . . . . . . .            8
+                       2.1. Componentes del enfoque mixto . . . . . . . . . . . . . . . . . . . . . . . .             9
+                       2.2. Fases de la metodología de investigación        . . . . . . . . . . . . . . . . . . .   12
+                       2.3. Distribución de la muestra por actor        . . . . . . . . . . . . . . . . . . . . .   13
+                       2.4. Técnicas e instrumentos de recolección de datos . . . . . . . . . . . . . . .           14
+                       2.5. Escala Likert utilizada en los cuestionarios . . . . . . . . . . . . . . . . . .        15
+                       2.6. Operacionalización de variables . . . . . . . . . . . . . . . . . . . . . . . .         15
+                       2.7. Aplicación de Cross Industry Standard Process for Data Mining (CRISP-DM)
+                             al Sistema de Gestión Departamental de Informática y Computación (SGDIC) 16
+                       2.8. Técnicas de análisis por tipo de dato       . . . . . . . . . . . . . . . . . . . . .   19
+                       3.1. Componentes de la misión . . . . . . . . . . . . . . . . . . . . . . . . . . .          22
+                       3.2. Metas cuantiĄcables asociadas a la visión . . . . . . . . . . . . . . . . . . .         23
+                       3.3. Valores y su manifestación en el sistema        . . . . . . . . . . . . . . . . . . .   23
+                       3.4. Indicadores clave de desempeĳo (Key Performance Indicator (Indicador
+                             Clave de Desempeĳo) (KPI)) . . . . . . . . . . . . . . . . . . . . . . . . . .         25
+                       3.5. BeneĄcios esperados por actor involucrado . . . . . . . . . . . . . . . . . .           26
+                       4.1. DeĄnición de actores del SGDIC . . . . . . . . . . . . . . . . . . . . . . . .          27
+                       4.2. Requerimientos funcionales Ů autenticación y roles . . . . . . . . . . . . .            28
+                       4.3. Requerimientos funcionales Ů gestión de cupos           . . . . . . . . . . . . . . .   28
+                       4.4. Requerimientos funcionales Ů materias . . . . . . . . . . . . . . . . . . . .           29
+                       4.5. Requerimientos funcionales Ů mensajería . . . . . . . . . . . . . . . . . . .           30
+                       4.6. Requerimientos funcionales Ů registro de faltas . . . . . . . . . . . . . . .           30
+                       4.7. Requerimientos funcionales Ů evaluación docente . . . . . . . . . . . . . .             31
+                       4.8. Requerimientos funcionales Ů quejas y sugerencias . . . . . . . . . . . . .             32
+                       4.9. Requerimientos funcionales Ů cuestionarios          . . . . . . . . . . . . . . . . .   33
+                       4.10. Requerimientos funcionales Ů analítica . . . . . . . . . . . . . . . . . . . .         34
+                       4.11. Requerimientos no funcionales . . . . . . . . . . . . . . . . . . . . . . . . .        35
+                                                                    v
+                   Departamento de Informática y Computación                                                         vi
+                       4.12. Reglas de negocio del Departamento de Informática y Computación (DIC)                  36
+                       4.13. Trazabilidad entre objetivos estratégicos y requerimientos . . . . . . . . . .         37
+                       5.1. EspeciĄcación del caso de uso: Solicitar cupo (UC1) . . . . . . . . . . . . .           40
+                       5.2. EspeciĄcación del caso de uso: Gestión de queja o sugerencia (UC8) . . . .              40
+                       5.3. EspeciĄcación del caso de uso: Evaluación docente a tiempo (UC10) . . . .               41
+                       5.4. Descripción de los componentes de la arquitectura . . . . . . . . . . . . . .           48
+                       5.5. Inventario de diagramas UniĄed Modeling Language (Lenguaje UniĄcado
+                             de Modelado) (UML) del documento . . . . . . . . . . . . . . . . . . . . .             48
+                       6.1. Etapas del algoritmo de soluciones rápidas . . . . . . . . . . . . . . . . . .          51
+                       6.2. Modelos analíticos aplicados por tipo de problema . . . . . . . . . . . . . .           55
+                       6.3. Catálogo de soluciones rápidas por anomalía detectada . . . . . . . . . . .             57
+                       6.4. Componentes del tablero de veriĄcación . . . . . . . . . . . . . . . . . . . .          58
+                       6.5. Métricas de desempeĳo del motor analítico . . . . . . . . . . . . . . . . . .           59
+                       7.1. Riesgos, impacto y plan de mitigación . . . . . . . . . . . . . . . . . . . . .         61
+                       7.2. Recursos humanos, técnicos y de infraestructura . . . . . . . . . . . . . . .           62
+                       7.3. Presupuesto estimado del proyecto         . . . . . . . . . . . . . . . . . . . . . .   62
+                       7.4. Criterios de aceptación del proyecto . . . . . . . . . . . . . . . . . . . . . .        63
+                       7.5. Líneas de trabajo futuro . . . . . . . . . . . . . . . . . . . . . . . . . . . .        66
+                                            Documentación de Investigación y PlaniĄcación
+                   Índice de Ąguras
+                       2.1. Ciclo metodológico de investigaciónŰacción aplicado al DIC . . . . . . . . .             11
+                       2.2. Ciclo CRISP-DM adaptado a la analítica del SGDIC . . . . . . . . . . . .                 16
+                       3.1. Mapa estratégico del SGDIC: de la visión a los resultados medibles             . . . .   25
+                       5.1. Diagrama de casos de uso del SGDIC . . . . . . . . . . . . . . . . . . . . .             39
+                       5.2. Diagrama de clases (visión de relaciones principales) del SGDIC . . . . . .              42
+                       5.3. Diagrama de clases detallado con atributos y métodos . . . . . . . . . . . .             43
+                       5.4. Diagrama de secuencia del proceso de evaluación docente . . . . . . . . . .              44
+                       5.5. Diagrama de actividades del Ćujo de quejas y sugerencias . . . . . . . . . .             45
+                       5.6. Diagrama de estados del ciclo de vida de una queja o sugerencia . . . . . .              46
+                       5.7. Arquitectura de componentes del SGDIC . . . . . . . . . . . . . . . . . . .              47
+                       6.1. Arquitectura del motor analítico y de soluciones rápidas . . . . . . . . . . .           50
+                       6.2. Estructura del tablero de veriĄcación de resultados          . . . . . . . . . . . . .   58
+                       7.1. Cronograma general del proyecto (24 semanas) . . . . . . . . . . . . . . . .             60
+                                                                    vii
+        Resumen Ejecutivo
+        El presente documento establece la base metodológica, conceptual y de modelado para la
+        construcción del Sistema de Gestión Departamental de Informática y Computación
+        (SGDIC).ElproblemaidentiĄcadoenelDICsecaracterizaporunagestiónfragmentadade
+        sus procesos académicos y administrativos: las solicitudes de cupos, la creación y edición de
+        materias, la comunicación entre estudiantes y docentes, el registro de faltas, la caliĄcación
+        de docentes, la gestión de quejas y sugerencias, y la veriĄcación de resultados por parte de
+        la secretaría se realizan de manera aislada, manual o tardía.
+        La consecuencia directa es la pérdida de oportunidad en la toma de decisiones: las
+        evaluaciones docentes no se completan a tiempo, las quejas no llegan al docente responsable
+        en el momento adecuado, y no existe información analítica que permita anticipar problemas
+        de disponibilidad de horarios o saturación de cupos.
+        El documento se organiza en siete capítulos: (1) introducción y planteamiento del problema,
+        (2) metodología de investigación, (3) misión, visión, objetivos y valores, (4) requerimientos
+        funcionales y no funcionales, (5) modelado UML mediante diagramas de casos de uso,
+        clases, secuencia, actividades y estados, (6) propuesta del algoritmo de soluciones rápidas
+        con analítica de datos, y (7) cronograma, riesgos y conclusiones.
+         Resultados esperados del proyecto
+           Reducción ≥ 60% del tiempo de respuesta a solicitudes de cupos.
+           100%delas evaluaciones docentes completadas dentro del periodo académico
+           establecido.
+           Canal uniĄcado de comunicación estudianteŰdocenteŰsecretaría.
+           Trazabilidad completa de quejas y sugerencias con estado y responsable.
+           Modelo analítico que recomiende horarios óptimos según preferencias históricas
+           de los estudiantes.
+           Tablero (dashboard) de veriĄcación de resultados para la secretaría y el departa-
+           mento.
+                          viii
+        Acrónimos y Abreviaturas
+        DIC   Departamento de Informática y Computación
+        SGDIC Sistema de Gestión Departamental de Informática y Computación
+        UML   UniĄed Modeling Language (Lenguaje UniĄcado de Modelado)
+        CRISP-DM Cross Industry Standard Process for Data Mining
+        RF    Requerimiento Funcional
+        RNF   Requerimiento No Funcional
+        KPI   Key Performance Indicator (Indicador Clave de Desempeĳo)
+        API   Application Programming Interface
+        RBAC  Role-Based Access Control (Control de Acceso Basado en Roles)
+        ETL   Extract, Transform, Load
+        REST  Representational State Transfer
+        CSV   Comma-Separated Values
+        KNN   K-Nearest Neighbors
+        PII   Personally IdentiĄable Information
+                           ix
+           Capítulo 1
+           Introducción y Planteamiento del Pro-
+           blema
+           1.1  Contexto Institucional
+           El DIC es la unidad académica responsable de la formación profesional en las áreas de
+           informática, computación, desarrollo de software y tecnologías de la información. Su
+           operación diaria involucra cuatro actores fundamentales:
+                Estudiantes: demandan cupos, consultan horarios, caliĄcan docentes, reportan
+                faltas y presentan quejas o sugerencias.
+                Docentes: administran materias, registran asistencia y faltas, se comunican con
+                estudiantes y responden evaluaciones.
+                Secretaría: recibe, canaliza y da seguimiento a solicitudes, quejas y sugerencias;
+                coordina la comunicación entre las partes.
+                Departamento (Dirección/Administración): veriĄca resultados, analiza infor-
+                mación y toma decisiones académicas.
+           A pesar de la naturaleza tecnológica del departamento, sus procesos administrativos y
+           académicos no cuentan con un sistema integrado que articule estos actores, lo cual genera
+           reprocesos, demoras y pérdida de información.
+                                       1
+                 Departamento de Informática y Computación                                            2
+                 1.2     Descripción del Problema
+                  Problema central
+                  El DIC carece de un mecanismo uniĄcado, trazable y analítico para gestionar la
+                  comunicación, las solicitudes y las evaluaciones entre estudiantes, docentes, secretaría
+                  y dirección, lo que provoca demoras en la respuesta, evaluaciones incompletas, quejas
+                  sin seguimiento y decisiones tomadas sin evidencia.
+                 Apartir del levantamiento inicial de necesidades se identiĄcaron los siguientes problemas
+                 especíĄcos:
+                     1. Solicitud de cupos. El proceso se realiza de forma manual o por canales informales
+                        (correo, mensajería, presencial), sin control de disponibilidad en tiempo real ni
+                        criterios de priorización transparentes.
+                     2. Creación y edición de materias. Las materias nuevas o sus modiĄcaciones
+                        (contenido, prerrequisitos, créditos, horarios) no siguen un Ćujo formal de solicitudŰ
+                        aprobaciónŰpublicación.
+                     3. Comunicación estudiante → docente. No existe un canal institucional que
+                        garantice que el mensaje llegue, sea leído y tenga respuesta dentro de un plazo
+                        razonable.
+                     4. Comunicación docente → estudiante. Las notiĄcaciones sobre faltas, cambios
+                        de horario o novedades académicas dependen de medios externos y no quedan
+                        registradas.
+                     5. Registro y notiĄcación de faltas. Las faltas se registran de forma tardía y el
+                        estudiante se entera cuando el acumulado ya afecta su situación académica.
+                     6. Evaluación de docentes por estudiantes. La evaluación no se aplica a tiempo,
+                        la participación es baja y los resultados se consolidan tarde, cuando ya no permiten
+                        retroalimentación oportuna.
+                     7. Quejas y sugerencias. Se reciben por canales dispersos, sin categorización, sin
+                        responsable asignado y sin trazabilidad de estado.
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            3
+                     8. Efectividad de la secretaría. La secretaría actúa como cuello de botella: recibe
+                        las quejas y solicitudes, pero no cuenta con herramientas para priorizar, delegar y
+                        comunicarse formalmente con el docente.
+                     9. VeriĄcación de resultados. La secretaría y el departamento no disponen de
+                        tableros que les permitan veriĄcar resultados, quejas y evaluaciones de forma
+                        consolidada.
+                    10. Asignación de horarios. Los horarios se construyen sin conocer las preferencias
+                        reales de los estudiantes, generando baja asistencia y conĆictos de disponibilidad.
+                    11. Ausencia de analítica. No se explotan los datos históricos para anticipar satura-
+                        ción de cupos, docentes con bajo desempeĳo o patrones de quejas recurrentes.
+                 1.3     Formulación del Problema
+                  Pregunta de investigación principal
+                  ¾Cómo puede un sistema integrado de gestión, comunicación y analítica de datos
+                  mejorar la oportunidad, la trazabilidad y la calidad de las decisiones en el DIC?
+                 De la pregunta principal se derivan las siguientes preguntas especíĄcas:
+                        ¾Cuáles son los procesos críticos del DIC que presentan mayor demora y menor
+                        trazabilidad?
+                        ¾QuéarquitecturadeinformaciónpermiteuniĄcarlacomunicaciónentreestudiantes,
+                        docentes y secretaría sin duplicar canales?
+                        ¾Cómo diseĳar un mecanismo de evaluación docente que garantice el 100% de
+                        aplicación dentro del periodo?
+                        ¾Qué variables predicen la preferencia de horarios de los estudiantes y cómo pueden
+                        usarse para optimizar la programación académica?
+                        ¾Qué modelo analítico permite detectar anomalías (quejas recurrentes, cupos
+                        saturados, docentes con baja evaluación) y generar soluciones rápidas accionables?
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            4
+                        ¾Cómo veriĄcar la efectividad de las acciones tomadas por la secretaría y el
+                        departamento?
+                 1.4     JustiĄcación
+                 1.4.1    JustiĄcación académica
+                 Un departamento de informática debe ser el primer ejemplo de digitalización institucional.
+                 Diseĳar y documentar este sistema constituye un caso de estudio aplicado sobre arquitectura
+                 de software, modelado UML e ingeniería de datos.
+                 1.4.2    JustiĄcación operativa
+                 La automatización de solicitudes de cupos, la edición de materias, el registro de faltas y la
+                 gestión de quejas reduce el trabajo manual de la secretaría, elimina el retrabajo y libera
+                 tiempo para actividades de mayor valor.
+                 1.4.3    JustiĄcación estratégica
+                 La incorporación de analítica de datos y de un algoritmo de soluciones rápidas convierte
+                 la operación cotidiana en información accionable: permite anticipar problemas, priorizar
+                 intervenciones y medir el impacto de las decisiones.
+                 1.4.4    JustiĄcación social
+                 Un canal formal, trazable y conĄdencial para quejas y sugerencias mejora la convivencia
+                 académica, protege al estudiante y ofrece al docente retroalimentación oportuna y justa.
+                 1.5     Objetivos
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            5
+                 1.5.1    Objetivo general
+                  Objetivo general
+                  Diseĳar la documentación metodológica, funcional y de modelado del SGDIC, que
+                  integre la gestión de cupos, materias, comunicación, faltas, evaluación docente, quejas
+                  y sugerencias, junto con un componente de analítica de datos que genere soluciones
+                  rápidas y veriĄcables para el DIC.
+                 1.5.2    Objetivos especíĄcos
+                     1. Documentar el problema y los procesos actuales del DIC mediante técnicas de
+                        investigación cualitativa y cuantitativa.
+                     2. DeĄnir la misión, visión, valores y objetivos estratégicos del sistema.
+                     3. EspeciĄcar los requerimientos funcionales y no funcionales por actor.
+                     4. Modelar el sistema mediante diagramas UML: casos de uso, clases, secuencia,
+                        actividades y estados.
+                     5. Diseĳar el mecanismo de evaluación docente con control de plazos que garantice su
+                        aplicación a tiempo.
+                     6. Diseĳar el módulo de cuestionarios de materias y horarios, y el modelo de preferen-
+                        cias por probabilidad.
+                     7. Proponer el algoritmo de soluciones rápidas basado en analítica de datos.
+                     8. DeĄnir el modelo de veriĄcación de resultados para la secretaría y el departamento.
+                     9. Establecer el cronograma, los riesgos y los indicadores de éxito.
+                 1.6     Alcance y Delimitaciones
+                 1.6.1    Alcance
+                 El proyecto cubre el análisis, la metodología de investigación, la especiĄcación de requeri-
+                 mientos y el modelado completo del sistema, así como la deĄnición del algoritmo analítico
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            6
+                 y del modelo de veriĄcación institucional. Incluye:
+                        Los cuatro actores: estudiante, docente, secretaría y departamento.
+                        Los once procesos problemáticos identiĄcados en la sección anterior.
+                        Los diagramas UML de casos de uso, clases, secuencia, actividades y estados,
+                        embebidos en este documento.
+                        La especiĄcación del algoritmo de soluciones rápidas y las métricas.
+                 1.6.2    Delimitaciones
+                        No se incluye la implementación completa del sistema productivo, sino su docu-
+                        mentación y modelado.
+                        El análisis se limita al DIC; otras unidades académicas podrían requerir adaptacio-
+                        nes.
+                        Los datos usados en los ejemplos son sintéticos y anonimizados, en cumplimiento de
+                        las normas de protección de datos personales (Personally IdentiĄable Information
+                        (PII)).
+                        La integración con el sistema central de la universidad se especiĄca a nivel de
+                        interfaz (Application Programming Interface (API) Representational State Transfer
+                        (REST)), sin detallar su implementación.
+                 1.7     Hipótesis
+                     1. H1. Un canal uniĄcado de comunicación reduce en al menos 60% el tiempo de
+                        respuesta a solicitudes y mensajes respecto al proceso manual actual.
+                     2. H2. Un mecanismo de evaluación con recordatorios automáticos, plazos visibles
+                        e incentivos incrementa la tasa de respuesta docente a más del 90% dentro del
+                        periodo.
+                     3. H3. Un modelo de preferencias por probabilidad sobre los cuestionarios de horarios
+                        permite asignar horarios con mayor nivel de aceptación por parte de los estudiantes.
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            7
+                     4. H4. Un algoritmo de priorización basado en analítica reduce el tiempo de resolución
+                        de quejas críticas y mejora la percepción de efectividad de la secretaría.
+                     5. H5. La trazabilidad completa (estado, responsable, fechas) aumenta la conĄanza
+                        institucional y la participación en los canales formales.
+                 1.8     Metodología Resumida
+                 La investigación se aborda con un enfoque mixto (cualitativo y cuantitativo) y un diseĳo
+                 de investigación aplicada complementado con el ciclo CRISP-DM para el componente
+                 de analítica de datos. El detalle completo se presenta en el Capítulo 2.
+                 1.9     Estructura del Documento
+                                        Tabla 1.1: Estructura de la documentación
+                 Cap. Título                                        Contenido principal
+                   1    Introducción y planteamiento del problema   Contexto, problema, preguntas, justi-
+                                                                    Ącación, objetivos, alcance, hipótesis.
+                   2    Metodología de investigación                Enfoque mixto, diseĳo, población,
+                                                                    instrumentos, CRISP-DM, validez y
+                                                                    ética.
+                   3    Misión, visión y objetivos                  Misión, visión, valores, objetivos es-
+                                                                    tratégicos, KPI y mapa estratégico.
+                   4    Requerimientos                              Actores, requerimientos funcionales
+                                                                    y no funcionales, reglas de negocio.
+                   5    Modelado UML                                Casos de uso, clases, secuencia, acti-
+                                                                    vidades y estados (diagramas embe-
+                                                                    bidos).
+                   6    Algoritmo de soluciones rápidas             Analítica de datos, priorización, pre-
+                                                                    dicción de horarios, veriĄcación.
+                   7    PlaniĄcación                                Cronograma, recursos, riesgos, indi-
+                                                                    cadores y conclusiones.
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                            8
+                 1.10      Glosario de Términos del Dominio
+                                        Tabla 1.2: Glosario del dominio académico
+                 Término                  DeĄnición
+                 Cupo                     Plaza disponible de un estudiante en una materia para un periodo
+                                          académico.
+                 Materia                  Unidad curricular con código, créditos, prerrequisitos y horario.
+                 Falta                    Inasistencia de un estudiante a una sesión de clase programada.
+                 Queja                    Manifestación formal de insatisfacción sobre un servicio o perso-
+                                          na.
+                 Sugerencia               Propuesta de mejora no vinculada a una inconformidad.
+                 Evaluación docente       Instrumento mediante el cual el estudiante valora el desempeĳo.
+                 Cuestionario de horario  Instrumento que captura preferencias y disponibilidad.
+                 Solución rápida          Recomendación accionable generada por el motor analítico.
+                 VeriĄcación              Contraste de resultados, quejas y evaluaciones por secretaría y
+                                          dirección.
+                 Trazabilidad             Conocer el estado, responsable e historial de un caso.
+                                      Documentación de Investigación y PlaniĄcación
+                  Capítulo 2
+                  Metodología de Investigación
+                  2.1      Enfoque de Investigación
+                  La presente investigación adopta un enfoque mixto (cualitativo y cuantitativo) con alcance
+                  descriptivo, explicativo y propositivo.SeeligióesteenfoqueporqueelproblemadelDIC
+                  combina dimensiones humanas (percepciones, comunicación, conĆictos) con dimensiones
+                  medibles (tiempos de respuesta, tasas de respuesta, frecuencias de quejas, disponibilidad
+                  horaria).
+                                           Tabla 2.1: Componentes del enfoque mixto
+                  Dimensión        Enfoque cualitativo                     Enfoque cuantitativo
+                  Propósito        Comprender el problema y sus cau- Medir magnitud, frecuencia e impac-
+                                   sas                                     to
+                  Técnicas         Entrevistas, observación, análisis do-  Encuestas, registro de tiempos, ana-
+                                   cumental                                lítica
+                  Instrumentos     Guion de entrevista, Ącha de obser- Cuestionario estructurado, ETL de
+                                  vación                                   logs
+                  Muestra          8Ű12 informantes clave                  Muestreo probabilístico por estrato
+                  Análisis         CodiĄcación temática                    Estadística descriptiva e inferencial
+                  Resultado        Marco interpretativo del problema       Indicadores y modelos predictivos
+                  2.2      Tipo y Diseĳo de Investigación
+                  2.2.1     Tipo
+                          Investigación aplicada: busca resolver un problema concreto del DIC mediante
+                          una solución tecnológica documentada.
+                                                                 9
+                 Departamento de Informática y Computación                                           10
+                        Estudio de caso: el DIC se analiza como unidad integral, considerando sus
+                        procesos, actores y datos.
+                        InvestigaciónŰacción: se iteran ciclos de diagnóstico, diseĳo, validación y reĄna-
+                        miento con participación de los actores.
+                 2.2.2    Diseĳo
+                 Se emplea un diseĳo transversal para el diagnóstico (una medición completa del es-
+                 tado actual) y longitudinal para la validación (mediciones del antes y después de la
+                 implementación de los módulos).
+                                      Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                           11
+                                                                    Inicio
+                                                               Diagnóstico del
+                                                                estado actual
+                                                            Recolección cualitativa
+                                                                y cuantitativa
+                                                                  Análisis y
+                                                                 codiĄcación
+                                Ampliar             No           ¾Problema
+                                muestra                           validado?
+                                                                       Sí
+                                                                  Diseĳo de
+                                                                 la solución
+                                                                 Prototipo y
+                                                                  validación
+                                                                  ¾Hipótesis           No            ReĄnar
+                                                                  aceptada?                       iterativamente
+                                                                       Sí
+                                                               Documentación
+                                                                    Ąnal
+                                Figura 2.1: Ciclo metodológico de investigaciónŰacción aplicado al DIC
+                    2.3      Fases de la Metodología
+                    Lametodología se estructura en ocho fases, cada una con entradas, actividades y entregables
+                    explícitos.
+                                             Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                         12
+                                          Tabla 2.2: Fases de la metodología de investigación
+                   Fase    Nombre                        Actividades principales                            Duración
+                    F1     DeĄnición del problema        IdentiĄcación de síntomas, delimitación del al-    2 sem.
+                                                         cance, formulación de preguntas e hipótesis.
+                    F2     Revisión de literatura        Búsqueda de antecedentes en gestión académica,     3 sem.
+                                                         analítica educativa, sistemas de quejas y evalua-
+                                                         ción docente.
+                    F3     Diseĳo metodológico           Selección de técnicas, deĄnición de población y    2 sem.
+                                                         muestra, construcción de instrumentos.
+                    F4     Recolección de datos          Entrevistas, encuestas, observación de procesos,   4 sem.
+                                                         extracción de datos históricos del DIC.
+                    F5     Análisis de datos             Transcripción y codiĄcación, estadística descrip-  3 sem.
+                                                         tiva, análisis de correlaciones, preparación del
+                                                         dataset.
+                    F6     Diseĳo de la solución         Arquitectura, modelado UML, especiĄcación de       4 sem.
+                                                         requerimientos y del algoritmo de soluciones
+                                                         rápidas.
+                    F7     Validación                    Validación de instrumentos, validación del mo-     3 sem.
+                                                         delo con expertos, prueba piloto del prototipo.
+                    F8     Documentación y difusión      Redacción del informe, tableros de resultados,     3 sem.
+                                                         socialización con la comunidad académica.
+                   2.4       Población y Muestra
+                   2.4.1      Población
+                   La población objeto de estudio está conformada por los integrantes del DIC:
+                            Estudiantes: matriculados en materias del departamento en el periodo académico
+                            vigente.
+                            Docentes: adscritos al departamento.
+                            Personal de secretaría: responsable de la atención de solicitudes, quejas y
+                            sugerencias.
+                                            Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           13
+                        Directivos: dirección y coordinación académica del departamento.
+                 2.4.2    Tamaĳo de muestra
+                 Para la encuesta a estudiantes se utiliza muestreo probabilístico estratiĄcado por semestre,
+                 con un nivel de conĄanza del 95% y un margen de error del 5%:
+                                               n=       N·Z2·p·q                                   (2.1)
+                                                    e2(N −1)+Z2·p·q
+                 donde N es el tamaĳo de la población, Z = 1:96, p = q = 0:5 y e = 0:05. Para el resto
+                 de actores se emplea muestreo no probabilístico por conveniencia, dado el tamaĳo
+                 reducido de la población (docentes, secretaría y directivos).
+                                      Tabla 2.3: Distribución de la muestra por actor
+                 Actor                Población        Muestra     Técnica principal
+                 Estudiantes         N (variable)     n calculado  Encuesta estructurada
+                 Docentes               20Ű40            12Ű20     Entrevista semiestructurada
+                 Secretaría              2Ű4              2Ű4      Entrevista + observación de procesos
+                 Directivos              2Ű3              2Ű3      Entrevista en profundidad
+                 Datos históricos Registros del DIC      Censo     Extracción y ETL
+                                      Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                    14
+                  2.5      Técnicas e Instrumentos de Recolección
+                                    Tabla 2.4: Técnicas e instrumentos de recolección de datos
+                  Técnica                Instrumento                    Propósito
+                  Encuesta               Cuestionario de 25 ítems (es-  Medir percepción de tiempos, satisfacción
+                                         cala Likert 1Ű5)               con comunicación y utilidad percibida
+                  Entrevista   semies-   Guion de 15 preguntas          Comprendercausasdelretraso, sobrecarga
+                  tructurada                                            operativa y expectativas
+                  Observación no par- Ficha de registro de procesos     Cronometrar el Ćujo real de una solicitud
+                  ticipante                                             de cupo y de una queja
+                  Análisis documental    Ficha de revisión normativa    IdentiĄcar reglas de negocio y criterios de
+                                                                        asignación vigentes
+                  Cuestionario de ho- Formulario de disponibilidad      Capturar datos para el modelo probabilís-
+                  rarios                 y preferencia                  tico de horarios
+                  Extracción de datos    Consultas sobre registros his- Construir el dataset para analítica de da-
+                                         tóricos                        tos
+                  Grupo focal            Guion de discusión (6Ű8 estu-  Validar hallazgos y priorizar funcionalida-
+                                         diantes)                       des
+                  2.5.1     Escala de medición
+                  Se emplea una escala Likert de cinco niveles para las variables perceptuales:
+                                      Tabla 2.5: Escala Likert utilizada en los cuestionarios
+                                     Valor SigniĄcado
+                                       5      Totalmente de acuerdo / Muy satisfecho
+                                       4      De acuerdo / Satisfecho
+                                       3      Neutral / Indiferente
+                                       2      En desacuerdo / Insatisfecho
+                                       1      Totalmente en desacuerdo / Muy insatisfecho
+                                          Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                        15
+                   2.5.2      Operacionalización de variables
+                                              Tabla 2.6: Operacionalización de variables
+                   Variable                       Tipo                      Indicador             Instrumento
+                   Tiempo de respuesta            Cuantitativa continua     Horas promedio        Observación, logs
+                   Tasa de respuesta docente      Cuantitativa discreta     Porcentaje            Registro del sistema
+                   Satisfacción comunicacional    Cualitativa ordinal       Índice 1Ű5            Encuesta
+                   Frecuencia de quejas           Cuantitativa discreta     N.º por periodo       Registro del sistema
+                   Preferencia de horario         Cualitativa nominal       Probabilidad P(hi)    Cuestionario de ho-
+                                                                                                  rarios
+                   Desempeĳo docente              Cuantitativa continua     Puntaje 0Ű5           Evaluación docente
+                   Efectividad secretaría         Cuantitativa continua     %casos resueltos      Tablero veriĄcación
+                   2.6       Metodología CRISP-DM para la Analítica de Da-
+                             tos
+                   Para el componente de analítica de datos y el algoritmo de soluciones rápidas se adopta el
+                   estándar CRISP-DM, que organiza el trabajo de datos en seis fases iterativas.
+                                 1. Comprensión             2. Comprensión            3. Preparación
+                                    del negocio               de los datos              de los datos
+                                                                reĄnar
+                                                                                                iterar
+                                    6. Despliegue            5. Evaluación             4. Modelado
+                                  Figura 2.2: Ciclo CRISP-DM adaptado a la analítica del SGDIC
+                                            Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                              16
+                                       Tabla 2.7: Aplicación de CRISP-DM al SGDIC
+                 Fase   Nombre                    Aplicación concreta en el DIC
+                   1    Comprensión del negocio   Objetivos: reducir tiempos de respuesta, asegurar evaluación
+                                                  docente oportuna, priorizar quejas. DeĄnición de KPI.
+                   2    Comprensión de los datos  Fuentes: registros de cupos, mensajes, faltas, evaluaciones,
+                                                  quejas, cuestionarios de horarios.
+                   3    Preparación de los datos  Limpieza, normalización de fechas y categorías, anonimización
+                                                  de PII, construcción de variables derivadas.
+                   4    Modelado                  Modelos de clasiĄcación de quejas, predicción de demanda de
+                                                  cupos, probabilidad de preferencia de horario, detección de
+                                                  anomalías.
+                   5    Evaluación                Validación cruzada, matrices de confusión, comparación con-
+                                                  tra línea base, revisión con expertos del departamento.
+                   6    Despliegue                Integración de las recomendaciones en el tablero de veriĄca-
+                                                  ción y en el motor de soluciones rápidas.
+                 2.7      Validez y ConĄabilidad
+                 2.7.1     Validez de contenido
+                 Los instrumentos se someten a juicio de expertos (tres docentes con experiencia en
+                 metodología de investigación y dos directivos del DIC), con una rúbrica de evaluación de
+                 claridad, pertinencia y suĄciencia.
+                 2.7.2     Validez de constructo
+                 Se aplica análisis factorial exploratorio para veriĄcar que los ítems del cuestionario
+                 agrupan las dimensiones previstas: comunicación, oportunidad, trazabilidad y satisfacción.
+                 2.7.3     ConĄabilidad
+                 La consistencia interna se mide con el coeĄciente alfa de Cronbach:
+                                                                P       
+                                                       k           k  σ2
+                                                 α=          1− i=1 i                                (2.2)
+                                                     k −1          σ2
+                                                                     T
+                                       Documentación de Investigación y PlaniĄcación
+             Departamento de Informática y Computación                         17
+             donde k es el número de ítems, σ2 la varianza de cada ítem y σ2 la varianza total. Se
+                                       i                        T
+             considera aceptable un valor α ≥ 0:70.
+             2.7.4  Validez de la analítica
+             Para los modelos de datos se emplea validación cruzada de k particiones (k = 10) y
+             se reportan exactitud, precisión, exhaustividad y F1:
+                                  F1 = 2· Precisión·Exhaustividad             (2.3)
+                                        Precisión + Exhaustividad
+             2.8    Consideraciones Éticas
+               Principios éticos del estudio
+                    Consentimiento informado: todos los participantes conocen el propósito del
+                    estudio y autorizan su participación.
+                    ConĄdencialidad: las respuestas de estudiantes sobre docentes se anonimizan;
+                    ningún docente conoce la identidad de quien lo caliĄca.
+                    No represalia: se garantiza que reportar una queja o una evaluación negativa
+                    no genere consecuencias académicas adversas.
+                    Minimización de datos: solo se recolectan los datos necesarios para cada
+                    objetivo declarado.
+                    Transparencia algorítmica: los criterios del algoritmo de priorización son
+                    públicos y auditables por la comunidad académica.
+                    Revisión institucional: el protocolo se somete al comité de ética o instancia
+                    equivalente de la facultad.
+                              Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                      18
+                   2.9      Análisis de Datos Previsto
+                                          Tabla 2.8: Técnicas de análisis por tipo de dato
+                   Tipo de dato           Técnica                            Resultado esperado
+                   Respuestas Likert      Estadística descriptiva (media,    Índice de satisfacción por dimensión
+                                          mediana, desviación)
+                   Comparación      an- Prueba t para muestras relacio- SigniĄcancia del cambio en tiempos de
+                   tes/después            nadas                              respuesta
+                                                                    2
+                   Datos categóricos de   Tablas de contingencia, χ          Asociación entre tipo de queja y área
+                   quejas                                                    responsable
+                   Series temporales de   Suavizado exponencial, ARIMA       Pronóstico de demanda por materia
+                   cupos
+                   Preferencias de hora-  Frecuencias y probabilidad con-    P(horario ♣ perĄl del estudiante)
+                   rio                    dicional
+                   Texto libre de quejas  PLN(bolsa de palabras)             Categorización automática y temas re-
+                                                                             currentes
+                   Registros de evalua-   Tendencia y control estadístico    Detección de docentes con desempeĳo
+                   ción                                                      atípico
+                   2.10       Limitaciones Metodológicas
+                           Sesgo de autoselección: quienes responden encuestas pueden tener opiniones
+                           más extremas que quienes no participan.
+                           Deseabilidad social: los estudiantes podrían suavizar sus evaluaciones por temor
+                           a represalias, mitigado con anonimato estricto.
+                           Datos históricos incompletos: los registros previos pueden ser fragmentarios, lo
+                           que obliga a imputar o descartar observaciones.
+                           Estacionalidad académica: los patrones de quejas y demanda de cupos varían
+                           según el calendario académico, lo que exige comparar periodos equivalentes.
+                           Generalización: los hallazgos describen el DIC y no se extrapolan automática-
+                           mente a otras unidades académicas.
+                                           Documentación de Investigación y PlaniĄcación
+           Capítulo 3
+           Misión, Visión, Valores y Objetivos
+           3.1  Identidad del Sistema
+            Identidad
+            Denominación: Sistema de Gestión Departamental de Informática y Computación
+            (SGDIC).
+            Naturaleza: Plataforma integrada de gestión académica, comunicación institucional y
+            analítica de datos.
+            Ámbito de aplicación: DIC.
+            Usuarios: estudiantes, docentes, secretaría y dirección del departamento.
+           3.2  Misión
+            Misión
+            Facilitar al DIC una plataforma uniĄcada, transparente y trazable que centralice
+            la gestión de cupos, materias, comunicación, faltas, evaluación docente, quejas y
+            sugerencias, incorporando analítica de datos que permita detectar patrones, anticipar
+            problemas y generar soluciones rápidas basadas en evidencia, con el Ąn de mejorar la
+            oportunidad de las respuestas, la equidad en las decisiones y la calidad de la experiencia
+            académica de estudiantes, docentes y personal administrativo.
+                                      19
+                 Departamento de Informática y Computación                                           20
+                 3.2.1    Desglose de la misión
+                                          Tabla 3.1: Componentes de la misión
+                 Componente         Contenido
+                 ¾Qué hacemos?      Centralizamos y automatizamos los procesos académicos y adminis-
+                                    trativos del DIC.
+                 ¾Para quién?       Estudiantes, docentes, secretaría y dirección del departamento.
+                 ¾Para qué?         Para mejorar oportunidad, trazabilidad, equidad y calidad de las
+                                    decisiones académicas.
+                 ¾Cómo?             Mediante una plataforma integrada con analítica de datos y un motor
+                                    de soluciones rápidas.
+                 ¾Con qué valores?  Transparencia, equidad, conĄdencialidad, eĄciencia, innovación y ser-
+                                    vicio.
+                 3.3     Visión
+                  Visión
+                  Ser, en un horizonte de tres aĳos, el sistema de gestión departamental de referencia en
+                  la universidad, reconocido por eliminar las barreras de comunicación entre estudiantes
+                  y docentes, por garantizar evaluaciones docentes oportunas y por transformar los datos
+                  operativos en decisiones académicas informadas, anticipadas y veriĄcables.
+                                      Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                       21
+                   3.3.1     Metas de la visión
+                                        Tabla 3.2: Metas cuantiĄcables asociadas a la visión
+                   Meta                                                  Línea base           Objetivo a 3 aĳos
+                   Tiempo de respuesta a solicitudes de cupo           5Ű10 días hábiles          <24horas
+                   Evaluaciones docentes completadas en el periodo          <40%                    =100%
+                   Quejas con responsable asignado y fecha de cierre        <30%                    >95%
+                   Tiempo medio de resolución de queja crítica             >15días                  <3días
+                   Cobertura de la encuesta de horarios                  No existente       >80%dematriculados
+                   Módulos con tablero de veriĄcación                          0           100% de procesos críticos
+                   Materias con horario optimizado por modelo                  0                    >70%
+                   3.4      Valores Institucionales
+                                         Tabla 3.3: Valores y su manifestación en el sistema
+                   Valor               Cómo se maniĄesta en el SGDIC
+                   Transparencia       Estados, plazos y criterios visibles para el solicitante.
+                   Equidad             Reglas de priorización publicadas y aplicadas uniformemente.
+                   ConĄdencialidad     Anonimato del evaluador y protección de datos personales.
+                   Trazabilidad        Cada caso registra responsable, fecha y bitácora de cambios.
+                   Oportunidad         NotiĄcaciones automáticas y control de plazos.
+                   EĄciencia           Automatización y eliminación de intermediarios innecesarios.
+                   Innovación          Uso de analítica y modelos predictivos para anticipar problemas.
+                   Servicio            Foco en reducir la carga y mejorar la experiencia de los actores.
+                   Mejora continua     Ciclos de retroalimentación a partir de las métricas.
+                   3.5      Objetivos Estratégicos
+                        1. OE1. Gestión de cupos eĄciente. Automatizar la solicitud, veriĄcación de
+                           disponibilidad y asignación de cupos con criterios transparentes y tiempo de
+                           respuesta inferior a 24 horas.
+                                           Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           22
+                     2. OE2. Ciclo de vida de materias. Formalizar el Ćujo de creación, edición,
+                        aprobación y publicación de materias con control de versiones.
+                     3. OE3. Comunicación institucional uniĄcada. Proveer un canal único y trazable
+                        para la comunicación bidireccional entre estudiantes, docentes y secretaría.
+                     4. OE4. NotiĄcación temprana de faltas. Registrar faltas en el momento y
+                        notiĄcar al estudiante de forma automática e inmediata.
+                     5. OE5. Evaluación docente oportuna. Garantizar la aplicación, recordatorio y
+                        cierre de la evaluación docente dentro del periodo.
+                     6. OE6. Gestión formal de quejas y sugerencias. Categorizar, priorizar, asignar
+                        responsable y cerrar cada caso con trazabilidad total.
+                     7. OE7. Fortalecimiento de la secretaría. Dotar a la secretaría de herramientas
+                        de priorización, delegación y comunicación con los docentes.
+                     8. OE8. Optimización de horarios. Aplicar cuestionarios y modelos probabilísticos
+                        para programar horarios con mayor aceptación estudiantil.
+                     9. OE9. VeriĄcación institucional. Ofrecer tableros de control a la secretaría y al
+                        departamento para veriĄcar resultados, quejas y evaluaciones.
+                    10. OE10. Analítica y soluciones rápidas. Implementar un motor analítico que
+                        detecte anomalías y genere recomendaciones accionables.
+                                      Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                  23
+                  3.6      Indicadores Clave de Desempeĳo
+                                        Tabla 3.4: Indicadores clave de desempeĳo (KPI)
+                  KPI        DeĄnición                                                 Meta        Frecuencia
+                  TRC        Tiempo de respuesta a solicitud de cupo (horas)           <24         Semanal
+                  TRD        Tiempo de respuesta docente a mensaje (horas)             <48         Semanal
+                  TED        Tasa de evaluaciones docentes completadas                 100%        Por periodo
+                  TQR        Tasa de quejas resueltas dentro del plazo                 >90%        Mensual
+                  TMC        Tiempo medio de cierre de queja crítica (días)            <3          Mensual
+                  ICOM       Índice de satisfacción con la comunicación (1Ű5)          >4:0        Por periodo
+                  CNF        Cobertura de notiĄcación de faltas el mismo día           100%        Semanal
+                  ACE        Aceptación de horario asignado (1Ű5)                      >4:0        Por periodo
+                  IDD        Índice de desempeĳo docente promedio (0Ű5)                >4:0        Por periodo
+                  EFA        Efectividad de acciones de la secretaría                  >85%        Mensual
+                  EAN        Exactitud del modelo de detección de anomalías            >85%        Trimestral
+                  3.7      Mapa Estratégico
+                                                             VISIÓN
+                                             Ser referente universitario en gestión departamental
+                                                             MISIÓN
+                                                 Plataforma uniĄcada, trazable y analítica
+                                                  PERSPECTIVA ESTRATÉGICA
+                                                 Soluciones rápidas basadas en evidencia
+                                                          RESULTADOS
+                                                 KPI: TRC, TED, TQR, CNF, ACE, IDD
+                         Figura 3.1: Mapa estratégico del SGDIC: de la visión a los resultados medibles
+                                         Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           24
+                 3.8     BeneĄcios Esperados por Actor
+                                   Tabla 3.5: BeneĄcios esperados por actor involucrado
+                 Actor          BeneĄcios principales
+                 Estudiante     Solicitud de cupos en línea con respuesta en menos de 24 h; notiĄcación inme-
+                                diata de faltas; canal formal y anónimo para evaluar y reportar; horarios más
+                                compatibles con su disponibilidad.
+                 Docente        Gestión ágil de materias; canal único de mensajería; retroalimentación de estu-
+                                diantes consolidada y anónima; menor carga administrativa.
+                 Secretaría     Bandeja priorizada de solicitudes y quejas; asignación de responsables; comu-
+                                nicación formal con docentes; tableros de seguimiento; eliminación de registros
+                                duplicados en hojas de cálculo.
+                 Departamento   VeriĄcación consolidada de resultados, quejas y evaluaciones; indicadores en
+                                tiempo real; alertas tempranas; soporte objetivo para decisiones académicas.
+                 Institución    Mayor satisfacción de la comunidad académica; trazabilidad auditable; experien-
+                                cia replicable en otras unidades académicas.
+                                      Documentación de Investigación y PlaniĄcación
+                   Capítulo 4
+                   Requerimientos del Sistema
+                   4.1      Actores del Sistema
+                                             Tabla 4.1: DeĄnición de actores del SGDIC
+                   Actor                          Descripción y responsabilidades
+                   Estudiante                     Usuario Ąnal que solicita cupos, consulta horarios, envía y recibe
+                                                  mensajes, responde cuestionarios de horario y de materias, cali-
+                                                  Ąca docentes, recibe notiĄcaciones de faltas y presenta quejas o
+                                                  sugerencias.
+                   Docente                        Gestiona sus materias y horarios, registra faltas, se comunica con
+                                                  estudiantes y con la secretaría, recibe evaluaciones consolidadas.
+                   Secretaría                     Recibe y clasiĄca quejas y solicitudes, asigna responsables, coordi-
+                                                  na la comunicación con docentes, veriĄca resultados y mantiene
+                                                  la trazabilidad.
+                   Departamento                   Administra el catálogo de materias y cupos, conĄgura periodos
+                                                  de evaluación, consulta analítica, veriĄca resultados y aprueba
+                                                  decisiones académicas.
+                   Sistema de notiĄcaciones       Actor secundario que despacha correos, mensajes internos y recor-
+                                                  datorios.
+                   Sistema central universitario  Actor secundario que provee la matrícula, catálogo oĄcial y au-
+                                                  tenticación.
+                   4.2      Requerimientos Funcionales
+                   4.2.1     Módulo de autenticación y roles
+                                                                  25
+                 Departamento de Informática y Computación                                                 26
+                                Tabla 4.2: Requerimientos funcionales Ů autenticación y roles
+                         ID         Requerimiento                           Actor
+                         RF-01      El sistema debe autenticar usuarios     Todos
+                                    mediante correo institucional y con-
+                                    traseĳa o credencial institucional.
+                         RF-02      El sistema debe asignar permisos se- Todos
+                                    gún el rol (Role-Based Access Con-
+                                    trol (Control de Acceso Basado en
+                                    Roles) (RBAC)): estudiante, docen-
+                                    te, secretaría, departamento.
+                         RF-03      El sistema debe permitir la recupera- Todos
+                                    ción de contraseĳa sin intervención
+                                    de la secretaría.
+                         RF-04      El sistema debe registrar bitácora de   Departamento
+                                    accesos y operaciones críticas.
+                  4.2.2     Módulo de cupos
+                                  Tabla 4.3: Requerimientos funcionales Ů gestión de cupos
+                         ID         Requerimiento                           Actor
+                         RF-05      El estudiante debe poder solicitar cu-  Estudiante
+                                    po en una materia mostrando la dis-
+                                    ponibilidad en tiempo real.
+                         RF-06      El sistema debe validar prerrequisi- Sistema
+                                    tos, créditos y conĆictos de horario
+                                    antes de aceptar la solicitud.
+                         RF-07      El sistema debe aplicar una regla       Departamento
+                                    de priorización conĄgurable (prome-
+                                    dio, avance curricular, orden de soli-
+                                    citud).
+                                         Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                     27
+                           ID         Requerimiento                            Actor
+                           RF-08      El sistema debe notiĄcar al estudian- Sistema
+                                      te el resultado de la solicitud (apro-
+                                      bada, en lista de espera, rechazada).
+                           RF-09      El sistema debe liberar automática- Sistema
+                                      mente cupos de solicitudes no conĄr-
+                                      madas en el plazo deĄnido.
+                           RF-10      La secretaría debe poder ver y ges- Secretaría
+                                      tionar la lista de espera por materia.
+                  4.2.3      Módulo de materias
+                                        Tabla 4.4: Requerimientos funcionales Ů materias
+                           ID         Requerimiento                            Actor
+                           RF-11      El docente debe poder proponer la        Docente
+                                      creación de una materia nueva con
+                                      su justiĄcación.
+                           RF-12      El docente debe poder solicitar la edi-  Docente
+                                      ción de una materia existente (con-
+                                      tenido, créditos, prerrequisitos, hora-
+                                      rio).
+                           RF-13      El sistema debe gestionar el Ćujo de     Departamento
+                                      aprobación: propuesta, revisión del
+                                      departamento, aprobación o rechazo,
+                                      publicación.
+                           RF-14      Elsistemadebemantenerhistorialde         Sistema
+                                      versiones de cada materia con autor
+                                      y fecha del cambio.
+                           RF-15      El sistema debe publicar automática- Sistema
+                                      mente las materias aprobadas en el
+                                      catálogo visible para los estudiantes.
+                                           Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           28
+                 4.2.4    Módulo de mensajería
+                                   Tabla 4.5: Requerimientos funcionales Ů mensajería
+                        ID        Requerimiento                         Actor
+                        RF-16     El estudiante debe poder enviar men- Estudiante
+                                  sajes a docentes de las materias en
+                                  las que está inscrito.
+                        RF-17     El docente debe poder enviar mensa- Docente
+                                  jes masivos o individuales a los estu-
+                                  diantes de sus materias.
+                        RF-18     El sistema debe registrar estado del  Sistema
+                                  mensaje: enviado, entregado y leído.
+                        RF-19     El sistema debe alertar cuando un     Sistema
+                                  mensaje no tenga respuesta en el pla-
+                                  zo conĄgurado.
+                        RF-20     La secretaría debe poder intervenir   Secretaría
+                                  en un hilo cuando el caso escale.
+                 4.2.5    Módulo de faltas
+                                Tabla 4.6: Requerimientos funcionales Ů registro de faltas
+                        ID        Requerimiento                         Actor
+                        RF-21     El docente debe poder registrar la    Docente
+                                  asistencia por sesión de clase de for-
+                                  marápida (lista o código).
+                        RF-22     El sistema debe notiĄcar al estudian- Sistema
+                                  te el mismo día en que se registra su
+                                  falta.
+                        RF-23     El estudiante debe poder presentar    Estudiante
+                                  una justiĄcación adjuntando eviden-
+                                  cia.
+                                      Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                   29
+                          ID         Requerimiento                            Actor
+                          RF-24      El docente debe poder aprobar o re- Docente
+                                     chazar la justiĄcación con comenta-
+                                     rio.
+                          RF-25      El sistema debe calcular el porcen- Sistema
+                                     taje de inasistencia acumulado por
+                                     materia.
+                          RF-26      El sistema debe alertar al estudiante,   Sistema
+                                     docente y secretaría cuando el acu-
+                                     mulado supere el umbral permitido.
+                  4.2.6     Módulo de evaluación docente
+                                  Tabla 4.7: Requerimientos funcionales Ů evaluación docente
+                          ID         Requerimiento                            Actor
+                          RF-27      El departamento debe poder conĄ- Departamento
+                                     gurar el periodo, las preguntas y la
+                                     fecha límite de la evaluación docente.
+                          RF-28      El sistema debe habilitar la evalua- Sistema
+                                     ción automáticamente al inicio del
+                                     periodo conĄgurado.
+                          RF-29      El sistema debe enviar recordatorios     Sistema
+                                     automáticos a los estudiantes que no
+                                     hayan completado la evaluación.
+                          RF-30      El sistema debe garantizar el anoni- Sistema
+                                     mato total del evaluador.
+                          RF-31      El sistema debe bloquear servicios       Sistema
+                                     académicos hasta completar la eva-
+                                     luación, si así se conĄgura.
+                                          Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                  30
+                          ID         Requerimiento                           Actor
+                          RF-32      El sistema debe consolidar resulta- Sistema
+                                     dos y publicarlos solo al cumplirse la
+                                     fecha límite o el umbral de participa-
+                                     ción.
+                          RF-33      El docente debe poder consultar su      Docente
+                                     resultado consolidado y su compara-
+                                     ción histórica.
+                          RF-34      El departamento debe poder identiĄ- Departamento
+                                     car docentes con resultados atípicos y
+                                     generar planes de acompaĳamiento.
+                  4.2.7     Módulo de quejas y sugerencias
+                                 Tabla 4.8: Requerimientos funcionales Ů quejas y sugerencias
+                          ID         Requerimiento                           Actor
+                          RF-35      Cualquier actor debe poder registrar    Todos
+                                     una queja o sugerencia con categoría
+                                     y descripción.
+                          RF-36      El sistema debe clasiĄcar automática- Sistema
+                                     mente el caso por categoría, urgencia
+                                     y área responsable.
+                          RF-37      La secretaría debe poder asignar res- Secretaría
+                                     ponsable, plazo y estado a cada caso.
+                          RF-38      Lasecretaría debe poder comunicarse     Secretaría
+                                     formalmente con el docente involu-
+                                     crado dentro del caso.
+                          RF-39      El sistema debe notiĄcar al solicitan-  Sistema
+                                     te cada cambio de estado del caso.
+                          RF-40      El sistema debe permitir el cierre con  Secretaría
+                                     evidencia de la acción tomada y en-
+                                     cuesta de satisfacción.
+                                         Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           31
+                        ID        Requerimiento                         Actor
+                        RF-41     El sistema debe permitir el anonima- Sistema
+                                  to del denunciante cuando la natura-
+                                  leza del caso lo requiera.
+                        RF-42     El sistema debe impedir el cierre de  Sistema
+                                  un caso sin acción registrada.
+                 4.2.8    Módulo de cuestionarios de materias y horarios
+                                  Tabla 4.9: Requerimientos funcionales Ů cuestionarios
+                        ID        Requerimiento                         Actor
+                        RF-43     El sistema debe aplicar un cuestio- Estudiante
+                                  nario de disponibilidad horaria por
+                                  estudiante y periodo.
+                        RF-44     El sistema debe aplicar un cuestio- Estudiante
+                                  nario de preferencia y evaluación de
+                                  materias cursadas.
+                        RF-45     El sistema debe calcular la probabi- Sistema
+                                  lidad de preferencia por cada franja
+                                  horaria disponible.
+                        RF-46     El sistema debe recomendar una asig- Departamento
+                                  nación de horario que maximice la
+                                  aceptación esperada.
+                        RF-47     El sistema debe mostrar al depar- Departamento
+                                  tamento escenarios alternativos de
+                                  horario con su impacto estimado.
+                        RF-48     El sistema debe permitir al estudian- Estudiante
+                                  te conĄrmar o rechazar el horario su-
+                                  gerido.
+                 4.2.9    Módulo de analítica y soluciones rápidas
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           32
+                                   Tabla 4.10: Requerimientos funcionales Ů analítica
+                        ID        Requerimiento                         Actor
+                        RF-49     El sistema debe alimentar un reposi- Sistema
+                                  torio analítico con los datos de todos
+                                  los módulos.
+                        RF-50     El sistema debe calcular los KPI de- Sistema
+                                  Ąnidos en el Capítulo 3.
+                        RF-51     El sistema debe detectar anomalías: Sistema
+                                  cupos saturados, quejas recurrentes,
+                                  docentes con baja evaluación, inasis-
+                                  tencia atípica.
+                        RF-52     El sistema debe generar recomenda- Sistema
+                                  ciones accionables priorizadas por im-
+                                  pacto y esfuerzo.
+                        RF-53     El sistema debe estimar la demanda    Departamento
+                                  futura de cupos por materia.
+                        RF-54     La secretaría y el departamento de- Secretaría, Departamento
+                                  ben veriĄcar resultados, quejas y eva-
+                                  luaciones en tableros consolidados.
+                        RF-55     El sistema debe exportar reportes a   Secretaría, Departamento
+                                  Comma-Separated Values (CSV) y
+                                  PDF!(PDF!).
+                        RF-56     El sistema debe registrar si la reco- Sistema
+                                  mendación fue aplicada y medir su
+                                  efecto posterior.
+                                      Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                    33
+                  4.3      Requerimientos No Funcionales
+                                            Tabla 4.11: Requerimientos no funcionales
+                  ID         Categoría           Descripción
+                  RNF-01     Usabilidad          Interfaz responsiva, accesible desde móvil, con un máximo de tres
+                                                 clics para completar cualquier operación frecuente.
+                  RNF-02     Rendimiento         Tiempo de respuesta menor a 2 segundos en el 95% de las peti-
+                                                 ciones.
+                  RNF-03     Disponibilidad      Disponibilidad mínima del 99.5% en horario académico (06:00Ű
+                                                 22:00).
+                  RNF-04     Seguridad           Cifrado en tránsito (TLS) y en reposo, autenticación multifactor
+                                                 para roles administrativos.
+                  RNF-05     Privacidad          Anonimización de evaluaciones y quejas sensibles; cumplimiento
+                                                 de normas de protección de datos personales.
+                  RNF-06     Escalabilidad       Soporte para el crecimiento de usuarios y datos sin rediseĳo
+                                                 estructural.
+                  RNF-07     Mantenibilidad      Arquitectura modular con separación de responsabilidades e in-
+                                                 terfaces documentadas.
+                  RNF-08     Interoperabilidad   API REST documentada para integrarse con el sistema central
+                                                 universitario.
+                  RNF-09     Trazabilidad        Registro de auditoría inmutable de cada transición de estado.
+                  RNF-10     Compatibilidad      Funcionamiento en navegadores modernos (Chrome, Edge, Firefox,
+                                                 Safari).
+                  RNF-11     Accesibilidad       Cumplimiento de pautas WCAG 2.1 nivel AA.
+                  RNF-12     Localización        Interfaz en espaĳol con soporte de zona horaria y formatos locales.
+                                          Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           34
+                 4.4     Reglas de Negocio
+                                          Tabla 4.12: Reglas de negocio del DIC
+                 ID       Nombre                   Regla
+                 RN-01    Prerrequisitos           No se puede otorgar cupo si el estudiante no ha aprobado
+                                                   los prerrequisitos declarados en la materia.
+                 RN-02    Cupo máximo              El número de cupos asignados nunca puede superar el cupo
+                                                   máximo deĄnido para la materia y el periodo.
+                 RN-03    ConĆicto horario         No se puede asignar cupo si el horario de la materia se
+                                                   solapa con otra materia ya inscrita por el estudiante.
+                 RN-04    Priorización             Ante escasez de cupos, se aplica prioridad por avance cu-
+                                                   rricular, luego por promedio acumulado y Ąnalmente por
+                                                   orden cronológico de la solicitud.
+                 RN-05    Anonimato de evaluación  El docente nunca accede a la identidad de quien lo evaluó;
+                                                   solo a resultados agregados con un mínimo de cinco res-
+                                                   puestas.
+                 RN-06    Ventana de evaluación    La evaluación docente solo puede diligenciarse dentro del
+                                                   periodo conĄgurado; fuera de él, el formulario se bloquea.
+                 RN-07    NotiĄcación de falta     TodafaltaregistradadebegenerarnotiĄcaciónalestudiante
+                                                   el mismo día.
+                 RN-08    Umbral de inasistencia   Al superar el 20% de inasistencia en una materia, se genera
+                                                   alerta automática al estudiante, al docente y a la secretaría.
+                 RN-09    Cierre de queja          Unaquejanopuedecerrarsesinregistrarlaacciónrealizada
+                                                   y la fecha de cierre.
+                 RN-10    Escalamiento             Una queja crítica sin atender en 3 días se escala automáti-
+                                                   camente a la dirección del departamento.
+                 RN-11    Edición de materia       TodamodiĄcación curricular requiere revisión y aprobación
+                                                   del departamento antes de su publicación.
+                 RN-12    Cobertura de horario     Un horario solo se publica si alcanza el umbral mínimo de
+                                                   aceptación estimada deĄnido por el departamento.
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           35
+                 4.5     Matriz de Trazabilidad ObjetivosŰRequerimientos
+                            Tabla 4.13: Trazabilidad entre objetivos estratégicos y requerimientos
+                 Objetivo             Requerimientos asociados
+                 OE1 (Cupos)          RF-05, RF-06, RF-07, RF-08, RF-09, RF-10, RN-01, RN-02, RN-03, RN-
+                                      04
+                 OE2 (Materias)       RF-11, RF-12, RF-13, RF-14, RF-15, RN-11
+                 OE3 (Comunicación)   RF-16, RF-17, RF-18, RF-19, RF-20
+                 OE4 (Faltas)         RF-21, RF-22, RF-23, RF-24, RF-25, RF-26, RN-07, RN-08
+                 OE5 (Evaluación)     RF-27 a RF-34, RN-05, RN-06
+                 OE6 (Quejas)         RF-35 a RF-42, RN-09, RN-10
+                 OE7 (Secretaría)     RF-10, RF-20, RF-37, RF-38, RF-40, RF-54, RF-55
+                 OE8 (Horarios)       RF-43, RF-44, RF-45, RF-46, RF-47, RF-48, RN-12
+                 OE9 (VeriĄcación)    RF-50, RF-54, RF-55, RF-56
+                 OE10 (Analítica)     RF-49, RF-51, RF-52, RF-53, RF-56
+                                      Documentación de Investigación y PlaniĄcación
+             Capítulo 5
+             Modelado UML del Sistema
+             El modelado se realiza con el estándar UML 2.5. Todos los diagramas de este capítulo
+             están integrados directamente en el documento y se compilan junto con el texto.
+             5.1    Diagrama de Casos de Uso
+             5.1.1   Descripción general
+             El diagrama de casos de uso muestra las funcionalidades del SGDIC desde la perspectiva
+             de los cuatro actores principales.
+                                               36
+                                  Departamento de Informática y Computación                                                                                                                                     37
+                                                                                         SGDIC Ů Sistema de Gestión Departamental
+                                                                                           Gestión Académica                           Evaluación, VeriĄcación y Analítica
+                                                                                               ≪include≫Crear/editar                               Evaluación
+                                                                                 Solicitar cupos            materias                            docente a tiempo
+                                     Estudiante
+                                                                                Registrar faltas         Cuestionario de                            VeriĄcar
+                                                                                                       horarios y materias                          resultados
+                                                                                                                                                                                               Secretaría
+                                                                                           CaliĄcar docentes                                     Ver tableros de
+                                                                                                                                                    analítica
+                                                                                  Comunicación y Retroalimentación
+                                                                                                                                               Generar soluciones
+                                                                                  Mensaje de               Mensaje de                                rápidas
+                                                                              estudiante a docente    docente a estudiante
+                                       Docente
+                                                                                                                                                   Optimizar
+                                                                                    Quejas y              NotiĄcaciones                              horarios
+                                                                                   sugerencias            automáticas                                                                       Departamento
+                                                                                                                                                    Gestionar                             (Administrador)
+                                                                                                                                                actas y reportes
+                                                                                                                                                  Administrar
+                                                                                                                                                    catálogo
+                                                                            Figura 5.1: Diagrama de casos de uso del SGDIC
+                                                                               Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           38
+                 5.1.2    EspeciĄcación de casos de uso principales
+                               Tabla 5.1: EspeciĄcación del caso de uso: Solicitar cupo (UC1)
+                 Elemento            Descripción
+                 Actor principal     Estudiante
+                 Actores secundarios Sistema de notiĄcaciones, Secretaría
+                 Precondición        El estudiante está autenticado y el periodo de solicitudes está abierto.
+                 Flujo principal     1. El estudiante consulta el catálogo de materias y su disponibilidad.
+                                     2. Selecciona la materia y conĄrma la solicitud.
+                                     3. El sistema valida prerrequisitos, cupo y conĆicto de horario.
+                                     4. Si hay cupo, se reserva y se notiĄca la aprobación.
+                                     5. Si no hay cupo, se registra en lista de espera y se notiĄca la posición.
+                 Flujos alternativos A1: No cumple prerrequisitos → rechazo con motivo explícito.
+                                     A2: ConĆicto de horario → se sugiere horario alternativo.
+                                     A3: Cupo liberado por no conĄrmación → se notiĄca al siguiente en espera.
+                 Postcondición       La solicitud queda registrada con estado y trazabilidad completa.
+                 Requerimientos      RF-05 a RF-10, RN-01 a RN-04
+                        Tabla 5.2: EspeciĄcación del caso de uso: Gestión de queja o sugerencia (UC8)
+                 Elemento            Descripción
+                 Actor principal     Estudiante o Docente
+                 Actores secundarios Secretaría, Docente involucrado, Departamento
+                 Precondición        El usuario está autenticado.
+                 Flujo principal     1. El usuario registra la queja o sugerencia con categoría y descripción.
+                                     2. El sistema clasiĄca automáticamente urgencia y área responsable.
+                                     3. La secretaría revisa, asigna responsable y plazo.
+                                     4. La secretaría se comunica formalmente con el docente si aplica.
+                                     5. Se registra la acción, se cierra el caso y se solicita satisfacción.
+                 Flujos alternativos A1: Caso crítico sin atención en 3 días → escalamiento a dirección.
+                                     A2: El denunciante solicita anonimato → se oculta su identidad en todo el
+                                     Ćujo.
+                 Postcondición       Caso cerrado con acción registrada, evidencia y encuesta de satisfacción.
+                 Requerimientos      RF-35 a RF-42, RN-09, RN-10
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           39
+                       Tabla 5.3: EspeciĄcación del caso de uso: Evaluación docente a tiempo (UC10)
+                 Elemento            Descripción
+                 Actor principal     Departamento (Administrador)
+                 Actores secundarios Estudiante, Docente, Sistema de notiĄcaciones
+                 Precondición        El periodo académico está conĄgurado con fechas de evaluación.
+                 Flujo principal     1. El departamento conĄgura periodo, preguntas y fecha límite.
+                                     2. El sistema habilita el formulario en la fecha de inicio.
+                                     3. Se envían recordatorios automáticos a los pendientes.
+                                     4. Al cumplirse la fecha límite se consolidan los resultados.
+                                     5. Se publican resultados anonimizados y se generan alertas de desempeĳo
+                                     atípico.
+                 Flujos alternativos A1: Participación insuĄciente → se extiende el plazo y se intensiĄcan re-
+                                     cordatorios.
+                                     A2: El docente solicita revisión → se veriĄca trazabilidad sin revelar iden-
+                                     tidades.
+                 Postcondición       100% de evaluaciones aplicadas y resultados publicados en el periodo.
+                 Requerimientos      RF-27 a RF-34, RN-05, RN-06
+                 5.2     Diagrama de Clases
+                 5.2.1    Descripción general
+                 El diagrama de clases deĄne la estructura estática del SGDIC. Se utiliza una clase abstracta
+                 Usuario de la que heredan los cuatro roles del sistema. Las entidades de dominio modelan
+                 los procesos problemáticos identiĄcados.
+                                      Documentación de Investigación y PlaniĄcación
+                                    Departamento de Informática y Computación                                                                                                                                                 40
+                                                                                                                      Usuario (abstracta)
+                                                           Estudiante                                   Docente                                  Secretaría                              Administrador
+                                                         Gestión académica                                                                                                      Evaluación y analítica
+                                                                                                         envía
+                                                               realizarecibe         imparte                  responde                                                                                       conĄgura
+                                                Materia                  SolicitudCupo                                                                             CuestionarioHorario              EvaluacionDocente
+                                                                                                   Comunicación y seguimiento
+                                                                         envía         reportaMensaje                  QuejaSugerencia gestiona
+                                                                                                                                                   genera      Reporte                                 ejecuta
+                                                                                                                                                                                         AnaliticaDatos
+                                                                                             registra
+                                                                       acumula         caliĄca   Falta       recibe        CaliĄcacion
+                                                                                                                                                                                                   sugiere
+                                                                                                                                                                                        Recomendacion
+                                                      Figura 5.2: Diagrama de clases (visión de relaciones principales) del SGDIC
+                                    5.2.2                Diagrama de clases detallado
+                                    La Ągura 5.3 presenta las clases principales con sus atributos y métodos en notación UML
+                                    completa (visibilidad: − privado, + público).
+                                                                                    Documentación de Investigación y PlaniĄcación
+                                     Departamento de Informática y Computación                                                                                                                                                     41
+                                                                                                                              Usuario {abstract}
+                                                                                                                         − id: String
+                                                                                                                         − nombre: String
+                                                                                                                         − email: String
+                                                                                                                         − passwordHash: String
+                                                                                                                         − activo: Boolean
+                                                                                                                         + autenticar(): Boolean
+                                                                                                                         + actualizarPerfil(): void
+                                                   Estudiante                                            Docente
+                                        − codigo: String                                      − codigo: String                                              Secretaría                                         Administrador
+                                        − semestre: Integer                                   − especialidad: String                            − area: String                                     − nivelAcceso: Enum
+                                        − promedio: Double                                    − materiasAsignadas: List                         − casosAsignados: Integer                          + asignarCupos(): void
+                                        + solicitarCupos(m): Boolean                          + registrarFalta(e,f): Falta                      + gestionarQueja(q): void                          + configurarEvaluacion(): void
+                                        + enviarMensaje(d,c): Mensaje                         + crearEditarMateria(m): void                     + comunicarDocente(d,c): void                      + generarSolucion(a): Recomendacion
+                                        + calificarDocente(d,p): void                         + enviarMensaje(e,c): Mensaje                     + verificarResultados(): Reporte                   + publicarResultados(): void
+                                        + responderCuestionario(): void                       + justificarFalta(f): void                        + generarAnalitica(): Dataset
+                                        + presentarQueja(q): void
+                                                                                                                                       0 .. *
+                                                                                                                                    1 .. *
+                                                                                                     QuejaSugerencia                                    EvaluacionDocente
+                                                     Materia                            − id: String                                           − id: String
+                                      − idMateria: String                               − tipo: {QUEJA, SUGERENCIA}                            − periodo: String                                               AnaliticaDatos
+                                      − codigo: String                                  − estado: {ABIERTO, EN_PROCESO, RESUELTO}              − fechaInicio: Date                                  − dataset: Dataset
+                                      − creditos: Integer                               − prioridad: {BAJA, MEDIA, ALTA}                       − fechaLimite: Date                                  − metricas: Map
+                                      − cupoMaximo: Integer                             − responsable: String                                  − completadas: Integer                               + calcularKPI(): Map
+                                      − cuposDisponibles: Integer                       − fechaCierre: Date                                    − total: Integer                                     + detectarAnomalias(): List
+                                      − horarios: List<String>                          + asignarSecretaria(): void                            + habilitar(): void                                  + predecirDemanda(): Modelo
+                                      + actualizarCupos(): void                         + generarRespuesta(): void                             + enviarRecordatorio(): void                         + priorizarRecomendaciones(): List
+                                      + verificarDisponibilidad(): Boolean              + cerrar(evidencia): void                              + consolidar(): Reporte
+                                                                                                                                               + verificarCumplimiento(): Boolean
+                                                                  Figura 5.3: Diagrama de clases detallado con atributos y métodos
+                                     5.3                Diagrama de Secuencia: Evaluación Docente
+                                     El diagrama de secuencia modela la interacción temporal del proceso de evaluación docente,
+                                     crítico para garantizar que se complete dentro del periodo académico.
+                                                                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                                 42
+                   Administrador         SGDIC             Estudiante          Docente            Secretaría
+                    1. conĄgurarEvaluacion(periodo, fechaLimite)
+                                             2. crear formulario
+                                              3. habilitarEvaluacion()
+                                            4. mostrar formulario anónimo
+                                            5. responderEvaluacion(puntajes)
+                                             6. validar ventana de tiempo
+                                               7. conĄrmarRegistro()
+                                             8. enviarRecordatorio()
+                                               9. notiĄcar pendientes
+                                                                 10. alertarNoCompletadas()
+                                                                 11. veriĄcarCumplimiento()
+                                             12. consolidar resultados
+                                                      13. publicarResultados(docente)
+                                                                14. generarReporte(secretaría)
+                         15. analizarDesempeñoAtípico()
+                          16. plan de acompañamiento
+                                                     Restricción: el docente nunca
+                                                     recibe la identidad del evaluador;
+                                                     solo resultados agregados con míni-
+                                                     mo 5 respuestas.
+                              Figura 5.4: Diagrama de secuencia del proceso de evaluación docente
+                  5.4     Diagrama de Actividades: Gestión de Quejas y
+                          Sugerencias
+                  El diagrama de actividades describe el Ćujo completo de una queja o sugerencia, desde su
+                  registro hasta su cierre veriĄcado, incluyendo el escalamiento automático de casos críticos.
+                                         Documentación de Investigación y PlaniĄcación
+                            Departamento de Informática y Computación                                                                                                        43
+                                        Inicio
+                                   Registrar queja o                    ClasiĄcar categoría,                           ¾Caso                Sí                Escalar a
+                                      sugerencia                           urgencia y área                            crítico?                                dirección
+                                                                                                         No
+                                                                        Asignar responsable
+                                                                              y plazo
+                                        Recibir
+                                 notiĄcación de estado
+                                  Responder encuesta                          ¾Vencido              Sí            Reasignar y
+                                    de satisfacción                           el plazo?                              alertar
+                                                                                   No
+                                          Fin
+                                                                            Contactar al
+                                                                        docente involucrado
+                                                                          Registrar acción
+                                                                             y evidencia
+                                                                              ¾Acción               No              Escalar a
+                                                                             suĄciente?                             dirección
+                                                                                   Sí
+                                                                           Cerrar caso y
+                                                                              notiĄcar
+                                               Figura 5.5: Diagrama de actividades del Ćujo de quejas y sugerencias
+                                                                 Documentación de Investigación y PlaniĄcación
+                           Departamento de Informática y Computación                                                                                                   44
+                           5.5           Diagrama de Estados: Ciclo de Vida de una Queja
+                                                                                                    Inicio
+                                                                                             REGISTRADA                  por el usuario
+                                                                                             CLASIFICADA                 automática
+                            secretaría          ASIGNADA                                                                                      ESCALADA                   crítico > 3 días
+                                                                                             ENPROCESO
+                                                                    acción registrada          ATENDIDA
+                                                                                               CERRADA                     insatisfacción           REABIERTA
+                                                                                                     Fin
+                                         Figura 5.6: Diagrama de estados del ciclo de vida de una queja o sugerencia
+                                                               Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                       45
+                   5.6      Diagrama de Componentes y Arquitectura
+                                     Portal Web                  Consola                Vista Móvil
+                                (Estudiante/Docente)         Administrativa            (Responsiva)
+                                     Servicio de               Servicio de              Servicio de
+                                  Cupos y Materias            Comunicación          Evaluación y Quejas
+                                       Motor de                Motor ETL                Repositorio
+                                  Soluciones Rápidas                                     Analítico
+                                    Servicio de          API REST Institucional          Autenticación
+                                  NotiĄcaciones                                           Institucional
+                                        Figura 5.7: Arquitectura de componentes del SGDIC
+                                           Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                  46
+                                  Tabla 5.4: Descripción de los componentes de la arquitectura
+                  Componente                        Responsabilidad
+                  Portal Web                        Interfaz principal para estudiantes y docentes (gestión acadé-
+                                                    mica).
+                  Consola Administrativa            ConĄguración, veriĄcación y tableros para secretaría y depar-
+                                                    tamento.
+                  Vista Móvil                       Acceso responsivo optimizado para notiĄcaciones y consultas
+                                                    rápidas.
+                  Servicio de Cupos y Materias      Lógica de disponibilidad, priorización y ciclo de vida de mate-
+                                                    rias.
+                  Servicio de Comunicación          Mensajería trazable y notiĄcaciones automáticas.
+                  Servicio de Evaluación y Quejas   Ventanas de evaluación, cuestionarios y gestión de casos.
+                  Motor ETL                         Extracción, limpieza, transformación y carga de datos al repo-
+                                                    sitorio.
+                  Repositorio Analítico             Almacén consolidado para cálculo de KPI y modelos.
+                  Motor de Soluciones Rápidas       Detección de anomalías, predicciones y generación de recomen-
+                                                    daciones.
+                  API REST Institucional            Integración con matrícula, catálogo oĄcial y autenticación.
+                  Servicio de NotiĄcaciones         Despacho de correos, mensajes internos y recordatorios.
+                  Autenticación Institucional       Validación de credenciales y roles (RBAC).
+                  5.7      Resumen de Diagramas
+                                    Tabla 5.5: Inventario de diagramas UML del documento
+                  Diagrama            Figura         Propósito
+                  Casos de uso        5.1            Funcionalidades y actores del sistema.
+                  Clases (relaciones) 5.2            Estructura estática y asociaciones.
+                  Clases (detalle)    5.3            Atributos y métodos por clase.
+                  Secuencia           5.4            Interacción temporal de la evaluación docente.
+                  Actividades         5.5            Flujo completo de quejas y sugerencias.
+                  Estados             5.6            Ciclo de vida de una queja o sugerencia.
+                  Componentes         5.7            Arquitectura de la solución.
+                                         Documentación de Investigación y PlaniĄcación
+           Capítulo 6
+           Algoritmo de Soluciones Rápidas y
+           Analítica de Datos
+           6.1  DeĄnición de Solución Rápida
+            DeĄnición
+            Una solución rápida es una recomendación accionable, priorizada y trazable que el
+            motor analítico del SGDIC genera para resolver una situación detectada (saturación
+            de cupos, queja recurrente, acumulación de inasistencia, desempeĳo docente atípico
+            o conĆicto de horarios), indicando qué hacer, quién es el responsable, en qué
+            plazo y con qué impacto esperado.
+                                      47
+                 Departamento de Informática y Computación                                             48
+                 6.2     Arquitectura del Motor Analítico
+                                           Datos operativos del SGDIC
+                                         1. Extracción y limpieza (ETL)
+                                            2. Ingeniería de variables
+                                              3. Modelos analíticos
+                         ClasiĄcación             Predicción de           Preferencia de
+                           de quejas           demanda de cupos              horarios
+                                             4. Motor de priorización
+                                         (impacto × urgencia ÷ esfuerzo)     retroalimentación
+                                                5. Generación de
+                                                soluciones rápidas
+                                                ¾Recomendación            No           Ajustar
+                                                    validada?                        parámetros
+                                                         Sí
+                                                  6. Tablero de
+                                                   veriĄcación
+                             Figura 6.1: Arquitectura del motor analítico y de soluciones rápidas
+                 6.3     Descripción del Algoritmo
+                                       Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                         49
+                   6.3.1      Vista general
+                   El algoritmo consta de seis etapas que transforman datos operativos en recomendaciones
+                   priorizadas.
+                                        Tabla 6.1: Etapas del algoritmo de soluciones rápidas
+                   Etapa Nombre                          Operación
+                      1      Ingesta y limpieza          Consolidación de datos de cupos, mensajes, faltas, evalua-
+                                                         ciones, quejas y cuestionarios; eliminación de duplicados y
+                                                         normalización.
+                      2      Ingeniería de variables     Cálculo de variables derivadas: tasa de ocupación, tiempo
+                                                         medio de respuesta, índice de inasistencia, sentimiento de
+                                                         quejas, frecuencia histórica de preferencia horaria.
+                      3      Modelado                    Ejecución de modelos de clasiĄcación, regresión y probabili-
+                                                         dad según el tipo de problema detectado.
+                      4      Detección de anomalías      IdentiĄcación de desviaciones signiĄcativas respecto al com-
+                                                         portamiento histórico esperado.
+                      5      Priorización                Ordenamiento de hallazgos según impacto potencial, urgencia
+                                                         y esfuerzo de implementación.
+                      6      Generación y despliegue     Construcción del texto de la recomendación, asignación de
+                                                         responsable, plazo sugerido y publicación en el tablero.
+                   6.3.2      Pseudocódigo del algoritmo
+                 1 ALGORITMO GenerarSolucionesRapidas(periodo):
+                 2
+                 3       # Etapa 1: ingesta y limpieza
+                 4       D <- ExtraerDatos(periodo)
+                 5       D <- LimpiarYNormalizar(D)
+                 6       D <- Anonimizar(D)
+                 7
+                 8       # Etapa 2: ingenieria de variables
+                 9       V <- CalcularVariables(D)
+                10
+                11       # Etapa 3: modelado
+                12       M_quejas      <- ModeloClasificacionQuejas(V.quejas)
+                13       M_demanda <- ModeloPrediccionCupos(V.cupos)
+                14       M_horario <- ModeloProbabilidadHorario(V.cuestionarios)
+                                            Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                               50
+              15      M_desemp     <- ModeloDesempenoDocente(V.evaluaciones)
+              16
+              17      # Etapa 4: deteccion de anomalias
+              18      A <- []
+              19      PARA CADA materia m EN V.materias HACER
+              20           SI tasa_ocupacion(m) > 0.90 ENTONCES
+              21                A.agregar(Anomalia("SATURACION_CUPOS", m))
+              22           FIN SI
+              23      FIN PARA
+              24
+              25      PARA CADA docente d EN V.docentes HACER
+              26           SI puntaje(d) < umbral_bajo(d) ENTONCES
+              27                A.agregar(Anomalia("DESEMPENO_ATIPICO", d))
+              28           FIN SI
+              29      FIN PARA
+              30
+              31      PARA CADA patron p EN DetectarPatrones(V.quejas) HACER
+              32           SI p.frecuencia > umbral_frecuencia ENTONCES
+              33                A.agregar(Anomalia("QUEJA_RECURRENTE", p))
+              34           FIN SI
+              35      FIN PARA
+              36
+              37      # Etapa 5: priorizacion
+              38      PARA CADA anomalia a EN A HACER
+              39           a.esfuerzo <- EstimarEsfuerzo(a)
+              40           a.score       <- (EstimarImpacto(a) * EstimarUrgencia(a))
+              41                             / (a.esfuerzo + EPSILON)
+              42      FIN PARA
+              43      A <- OrdenarDescendente(A, por=a.score)
+              44
+              45      # Etapa 6: generacion de recomendaciones
+              46      R <- []
+              47      PARA CADA anomalia a EN A HACER
+              48           r <- ConstruirRecomendacion(a)
+              49           r.responsable <- AsignarResponsable(a)
+              50           r.plazo           <- CalcularPlazo(EstimarUrgencia(a))
+              51           r.confianza       <- CalcularConfianza(a)
+              52           r.estado          <- "PENDIENTE"
+              53           R.agregar(r)
+              54      FIN PARA
+              55
+              56      PublicarEnTablero(R)
+                                        Documentación de Investigación y PlaniĄcación
+                        Departamento de Informática y Computación                                                                                 51
+                    57         RETORNAR R
+                    58
+                    59  FIN ALGORITMO
+                                               Listing 6.1: Algoritmo de generación de soluciones rápidas
+                        6.3.3        Fórmula de priorización
+                        La puntuación de prioridad de cada recomendación se calcula como:
+                                                                            Score = I ·U                                                       (6.1)
+                                                                                        E+ε
+                        donde I ∈ [1,5] es el impacto estimado, U ∈ [1,5] la urgencia, E ∈ [1,5] el esfuerzo de
+                        implementación y ε un valor pequeĳo que evita la división por cero. Este criterio favorece
+                        las acciones de alto impacto y alta urgencia con bajo esfuerzo, es decir, las soluciones
+                        rápidas propiamente dichas.
+                        6.3.4        Modelo de preferencia de horarios por probabilidad
+                        El módulo de cuestionarios de materias y horarios alimenta el modelo probabilístico de
+                        preferencia horaria. Para cada combinación de perĄl de estudiante p y franja horaria h , se
+                                                                                                                                                i
+                        estima la probabilidad:
+                                                                        P(p ♣ h ) · P(h )             N +α
+                                                       P(h ♣ p) =                 i         i   =        p;hi                                  (6.2)
+                                                             i                  P(p)               N +α·♣P♣
+                                                                                                      h
+                                                                                                       i
+                        donde N          es el número de estudiantes del perĄl p que preĄrieron la franja h , N                            el total
+                                    p;h                                                                                            i    h
+                                       i                                                                                                 i
+                        de preferencias de esa franja, ♣P♣ el número de perĄles y α un parámetro de suavizado de
+                        Laplace que evita probabilidades nulas para franjas sin observaciones.
+                        La preferencia esperada total de una franja se calcula como el promedio ponderado sobre
+                        los perĄles de la población objetivo:
+                                                                     P(h)= XP(h ♣p)·w                                                          (6.3)
+                                                                          i                 i          p
+                                                                                 p∈P
+                                                       Documentación de Investigación y PlaniĄcación
+                    Departamento de Informática y Computación                                                             52
+                    donde w es el peso relativo del perĄl p en la matrícula. La asignación de horario se resuelve
+                             p
+                    como un problema de optimización que maximiza la aceptación esperada:
+                                                 n                            n
+                                          ma´xXP(hi)·xi sujeto a             Xxi=1, xi ∈¶0,1♢                          (6.4)
+                                                i=1                          i=1
+                    donde xi = 1 indica que la franja hi es seleccionada para la materia.
+                    6.4       Modelos Analíticos por Tipo de Problema
+                                      Tabla 6.2: Modelos analíticos aplicados por tipo de problema
+                    Problema               Modelo                                        Salida
+                    ClasiĄcación      de   ClasiĄcación supervisada (Naive Bayes         Categoría, área responsable y ur-
+                    quejas                 / KNN) sobre el texto de la queja             gencia sugerida
+                    Predicción de de- Series temporales (suavizado exponen- Demanda esperada y riesgo de
+                    manda de cupos         cial / ARIMA) por materia y periodo           saturación
+                    Preferencia de hora-   Probabilidad condicional con suavizado        P(hi ♣ p) y ranking de franjas
+                    rios                   de Laplace                                    preferidas
+                    Desempeĳo docen- Control estadístico de procesos (µ±2σ)              Docentes con puntaje fuera del
+                    te atípico                                                           rango esperado
+                    Reincidencia de in-    Regresión logística sobre historial de fal-   Probabilidad de superar el um-
+                    asistencia             tas                                           bral permitido
+                    Tiempo de respues- Estadística descriptiva y percentiles             Materias y actores con tiempos
+                    ta                                                                   sobre el objetivo
+                    Temas recurrentes      Procesamiento de lenguaje natural (fre-       Temas emergentes y su evolución
+                    en quejas              cuencia de términos)                          temporal
+                                              Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                         53
+                   6.5       Reglas de Generación de Soluciones Rápidas
+                                  Tabla 6.3: Catálogo de soluciones rápidas por anomalía detectada
+                   Anomalía               Solución rápida sugerida                                  Responsable
+                   Saturación de cu- Abrir una sección adicional o ampliar el cupo máximo;          Departamento
+                   pos (> 90%)            notiĄcar a los estudiantes en lista de espera con horario
+                                          alternativo.
+                   Demanda proyecta- PlaniĄcar apertura de sección antes del inicio del pe-         Departamento
+                   da creciente           riodo de matrícula.
+                   Quejarecurrenteen      Reunión formal con el docente, revisión del plan de       Secretaría + De-
+                   una materia            asignatura y plan de mejoramiento con seguimiento         partamento
+                                          quincenal.
+                   Queja crítica sin      Escalamiento inmediato a dirección y notiĄcación al       Dirección
+                   atender (> 3 días)     responsable con plazo de 24 horas.
+                   Desempeĳo docen- Activar plan de acompaĳamiento pedagógico y obser- Departamento
+                   te atípico             vación de clase.
+                   Inasistencia acumu-    Alerta al estudiante con plan de recuperación y citación  Docente + Secre-
+                   lada > 20%             a tutoría.                                                taría
+                   Evaluación docente     Recordatorio intensivo y habilitación de tiempo prote-    Docente + Siste-
+                   incompleta             gido en clase.                                            ma
+                   ConĆicto de hora- Reubicar la materia a la franja con mayor P(h ) esti- Departamento
+                                                                                           i
+                   rios frecuente         mada.
+                   Mensajes sin res- Recordatorio automático al destinatario y copia a la           Sistema
+                   puesta > 48 h          secretaría.
+                   Tiempo de respues- Redistribuir la carga de revisión entre el personal de        Secretaría
+                   ta a cupos elevado     secretaría.
+                                            Documentación de Investigación y PlaniĄcación
+                   Departamento de Informática y Computación                                                          54
+                   6.6       Tablero de VeriĄcación de Resultados
+                                                                Tablero de
+                                                               VeriĄcación
+                                        Resultados               Quejas y              Evaluación
+                                        académicos             sugerencias               docente
+                                    Ocupación de cupos        Tasa de cierre          Participación
+                                   Tiempo de respuesta       Tiempo por caso        Puntaje promedio
+                                  Reportar           Sí           ¾Meta            No        Generar acción
+                                    logro                       alcanzada?                      correctiva
+                                    Figura 6.2: Estructura del tablero de veriĄcación de resultados
+                   6.6.1      Elementos del tablero
+                                          Tabla 6.4: Componentes del tablero de veriĄcación
+                   Sección                 Contenido                                                 Usuario
+                   Panel de cupos          Ocupación por materia, lista de espera, tiempo de         Secretaría, Depar-
+                                           respuesta.                                                tamento
+                   Panel de quejas         Casos abiertos, vencidos, por categoría y responsable.    Secretaría, Direc-
+                                                                                                     ción
+                   Panel de evaluación     Participación por materia, puntajes agregados, alertas.   Departamento, Do-
+                                                                                                     cente
+                   Panel de comunica- Mensajes sin respuesta, tiempos promedio, escalamien-          Secretaría
+                   ción                    tos.
+                   Panel de faltas         Estudiantes en riesgo, alertas por umbral, justiĄcacio-   Docente, Secreta-
+                                           nes pendientes.                                           ría
+                   Panel de soluciones     Recomendaciones activas, aplicadas y su efecto medi-      Departamento
+                                           do.
+                                             Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                               55
+                 6.7      Métricas de Evaluación del Algoritmo
+                                    Tabla 6.5: Métricas de desempeĳo del motor analítico
+                 Métrica                DeĄnición                                                    Meta
+                 Exactitud                  TP+TN                                                    >0:85
+                                        TP+TN+FP+FN
+                 Precisión                TP                                                         >0:80
+                                        TP+FP
+                 Exhaustividad            TP                                                         >0:80
+                                        TP+FN
+                 F                      Media armónica de precisión y exhaustividad                  >0:80
+                   1
+                 Error absoluto medio   1 P♣y −yˆ♣ (demanda de cupos)                                <10%
+                                        n     i   i
+                 Tasa de aceptación     Recomendaciones aplicadas / generadas                        >70%
+                 Efectividad            Mejora medida tras la aplicación                             >60%
+                 Cobertura              Anomalías detectadas / anomalías reales                      >85%
+                 6.8      Ejemplo de Aplicación
+                   Ejemplo: quejas recurrentes en una materia de programación
+                   Datos observados: 18 quejas en el periodo correspondiente a la materia Programación
+                   II, 14 de ellas con el término ŞavanceŤ y ŞritmoŤ; la tasa de inasistencia del grupo es
+                   del 24%; el tiempo medio de respuesta del docente es de 96 horas.
+                   Hallazgos del motor:
+                         Anomalía QUEJA_RECURRENTE (frecuencia > umbral).
+                         Anomalía INASISTENCIA_ALTA (24% > 20%).
+                         Anomalía RESPUESTA_LENTA (96 h > 48 h).
+                   Priorización: impacto I = 5, urgencia U = 4, esfuerzo E = 2 ⇒ Score = (5×4)/(2+
+                   0:01) ≈ 9:95 (prioridad alta).
+                   Solución rápida generada: reunión formal entre secretaría, docente y coordinación
+                   académica en un plazo de 3 días; revisión del cronograma del plan de asignatura; tutoría
+                   de refuerzo semanal; recordatorios automáticos al docente sobre mensajes pendientes.
+                                        Documentación de Investigación y PlaniĄcación
+                      Capítulo 7
+                      PlaniĄcación, Cronograma y Conclu-
+                      siones
+                      7.1        Cronograma General del Proyecto
+                      El proyecto se planiĄca en 24 semanas, distribuidas en ocho fases alineadas con el Capítulo 2.
+                                                                                  Semanas de ejecución
+                                                 1  2   3  4   5  6  7   8  9  10  11 12  13 14 15  16 17  18 19  20 21 22  23 24
+                                    Fase 1: DeĄnición
+                                 Diagnóstico del problema
+                           Formulación de preguntas e hipótesis
+                             Fase 2: Revisión de literatura
+                               Antecedentes y marco teórico
+                               Normativa y reglas de negocio
+                              Fase 3: Diseño metodológico
+                                 Instrumentos y validación
+                                   DeĄnición de muestra
+                                   Fase 4: Recolección
+                                  Encuestas y entrevistas
+                                  Observación de procesos
+                               Extracción de datos históricos
+                                     Fase 5: Análisis
+                                  CodiĄcación cualitativa
+                           Estadística y preparación del dataset
+                             Fase 6: Diseño de la solución
+                             Requerimientos y modelado UML
+                              Algoritmo de soluciones rápidas
+                                 Motor analítico y tableros
+                                    Fase 7: Validación
+                                       Prueba piloto
+                                  Validación con expertos
+                                 Fase 8: Documentación
+                                   Redacción del informe
+                                   Socialización y cierre
+                                        Entrega Ąnal
+                                           Figura 7.1: Cronograma general del proyecto (24 semanas)
+                                                                             56
+                  Departamento de Informática y Computación                                                    57
+                  7.2      Plan de Mitigación de Riesgos
+                                         Tabla 7.1: Riesgos, impacto y plan de mitigación
+                  ID        Riesgo                           Prob. Impacto Mitigación
+                  R-01      Baja participación en encuestas  Media      Alto      Recordatorios     automáticos,
+                            y evaluación docente.                                 tiempo protegido en clase, in-
+                                                                                  centivos académicos y reducción
+                                                                                  de la longitud del instrumento.
+                  R-02      Resistencia al cambio de docen-  Media      Alto      Socialización temprana, capaci-
+                            tes y personal administrativo.                        tación, pilotos con voluntarios y
+                                                                                  visibilización de beneĄcios.
+                  R-03      Datos históricos incompletos o    Alta      Medio     Reglas de limpieza documenta-
+                            inconsistentes.                                       das, imputación controlada y ex-
+                                                                                  clusión de registros no conĄa-
+                                                                                  bles.
+                  R-04      Percepción de vigilancia sobre   Media      Alto      Anonimato estricto, transparen-
+                            la actividad docente.                                 cia de criterios y uso exclusiva-
+                                                                                  mente formativo de los resulta-
+                                                                                  dos.
+                  R-05      Retraso en la integración con el Media      Medio     Capa de abstracción (API
+                            sistema central.                                      REST) y datos simulados para
+                                                                                  pruebas tempranas.
+                  R-06      Bajo desempeĳo de los modelos    Media      Medio     Validación cruzada, compara-
+                            analíticos.                                           ción contra línea base y ajuste
+                                                                                  iterativo de variables.
+                  R-07      Incumplimiento de plazos por      Alta      Medio     Priorización por valor, entregas
+                            carga operativa del equipo.                           incrementales y revisión sema-
+                                                                                  nal del cronograma.
+                  R-08      Incidente de seguridad o fuga de  Baja    Muy alto    Cifrado, RBAC, auditoría de ac-
+                            información.                                          cesos, respaldo y anonimización
+                                                                                  de PII.
+                                          Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                     58
+                  7.3       Recursos Requeridos
+                                    Tabla 7.2: Recursos humanos, técnicos y de infraestructura
+                  Categoría         Recursos
+                  Humanos           Investigador principal, analista de datos, desarrollador API, diseĳador de inter-
+                                    faz, asesor metodológico, contraparte de secretaría.
+                  Software          Entorno de desarrollo, gestor de base de datos relacional, herramienta de
+                                    analítica, editor de documentación, control de versiones.
+                  Infraestructura   Servidor de aplicaciones, servidor de base de datos, repositorio analítico, dominio
+                                    institucional con certiĄcado TLS.
+                  Datos             Registros históricos de cupos, materias, faltas, evaluaciones y quejas del DIC,
+                                    debidamente anonimizados.
+                  7.4       Presupuesto Estimado
+                                           Tabla 7.3: Presupuesto estimado del proyecto
+                  Rubro              Descripción                                               Unidades         %
+                  Talento humano     Investigación, análisis de datos y desarrollo                     60     60%
+                  Infraestructura    Servidores y almacenamiento (periodo del proyecto)                15     15%
+                  Licencias          Herramientas de analítica y notiĄcaciones                         10     10%
+                  Capacitación       Formación de docentes y secretaría                                 8      8%
+                  Imprevistos        Contingencia del proyecto                                          7      7%
+                  Total                                                                               100 100%
+                                           Documentación de Investigación y PlaniĄcación
+              Departamento de Informática y Computación                              59
+              7.5    Criterios de Aceptación
+                                Tabla 7.4: Criterios de aceptación del proyecto
+              ID      Criterio veriĄcable
+              CA-01   Los 56 requerimientos funcionales del Capítulo 4 están trazados a objetivos estratégicos
+                      y casos de uso.
+                                                 A
+              CA-02   Los diagramas UML compilan en LT X y son consistentes con la especiĄcación de
+                                                   E
+                      requerimientos.
+              CA-03   El tiempo medio de respuesta a solicitudes de cupo es inferior a 24 horas durante la
+                      prueba piloto.
+              CA-04   El 100% de las evaluaciones docentes del periodo piloto se completan dentro de la
+                      ventana conĄgurada.
+              CA-05   El 95% de las quejas registradas cuentan con responsable, plazo y estado de trazabili-
+                      dad.
+              CA-06   El modelo de preferencia horaria alcanza una aceptación promedio superior a 4.0 sobre
+                      5 en el grupo piloto.
+              CA-07   El motor analítico genera al menos 10 recomendaciones priorizadas y el 70% de ellas
+                      son aplicadas por la secretaría o el departamento.
+              CA-08   El tablero de veriĄcación está disponible para secretaría y departamento con todos los
+                      paneles deĄnidos.
+                                Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           60
+                 7.6     Conclusiones
+                  Conclusiones del documento
+                      1. El problema del DIC no es de capacidad tecnológica sino de integración:
+                         los procesos existen, pero operan de manera aislada, sin trazabilidad ni analítica,
+                         lo que provoca demoras, evaluaciones incompletas y decisiones sin evidencia.
+                      2. Se evidenció que once procesos críticos concentran la mayor parte de las
+                         diĄcultades: cupos, materias, comunicación bidireccional, faltas, evaluación
+                         docente, quejas, efectividad de la secretaría, veriĄcación de resultados, asignación
+                         de horarios y ausencia de analítica.
+                      3. La metodología mixta con diseĳo de investigaciónŰacción resulta adecuada
+                         porque permite comprender las causas humanas del problema y, al mismo tiempo,
+                         medir objetivamente variables como tiempos de respuesta, tasas de participación
+                         y frecuencia de quejas.
+                      4. El uso de CRISP-DM ofrece una ruta estructurada y auditable para el compo-
+                         nente analítico, garantizando que las recomendaciones se evalúen contra una
+                         línea base antes de desplegarse.
+                      5. El modelado UML completo (casos de uso, clases, secuencia, actividades,
+                         estados y componentes) constituye una especiĄcación suĄciente para iniciar la
+                         construcción del sistema sin ambigüedades funcionales.
+                      6. El modelo de preferencias por probabilidad convierte los cuestionarios de
+                         horarios en una herramienta de decisión objetiva, reemplazando la programación
+                         académica basada en intuición por una basada en evidencia.
+                      7. El algoritmo de soluciones rápidas con priorización por impacto, urgencia y
+                         esfuerzo permite a la secretaría y al departamento actuar sobre lo verdaderamente
+                         relevante, y no solo sobre lo más visible.
+                      8. La veriĄcación de resultados mediante tableros cierra el ciclo de mejora
+                         continua: cada acción queda registrada, medida y disponible para la siguiente
+                         iteración de decisión.
+                                      Documentación de Investigación y PlaniĄcación
+                 Departamento de Informática y Computación                                           61
+                 7.7     Recomendaciones
+                     1. Implementar por incrementos: iniciar con los módulos de cupos, comunicación,
+                        faltas y evaluación docente, que concentran el mayor impacto sobre la oportunidad.
+                     2. Institucionalizar el porcentaje mínimo de participación: la evaluación
+                        docente debe ser requisito para la matrícula del siguiente periodo, con anonimato
+                        garantizado.
+                     3. Capacitar a la secretaría en el uso analítico: no basta con entregar tableros;
+                        se requiere formación en interpretación de indicadores y priorización.
+                     4. Publicar los criterios de priorización de cupos: la transparencia es requisito
+                        para la legitimidad del sistema ante los estudiantes.
+                     5. Revisar periódicamente las reglas del algoritmo: los umbrales (saturación,
+                        inasistencia, plazos) deben ajustarse con datos reales de cada periodo académico.
+                     6. Diseĳar el plan de protección de datos:clasiĄcarlainformación,deĄnirtiempos
+                        de retención y establecer controles de acceso antes de la puesta en producción.
+                     7. Extender progresivamente a otras unidades académicas: la arquitectura
+                        modular permite replicar el modelo, adaptando reglas de negocio y catálogos.
+                     8. Medir el impacto social: además de los KPI operativos, se recomienda medir la
+                        percepción de equidad, la reducción de conĆictos y el clima académico percibido.
+                                      Documentación de Investigación y PlaniĄcación
+                  Departamento de Informática y Computación                                                     62
+                  7.8       Trabajo Futuro
+                                                Tabla 7.5: Líneas de trabajo futuro
+                  Línea                     Descripción                                                Horizonte
+                  Asistente conversacio- Interfaz de lenguaje natural para consultar cupos, horarios      Corto
+                  nal                       y estados de casos.
+                  Recomendación perso- Sugerencia de materias y horarios según historial y perĄl         Mediano
+                  nalizada                  del estudiante.
+                  Detección temprana de     Modelos predictivos sobre inasistencia, desempeĳo y que-     Mediano
+                  deserción                 jas.
+                  Integración total con el  Sincronización bidireccional de matrícula, notas y titula-   Mediano
+                  sistema central           ción.
+                  Analítica de aprendiza-   Correlación entre desempeĳo docente y resultados acadé-       Largo
+                  je                        micos de los estudiantes.
+                  Aplicación móvil nativa   NotiĄcaciones push y operaciones sin conexión.                Largo
+                                           Documentación de Investigación y PlaniĄcación
+        Bibliografía
+        [1] Object Management Group. OMG UniĄed Modeling Language (OMG UML), Version
+          2.5.1. OMG, 2017.
+        [2] Sommerville, I. Software Engineering. 10th ed. Pearson, 2016.
+        [3] Pressman, R. S. y Maxim, B. R. Software Engineering: A PractitionerŠs Approach.
+          9th ed. McGraw-Hill, 2020.
+        [4] Project Management Institute. A Guide to the Project Management Body of Knowledge
+          (PMBOK Guide). 7th ed. PMI, 2021.
+        [5] Chapman, P., Clinton, J., Kerber, R., Khabaza, T., Reinartz, T., Shearer, C. y Wirth,
+          R. CRISP-DM 1.0: Step-by-step Data Mining Guide. SPSS Inc., 2000.
+        [6] International Organization for Standardization. ISO/IEC 25010: Systems and software
+          engineering Ů Systems and software Quality Requirements and Evaluation (SQuaRE).
+          ISO, 2011.
+        [7] International Organization for Standardization. ISO/IEC 27001: Information security,
+          cybersecurity and privacy protection Ů Information security management systems.
+          ISO, 2022.
+                           63

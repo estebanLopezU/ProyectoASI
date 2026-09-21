@@ -1,0 +1,739 @@
+% =====================================================================
+% CAPÍTULO 5: MODELADO UML
+% =====================================================================
+\chapter{Modelado UML del Sistema}
+\label{ch:diagramas}
+
+El modelado se realiza con el estándar \ac{UML}~2.5. Todos los diagramas de este
+capítulo están integrados directamente en el documento y se compilan junto con
+el texto.
+
+\section{Diagrama de Casos de Uso}
+
+\subsection{Descripción general}
+El diagrama de casos de uso muestra las funcionalidades del \ac{SGDIC} desde la
+perspectiva de los cuatro actores principales.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.8cm]
+
+% ============ FRONTERA DEL SISTEMA ============
+\begin{scope}[on background layer]
+\node[sistema, fit={(-2.0,0.65) (12.1,-16.2)}] (borde) {};
+\end{scope}
+\node[font=\small\bfseries, text=azulOscuro] at (5.05,0.25) {SGDIC --- Sistema de Gestión Departamental};
+
+% ============ ACTORES ============
+\node[actor] (est) at (-4.9,-3.0) {Estudiante};
+\node[actor] (doc) at (-4.9,-9.7) {Docente};
+\node[actor] (sec) at (14.3,-5.2) {Secretaría};
+\node[actor] (adm) at (14.3,-11.9) {Departamento\\(Administrador)};
+
+% ============ PAQUETE 1: GESTIÓN ACADÉMICA ============
+\begin{scope}[on background layer]
+\node[paquete, fit={(-1.0,-0.65) (5.0,-6.95)}] (pkg1) {};
+\end{scope}
+\node[font=\tiny\bfseries, text=verdeUC] at (2.0,-0.85) {Gestión Académica};
+\node[caso] (uc1) at (0.5,-1.9) {Solicitar cupos};
+\node[caso] (uc2) at (3.55,-1.9) {Crear/editar\\materias};
+\node[caso] (uc3) at (0.5,-4.0) {Registrar faltas};
+\node[caso] (uc5) at (3.55,-4.0) {Cuestionario de\\horarios y materias};
+\node[caso] (uc4) at (2.0,-6.05) {Calificar docentes};
+
+% ============ PAQUETE 2: COMUNICACIÓN ============
+\begin{scope}[on background layer]
+\node[paquete, fit={(-1.0,-7.35) (5.0,-12.95)}] (pkg2) {};
+\end{scope}
+\node[font=\tiny\bfseries, text=verdeUC] at (2.0,-7.55) {Comunicación y Retroalimentación};
+\node[caso] (uc6) at (0.5,-8.65) {Mensaje de\\estudiante a docente};
+\node[caso] (uc7) at (3.55,-8.65) {Mensaje de\\docente a estudiante};
+\node[caso] (uc8) at (0.5,-11.05) {Quejas y\\sugerencias};
+\node[caso] (uc9) at (3.55,-11.05) {Notificaciones\\automáticas};
+
+% ============ PAQUETE 3: EVALUACIÓN Y ANÁLISIS ============
+\begin{scope}[on background layer]
+\node[paquete, fit={(5.8,-0.65) (11.25,-15.85)}] (pkg3) {};
+\end{scope}
+\node[font=\tiny\bfseries, text=verdeUC] at (8.55,-0.85) {Evaluación, Verificación y Analítica};
+\node[caso] (uc10) at (8.55,-1.9) {Evaluación\\docente a tiempo};
+\node[caso] (uc11) at (8.55,-4.0) {Verificar\\resultados};
+\node[caso] (uc12) at (8.55,-6.1) {Ver tableros de\\analítica};
+\node[caso] (uc13) at (8.55,-8.25) {Generar soluciones\\rápidas};
+\node[caso] (uc14) at (8.55,-10.45) {Optimizar\\horarios};
+\node[caso] (uc15) at (8.55,-12.65) {Gestionar\\actas y reportes};
+\node[caso] (uc16) at (8.55,-14.8) {Administrar\\catálogo};
+
+% ============ RELACIONES ============
+\draw[thick, azulOscuro] (est) -- (uc1);
+\draw[thick, azulOscuro] (est) -- (uc5);
+\draw[thick, azulOscuro] (est) -- (uc4);
+\draw[thick, azulOscuro] (est) -- (uc6);
+\draw[thick, azulOscuro] (est) -- (uc8);
+
+\draw[thick, azulOscuro] (doc) -- (uc2);
+\draw[thick, azulOscuro] (doc) -- (uc3);
+\draw[thick, azulOscuro] (doc) -- (uc7);
+
+\draw[thick, azulOscuro] (sec) -- (uc11);
+\draw[thick, azulOscuro] (sec) -- (uc12);
+\draw[thick, azulOscuro] (sec) -- (uc8);
+\draw[thick, azulOscuro] (sec) -- (uc15);
+
+\draw[thick, azulOscuro] (adm) -- (uc10);
+\draw[thick, azulOscuro] (adm) -- (uc13);
+\draw[thick, azulOscuro] (adm) -- (uc14);
+\draw[thick, azulOscuro] (adm) -- (uc16);
+
+\draw[-{Stealth[length=2mm,width=1.4mm]}, thick, dashed, color=moradoUC]
+      (uc1) -- node[above, font=\tiny, fill=white, inner sep=1pt, text=moradoUC]{$\ll$include$\gg$} (uc2);
+\draw[-{Stealth[length=2mm,width=1.4mm]}, thick, dashed, color=moradoUC] (uc9) -- (uc6);
+\draw[-{Stealth[length=2mm,width=1.4mm]}, thick, dashed, color=moradoUC] (uc13) -- (uc12);
+
+\end{tikzpicture}%
+}
+\caption{Diagrama de casos de uso del \ac{SGDIC}}
+\label{fig:casos-uso}
+\end{figure}
+
+\subsection{Especificación de casos de uso principales}
+
+\begin{table}[H]
+\centering
+\caption{Especificación del caso de uso: Solicitar cupo (UC1)}
+\label{tab:uc1}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Elemento} & \textbf{Descripción} \\
+\midrule
+Actor principal & Estudiante \\
+Actores secundarios & Sistema de notificaciones, Secretaría \\
+Precondición & El estudiante está autenticado y el periodo de solicitudes está abierto. \\
+Flujo principal &
+  1. El estudiante consulta el catálogo de materias y su disponibilidad. \newline
+  2. Selecciona la materia y confirma la solicitud. \newline
+  3. El sistema valida prerrequisitos, cupo y conflicto de horario. \newline
+  4. Si hay cupo, se reserva y se notifica la aprobación. \newline
+  5. Si no hay cupo, se registra en lista de espera y se notifica la posición. \\
+Flujos alternativos &
+  A1: No cumple prerrequisitos $\to$ rechazo con motivo explícito. \newline
+  A2: Conflicto de horario $\to$ se sugiere horario alternativo. \newline
+  A3: Cupo liberado por no confirmación $\to$ se notifica al siguiente en espera. \\
+Postcondición & La solicitud queda registrada con estado y trazabilidad completa. \\
+Requerimientos & RF-05 a RF-10, RN-01 a RN-04 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Especificación del caso de uso: Gestión de queja o sugerencia (UC8)}
+\label{tab:uc8}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{naranjaClaro}
+\textbf{Elemento} & \textbf{Descripción} \\
+\midrule
+Actor principal & Estudiante o Docente \\
+Actores secundarios & Secretaría, Docente involucrado, Departamento \\
+Precondición & El usuario está autenticado. \\
+Flujo principal &
+  1. El usuario registra la queja o sugerencia con categoría y descripción. \newline
+  2. El sistema clasifica automáticamente urgencia y área responsable. \newline
+  3. La secretaría revisa, asigna responsable y plazo. \newline
+  4. La secretaría se comunica formalmente con el docente si aplica. \newline
+  5. Se registra la acción, se cierra el caso y se solicita satisfacción. \\
+Flujos alternativos &
+  A1: Caso crítico sin atención en 3 días $\to$ escalamiento a dirección. \newline
+  A2: El denunciante solicita anonimato $\to$ se oculta su identidad en todo el flujo. \\
+Postcondición & Caso cerrado con acción registrada, evidencia y encuesta de satisfacción. \\
+Requerimientos & RF-35 a RF-42, RN-09, RN-10 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Especificación del caso de uso: Evaluación docente a tiempo (UC10)}
+\label{tab:uc10}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Elemento} & \textbf{Descripción} \\
+\midrule
+Actor principal & Departamento (Administrador) \\
+Actores secundarios & Estudiante, Docente, Sistema de notificaciones \\
+Precondición & El periodo académico está configurado con fechas de evaluación. \\
+Flujo principal &
+  1. El departamento configura periodo, preguntas y fecha límite. \newline
+  2. El sistema habilita el formulario en la fecha de inicio. \newline
+  3. Se envían recordatorios automáticos a los pendientes. \newline
+  4. Al cumplirse la fecha límite se consolidan los resultados. \newline
+  5. Se publican resultados anonimizados y se generan alertas de desempeño atípico. \\
+Flujos alternativos &
+  A1: Participación insuficiente $\to$ se extiende el plazo y se intensifican recordatorios. \newline
+  A2: El docente solicita revisión $\to$ se verifica trazabilidad sin revelar identidades. \\
+Postcondición & 100\% de evaluaciones aplicadas y resultados publicados en el periodo. \\
+Requerimientos & RF-27 a RF-34, RN-05, RN-06 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Diagrama de Clases}
+
+\subsection{Descripción general}
+El diagrama de clases define la estructura estática del \ac{SGDIC}. Se utiliza una
+clase abstracta \texttt{Usuario} de la que heredan los cuatro roles del sistema.
+Las entidades de dominio modelan los procesos problemáticos identificados.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  entidad/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=3pt,
+    text=azulOscuro, align=center, font=\scriptsize\bfseries,
+    minimum width=3.35cm, minimum height=0.9cm, inner sep=4pt
+  },
+  abstracta/.style={
+    draw=verdeUC, fill=verdeClaro, thick, dashed, rounded corners=3pt,
+    text=verdeUC!60!black, align=center, font=\scriptsize\itshape\bfseries,
+    minimum width=3.9cm, minimum height=0.9cm, inner sep=4pt
+  },
+  etiqueta/.style={
+    font=\tiny, fill=white, inner sep=1.2pt, text=azulOscuro
+  },
+  modulo/.style={
+    draw=grisUC!55, fill=grisClaro!60, rounded corners=5pt, inner sep=8pt
+  },
+  node distance=1.0cm and 1.0cm
+]
+
+% --- Jerarquía de usuarios ---
+\node[abstracta] (usuario) at (0,0) {Usuario (abstracta)};
+\node[entidad] (est) at (-7.2,-2.0) {Estudiante};
+\node[entidad] (doc) at (-2.4,-2.0) {Docente};
+\node[entidad] (sec) at (2.4,-2.0) {Secretaría};
+\node[entidad] (adm) at (7.2,-2.0) {Administrador};
+
+\draw[generalizacion] (est.north) -- ++(0,0.65) -| (usuario.south west);
+\draw[generalizacion] (doc.north) -- ++(0,0.65) -| (usuario.south);
+\draw[generalizacion] (sec.north) -- ++(0,0.65) -| (usuario.south);
+\draw[generalizacion] (adm.north) -- ++(0,0.65) -| (usuario.south east);
+
+% --- Módulos de dominio ---
+\node[entidad] (mat) at (-8.6,-5.0) {Materia};
+\node[entidad] (sol) at (-5.4,-5.0) {SolicitudCupo};
+
+\node[entidad] (msg) at (-3.4,-7.5) {Mensaje};
+\node[entidad] (que) at (0.0,-7.5) {QuejaSugerencia};
+
+\node[entidad] (fal) at (-3.4,-10.0) {Falta};
+\node[entidad] (cal) at (0.0,-10.0) {Calificacion};
+
+\node[entidad] (cue) at (5.2,-5.0) {CuestionarioHorario};
+\node[entidad] (eva) at (8.8,-5.0) {EvaluacionDocente};
+
+\node[entidad] (rep) at (3.8,-9.0) {Reporte};
+\node[entidad] (ana) at (7.2,-9.0) {AnaliticaDatos};
+\node[entidad] (rec) at (7.2,-11.55) {Recomendacion};
+
+\begin{scope}[on background layer]
+\node[modulo, fit={(mat) (sol)}] {};
+\node[modulo, fit={(msg) (que) (fal) (cal)}] {};
+\node[modulo, fit={(cue) (eva) (rep) (ana) (rec)}] {};
+\end{scope}
+
+\node[font=\tiny\bfseries, text=grisUC] at (-7.0,-4.15) {Gestión académica};
+\node[font=\tiny\bfseries, text=grisUC] at (-1.7,-6.65) {Comunicación y seguimiento};
+\node[font=\tiny\bfseries, text=grisUC] at (6.5,-4.15) {Evaluación y analítica};
+
+% --- Relaciones principales con rutas ortogonales ---
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, near end, above]{realiza} (sol.west);
+\draw[thick, azulOscuro] (mat.east) -- node[etiqueta, above]{recibe} (sol.west);
+\draw[thick, azulOscuro] (doc.south) |- node[etiqueta, near end, above]{imparte} (mat.east);
+
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, near end, above]{envía} (msg.west);
+\draw[thick, azulOscuro] (doc.south) -- node[etiqueta, right]{envía} (msg.north);
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, near end, above]{reporta} (que.west);
+\draw[thick, azulOscuro] (sec.south) |- node[etiqueta, near end, above]{gestiona} (que.east);
+
+\draw[thick, azulOscuro] (doc.south) |- node[etiqueta, near end, above]{registra} (fal.west);
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, pos=0.74, above]{acumula} (fal.west);
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, near end, above]{califica} (cal.west);
+\draw[thick, azulOscuro] (doc.south) |- node[etiqueta, near end, above]{recibe} (cal.west);
+
+\draw[thick, azulOscuro] (est.south) |- node[etiqueta, near end, above]{responde} (cue.west);
+\draw[thick, azulOscuro] (adm.south) |- node[etiqueta, near end, above]{configura} (eva.east);
+\draw[thick, azulOscuro] (sec.south) |- node[etiqueta, near end, above]{genera} (rep.west);
+\draw[thick, azulOscuro] (adm.south) |- node[etiqueta, near end, above]{ejecuta} (ana.east);
+\draw[thick, azulOscuro] (ana.south) -- node[etiqueta, right]{sugiere} (rec.north);
+
+\end{tikzpicture}%
+}
+\caption{Diagrama de clases (visión de relaciones principales) del \ac{SGDIC}}
+\label{fig:clases-relaciones}
+\end{figure}
+
+\subsection{Diagrama de clases detallado}
+La figura~\ref{fig:clases-detalle} presenta las clases principales con sus
+atributos y métodos en notación \ac{UML} completa (visibilidad: $-$ privado,
+$+$ público).
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  clasedet/.style={
+    draw=azulOscuro, fill=white, thick,
+    text=black, align=left, font=\ttfamily\tiny, inner sep=3pt
+  }
+]
+
+% ============ Usuario (abstracta) ============
+\node[clasedet] (usuario) at (0,0) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Usuario}} \textit{\{abstract\}}}\\
+\hline
+$-$ id: String\\
+$-$ nombre: String\\
+$-$ email: String\\
+$-$ passwordHash: String\\
+$-$ activo: Boolean\\
+\hline
+$+$ autenticar(): Boolean\\
+$+$ actualizarPerfil(): void\\
+\end{tabular}
+};
+
+% ============ Estudiante ============
+\node[clasedet] (est) at (-9.0,-4.4) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Estudiante}}}\\
+\hline
+$-$ codigo: String\\
+$-$ semestre: Integer\\
+$-$ promedio: Double\\
+\hline
+$+$ solicitarCupos(m): Boolean\\
+$+$ enviarMensaje(d,c): Mensaje\\
+$+$ calificarDocente(d,p): void\\
+$+$ responderCuestionario(): void\\
+$+$ presentarQueja(q): void\\
+\end{tabular}
+};
+
+% ============ Docente ============
+\node[clasedet] (doc) at (-3.0,-4.4) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Docente}}}\\
+\hline
+$-$ codigo: String\\
+$-$ especialidad: String\\
+$-$ materiasAsignadas: List\\
+\hline
+$+$ registrarFalta(e,f): Falta\\
+$+$ crearEditarMateria(m): void\\
+$+$ enviarMensaje(e,c): Mensaje\\
+$+$ justificarFalta(f): void\\
+\end{tabular}
+};
+
+% ============ Secretaría ============
+\node[clasedet] (sec) at (3.0,-4.4) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Secretaría}}}\\
+\hline
+$-$ area: String\\
+$-$ casosAsignados: Integer\\
+\hline
+$+$ gestionarQueja(q): void\\
+$+$ comunicarDocente(d,c): void\\
+$+$ verificarResultados(): Reporte\\
+$+$ generarAnalitica(): Dataset\\
+\end{tabular}
+};
+
+% ============ Administrador ============
+\node[clasedet] (adm) at (9.0,-4.4) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Administrador}}}\\
+\hline
+$-$ nivelAcceso: Enum\\
+\hline
+$+$ asignarCupos(): void\\
+$+$ configurarEvaluacion(): void\\
+$+$ generarSolucion(a): Recomendacion\\
+$+$ publicarResultados(): void\\
+\end{tabular}
+};
+
+% ============ Materia ============
+\node[clasedet] (mat) at (-9.0,-8.8) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{Materia}}}\\
+\hline
+$-$ idMateria: String\\
+$-$ codigo: String\\
+$-$ creditos: Integer\\
+$-$ cupoMaximo: Integer\\
+$-$ cuposDisponibles: Integer\\
+$-$ horarios: List$<$String$>$\\
+\hline
+$+$ actualizarCupos(): void\\
+$+$ verificarDisponibilidad(): Boolean\\
+\end{tabular}
+};
+
+% ============ QuejaSugerencia ============
+\node[clasedet] (que) at (-3.0,-8.8) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{QuejaSugerencia}}}\\
+\hline
+$-$ id: String\\
+$-$ tipo: \{QUEJA, SUGERENCIA\}\\
+$-$ estado: \{ABIERTO, EN\_PROCESO, RESUELTO\}\\
+$-$ prioridad: \{BAJA, MEDIA, ALTA\}\\
+$-$ responsable: String\\
+$-$ fechaCierre: Date\\
+\hline
+$+$ asignarSecretaria(): void\\
+$+$ generarRespuesta(): void\\
+$+$ cerrar(evidencia): void\\
+\end{tabular}
+};
+
+% ============ EvaluacionDocente ============
+\node[clasedet] (eva) at (3.0,-8.8) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{EvaluacionDocente}}}\\
+\hline
+$-$ id: String\\
+$-$ periodo: String\\
+$-$ fechaInicio: Date\\
+$-$ fechaLimite: Date\\
+$-$ completadas: Integer\\
+$-$ total: Integer\\
+\hline
+$+$ habilitar(): void\\
+$+$ enviarRecordatorio(): void\\
+$+$ consolidar(): Reporte\\
+$+$ verificarCumplimiento(): Boolean\\
+\end{tabular}
+};
+
+% ============ AnaliticaDatos ============
+\node[clasedet] (ana) at (9.0,-8.8) {
+\begin{tabular}{@{}l@{}}
+\multicolumn{1}{@{}c@{}}{\textbf{\textsf{AnaliticaDatos}}}\\
+\hline
+$-$ dataset: Dataset\\
+$-$ metricas: Map\\
+\hline
+$+$ calcularKPI(): Map\\
+$+$ detectarAnomalias(): List\\
+$+$ predecirDemanda(): Modelo\\
+$+$ priorizarRecomendaciones(): List\\
+\end{tabular}
+};
+
+% --- Relaciones de generalización ---
+\draw[generalizacion] (est) -- (usuario);
+\draw[generalizacion] (doc) -- (usuario);
+\draw[generalizacion] (sec) -- (usuario);
+\draw[generalizacion] (adm) -- (usuario);
+
+% --- Asociaciones ---
+\draw[thick, azulOscuro] (adm) -- (mat) node[midway, above, font=\tiny, text=azulOscuro]{1 .. *};
+\draw[thick, azulOscuro] (est) -- (mat);
+\draw[thick, azulOscuro] (sec) -- (que) node[midway, above, font=\tiny, text=azulOscuro]{0 .. *};
+\draw[thick, azulOscuro] (adm) -- (eva);
+\draw[thick, azulOscuro] (adm) -- (ana);
+\draw[thick, azulOscuro] (doc) -- (eva) ;
+
+\end{tikzpicture}%
+}
+\caption{Diagrama de clases detallado con atributos y métodos}
+\label{fig:clases-detalle}
+\end{figure}
+
+\section{Diagrama de Secuencia: Evaluación Docente}
+
+El diagrama de secuencia modela la interacción temporal del proceso de
+evaluación docente, crítico para garantizar que se complete dentro del periodo
+académico.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  obj/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=2pt,
+    text=azulOscuro, align=center, font=\scriptsize\bfseries,
+    minimum width=2.6cm, minimum height=0.85cm, inner sep=3pt
+  },
+  linea/.style={draw=grisUC, dashed, thick},
+  men/.style={->, >=Stealth, thick, color=azulOscuro},
+  ret/.style={->, >=Stealth, thick, dashed, color=verdeUC},
+  self/.style={->, >=Stealth, thick, color=moradoUC}
+]
+
+% --- Objetos (líneas de vida) ---
+\node[obj] (adm)   at (0,0)    {Administrador};
+\node[obj] (sys)   at (3.6,0)  {SGDIC};
+\node[obj] (est)   at (7.2,0)  {Estudiante};
+\node[obj] (doc)   at (10.8,0) {Docente};
+\node[obj] (sec)   at (14.4,0) {Secretaría};
+
+% --- Líneas de vida ---
+\draw[linea] (adm) -- (0,-13.0);
+\draw[linea] (sys) -- (3.6,-13.0);
+\draw[linea] (est) -- (7.2,-13.0);
+\draw[linea] (doc) -- (10.8,-13.0);
+\draw[linea] (sec) -- (14.4,-13.0);
+
+% --- Mensajes ---
+\draw[men] (0,-0.9) -- node[above, font=\tiny]{1. configurarEvaluacion(periodo, fechaLimite)} (3.6,-0.9);
+\draw[self] (3.6,-1.4) -- node[right, font=\tiny]{2. crear formulario} (3.6,-1.4);
+\draw[men] (3.6,-2.1) -- node[above, font=\tiny]{3. habilitarEvaluacion()} (7.2,-2.1);
+\draw[men] (7.2,-2.8) -- node[above, font=\tiny]{4. mostrar formulario anónimo} (3.6,-2.8);
+\draw[men] (7.2,-3.6) -- node[above, font=\tiny]{5. responderEvaluacion(puntajes)} (3.6,-3.6);
+\draw[self] (3.6,-4.2) -- node[right, font=\tiny]{6. validar ventana de tiempo} (3.6,-4.2);
+\draw[ret] (3.6,-4.9) -- node[above, font=\tiny]{7. confirmarRegistro()} (7.2,-4.9);
+
+% --- Recordatorios ---
+\draw[self] (3.6,-5.7) -- node[right, font=\tiny]{8. enviarRecordatorio()} (3.6,-5.7);
+\draw[men] (3.6,-6.4) -- node[above, font=\tiny]{9. notificar pendientes} (7.2,-6.4);
+\draw[men] (3.6,-7.2) -- node[above, font=\tiny]{10. alertarNoCompletadas()} (14.4,-7.2);
+
+% --- Cierre y consolidación ---
+\draw[men] (14.4,-8.0) -- node[above, font=\tiny]{11. verificarCumplimiento()} (3.6,-8.0);
+\draw[self] (3.6,-8.7) -- node[right, font=\tiny]{12. consolidar resultados} (3.6,-8.7);
+\draw[men] (3.6,-9.4) -- node[above, font=\tiny]{13. publicarResultados(docente)} (10.8,-9.4);
+\draw[men] (3.6,-10.1) -- node[above, font=\tiny]{14. generarReporte(secretaría)} (14.4,-10.1);
+\draw[men] (3.6,-10.8) -- node[above, font=\tiny]{15. analizarDesempeñoAtípico()} (0,-10.8);
+\draw[ret] (0,-11.5) -- node[above, font=\tiny]{16. plan de acompañamiento} (3.6,-11.5);
+
+% --- Nota de anonimato ---
+\node[draw=moradoUC, fill=moradoClaro, rounded corners=2pt, font=\tiny,
+      align=left, inner sep=3pt, text width=4.0cm] at (7.2,-12.4) {
+  \textbf{Restricción:} el docente nunca recibe la identidad del evaluador;
+  solo resultados agregados con mínimo 5 respuestas.
+};
+
+\end{tikzpicture}%
+}
+\caption{Diagrama de secuencia del proceso de evaluación docente}
+\label{fig:secuencia-evaluacion}
+\end{figure}
+
+\section{Diagrama de Actividades: Gestión de Quejas y Sugerencias}
+
+El diagrama de actividades describe el flujo completo de una queja o sugerencia,
+desde su registro hasta su cierre verificado, incluyendo el escalamiento
+automático de casos críticos.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.5cm, every node/.style={font=\scriptsize}]
+
+% --- Swimlane: Estudiante ---
+\node[terminal] (ini) {Inicio};
+\node[flujo, below=of ini] (a1) {Registrar queja o\\sugerencia};
+\node[flujo, below=2.5cm of a1] (a2) {Recibir\\notificación de estado};
+\node[flujo, below=of a2] (a3) {Responder encuesta\\de satisfacción};
+\node[terminal, below=of a3] (fin) {Fin};
+
+% --- Flujo del sistema ---
+\node[flujo, right=2.7cm of a1] (s1) {Clasificar categoría,\\urgencia y área};
+\node[decision, right=2.7cm of s1, xshift=0.5cm] (d1) {¿Caso\\crítico?};
+\node[flujo, right=2.7cm of d1, xshift=0.5cm] (s2) {Escalar a\\dirección};
+
+% --- Flujo de secretaría ---
+\node[flujo, below=1.0cm of s1] (sec1) {Asignar responsable\\y plazo};
+\node[decision, below=1.6cm of sec1] (d2) {¿Vencido\\el plazo?};
+\node[flujo, right=2.7cm of d2] (sec2) {Reasignar y\\alertar};
+\node[flujo, below=1.0cm of d2] (sec3) {Contactar al\\docente involucrado};
+\node[flujo, below=of sec3] (sec4) {Registrar acción\\y evidencia};
+\node[decision, below=1.6cm of sec4] (d3) {¿Acción\\suficiente?};
+\node[flujo, right=2.7cm of d3] (sec5) {Escalar a\\dirección};
+\node[flujo, below=1.0cm of d3] (sec6) {Cerrar caso y\\notificar};
+
+% --- Conexiones ---
+\draw[flecha] (ini) -- (a1);
+\draw[flecha] (a1) -- (s1);
+\draw[flecha] (s1) -- (d1);
+\draw[flecha] (d1) -- node[above, font=\tiny]{Sí} (s2);
+\draw[flecha] (d1) -- node[right, font=\tiny]{No} (sec1);
+\draw[flecha] (s2) |- (sec3);
+\draw[flecha] (sec1) -- (d2);
+\draw[flecha] (d2) -- node[above, font=\tiny]{Sí} (sec2);
+\draw[flecha] (sec2) |- (sec3);
+\draw[flecha] (d2) -- node[right, font=\tiny]{No} (sec3);
+\draw[flecha] (sec3) -- (sec4);
+\draw[flecha] (sec4) -- (d3);
+\draw[flecha] (d3) -- node[above, font=\tiny]{No} (sec5);
+\draw[flecha] (sec5) |- (sec4);
+\draw[flecha] (d3) -- node[right, font=\tiny]{Sí} (sec6);
+\draw[flecha] (sec6) -- (a2);
+\draw[flecha] (a2) -- (a3);
+\draw[flecha] (a3) -- (fin);
+
+\end{tikzpicture}%
+}
+\caption{Diagrama de actividades del flujo de quejas y sugerencias}
+\label{fig:actividades-quejas}
+\end{figure}
+
+\section{Diagrama de Estados: Ciclo de Vida de una Queja}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.1cm and 1.3cm, every node/.style={font=\scriptsize}]
+
+\node[terminal] (ini) {Inicio};
+\node[flujo, below=of ini] (registrada) {REGISTRADA};
+\node[flujo, below=of registrada] (clasificada) {CLASIFICADA};
+\node[flujo, below left=of clasificada, xshift=-0.6cm] (asignada) {ASIGNADA};
+\node[flujo, below right=of clasificada, xshift=0.6cm] (escalada) {ESCALADA};
+\node[flujo, below=1.6cm of clasificada] (enproceso) {EN PROCESO};
+\node[flujo, below=of enproceso] (atendida) {ATENDIDA};
+\node[flujo, below=of atendida] (cerrada) {CERRADA};
+\node[flujo, right=2.6cm of cerrada] (reabierta) {REABIERTA};
+\node[terminal, below=of cerrada] (fin) {Fin};
+
+\draw[flecha] (ini) -- (registrada);
+\draw[flecha] (registrada) -- (clasificada);
+\draw[flecha] (clasificada) -- (asignada);
+\draw[flecha] (clasificada) -- (escalada);
+\draw[flecha] (asignada) -- (enproceso);
+\draw[flecha] (escalada) |- (enproceso);
+\draw[flecha] (enproceso) -- (atendida);
+\draw[flecha] (atendida) -- (cerrada);
+\draw[flecha] (cerrada) -- (fin);
+\draw[flecha] (cerrada) -- node[above, font=\tiny]{insatisfacción} (reabierta);
+\draw[flecha] (reabierta) |- (enproceso);
+
+% --- Transiciones etiquetadas ---
+\node[right=0.15cm of registrada, font=\tiny, text=grisUC, align=left] {por el usuario};
+\node[right=0.15cm of clasificada, font=\tiny, text=grisUC, align=left] {automática};
+\node[left=0.15cm of asignada, font=\tiny, text=grisUC, align=left] {secretaría};
+\node[right=0.15cm of escalada, font=\tiny, text=grisUC, align=left] {crítico $>$ 3 días};
+\node[left=0.15cm of atendida, font=\tiny, text=grisUC, align=left] {acción registrada};
+
+\end{tikzpicture}
+\caption{Diagrama de estados del ciclo de vida de una queja o sugerencia}
+\label{fig:estados-queja}
+\end{figure}
+
+\section{Diagrama de Componentes y Arquitectura}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  comp/.style={
+    draw=azulOscuro, fill=azulClaro, thick, rounded corners=3pt,
+    text=azulOscuro, align=center, font=\scriptsize\bfseries,
+    minimum width=3.0cm, minimum height=1.0cm, inner sep=4pt
+  },
+  infra/.style={
+    draw=verdeUC, fill=verdeClaro, thick, rounded corners=3pt,
+    text=verdeUC!60!black, align=center, font=\scriptsize\bfseries,
+    minimum width=3.0cm, minimum height=1.0cm, inner sep=4pt
+  },
+  node distance=0.6cm and 1.0cm
+]
+
+% --- Capa de presentación ---
+\node[comp] (web) {Portal Web\\(Estudiante/Docente)};
+\node[comp, right=of web] (admin) {Consola\\Administrativa};
+\node[comp, right=of admin] (movil) {Vista Móvil\\(Responsiva)};
+
+% --- Capa de servicios ---
+\node[comp, below=1.0cm of web] (srv1) {Servicio de\\Cupos y Materias};
+\node[comp, below=1.0cm of admin] (srv2) {Servicio de\\Comunicación};
+\node[comp, below=1.0cm of movil] (srv3) {Servicio de\\Evaluación y Quejas};
+
+% --- Capa analítica ---
+\node[infra, below=1.0cm of srv2] (etl) {Motor \ac{ETL}};
+\node[infra, right=of etl] (dwh) {Repositorio\\Analítico};
+\node[infra, left=of etl] (ml) {Motor de\\Soluciones Rápidas};
+
+% --- Integraciones ---
+\node[infra, below=1.0cm of etl] (api) {\ac{API} \ac{REST} Institucional};
+\node[infra, left=of api] (notif) {Servicio de\\Notificaciones};
+\node[infra, right=of api] (auth) {Autenticación\\Institucional};
+
+% --- Conexiones ---
+\draw[flecha] (web) -- (srv1);
+\draw[flecha] (admin) -- (srv2);
+\draw[flecha] (movil) -- (srv3);
+\draw[flecha] (srv1) -- (etl);
+\draw[flecha] (srv2) -- (etl);
+\draw[flecha] (srv3) -- (etl);
+\draw[flecha] (etl) -- (dwh);
+\draw[flecha] (dwh) -- (ml);
+\draw[flecha] (ml) -- (srv1);
+\draw[flecha] (api) -- (etl);
+\draw[flecha] (notif) -- (srv2);
+\draw[flecha] (auth) -- (srv3);
+
+\end{tikzpicture}
+\caption{Arquitectura de componentes del \ac{SGDIC}}
+\label{fig:componentes}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Descripción de los componentes de la arquitectura}
+\label{tab:componentes}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\rowcolor{azulClaro}
+\textbf{Componente} & \textbf{Responsabilidad} \\
+\midrule
+Portal Web & Interfaz principal para estudiantes y docentes (gestión académica). \\
+Consola Administrativa & Configuración, verificación y tableros para secretaría y departamento. \\
+Vista Móvil & Acceso responsivo optimizado para notificaciones y consultas rápidas. \\
+Servicio de Cupos y Materias & Lógica de disponibilidad, priorización y ciclo de vida de materias. \\
+Servicio de Comunicación & Mensajería trazable y notificaciones automáticas. \\
+Servicio de Evaluación y Quejas & Ventanas de evaluación, cuestionarios y gestión de casos. \\
+Motor \ac{ETL} & Extracción, limpieza, transformación y carga de datos al repositorio. \\
+Repositorio Analítico & Almacén consolidado para cálculo de \ac{KPI} y modelos. \\
+Motor de Soluciones Rápidas & Detección de anomalías, predicciones y generación de recomendaciones. \\
+\ac{API} \ac{REST} Institucional & Integración con matrícula, catálogo oficial y autenticación. \\
+Servicio de Notificaciones & Despacho de correos, mensajes internos y recordatorios. \\
+Autenticación Institucional & Validación de credenciales y roles (\ac{RBAC}). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Resumen de Diagramas}
+
+\begin{table}[H]
+\centering
+\caption{Inventario de diagramas \ac{UML} del documento}
+\label{tab:inventario-uml}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.1cm} p{2.2cm} X@{}}
+\toprule
+\rowcolor{verdeClaro}
+\textbf{Diagrama} & \textbf{Figura} & \textbf{Propósito} \\
+\midrule
+Casos de uso & \ref{fig:casos-uso} & Funcionalidades y actores del sistema. \\
+Clases (relaciones) & \ref{fig:clases-relaciones} & Estructura estática y asociaciones. \\
+Clases (detalle) & \ref{fig:clases-detalle} & Atributos y métodos por clase. \\
+Secuencia & \ref{fig:secuencia-evaluacion} & Interacción temporal de la evaluación docente. \\
+Actividades & \ref{fig:actividades-quejas} & Flujo completo de quejas y sugerencias. \\
+Estados & \ref{fig:estados-queja} & Ciclo de vida de una queja o sugerencia. \\
+Componentes & \ref{fig:componentes} & Arquitectura de la solución. \\
+\bottomrule
+\end{tabularx}
+\end{table}

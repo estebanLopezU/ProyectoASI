@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Editar materia{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-pencil-square me-2"></i>Solicitar edición · {{ materia.codigo }}</h3>
+<div class="row">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+              {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary">Enviar solicitud de edición</button>
+          <a class="btn btn-outline-secondary" href="{% url 'materias:catalogo' %}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Estado actual de la materia</div>
+      <div class="card-body">
+        <p class="mb-1"><strong>Nombre:</strong> {{ materia.nombre }}</p>
+        <p class="mb-1"><strong>Créditos:</strong> {{ materia.creditos }}</p>
+        <p class="mb-1"><strong>Cupo máximo:</strong> {{ materia.cupo_maximo }}</p>
+        <p class="mb-0"><strong>Estado:</strong> {{ materia.get_estado_display }}</p>
+        <hr>
+        <h6>Historial de versiones (RF-14)</h6>
+        <ul class="small mb-0">
+          {% for version in materia.versiones.all|slice:":5" %}
+            <li>v{{ version.version }} · {{ version.fecha|date:"d/m/Y H:i" }}
+              {% if version.autor %}· {{ version.autor.get_full_name|default:version.autor.username }}{% endif %}</li>
+          {% empty %}
+            <li class="text-muted">Sin versiones registradas.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
