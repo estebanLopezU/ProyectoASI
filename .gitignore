@@ -37,3 +37,5 @@ _push.sh
 _smoke_login.py
 _smoke_out.txt
 _svg_out.txt
+_valida_yaml.py
+_yaml_check.txt

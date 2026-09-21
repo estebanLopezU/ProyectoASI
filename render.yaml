@@ -1,28 +1,33 @@
 # Configuración de despliegue para Render
-# https://render.com/docs/deploy-django
-# Importa este servicio seleccionando "Blueprint" y conecta tu repo GitHub
+# https://render.com/docs/blueprint-spec
+# Importa este servicio desde el Dashboard → New → Blueprint y conecta el repo.
 
 services:
   - type: web
     name: sgdic-web
     runtime: python
     plan: free
+    region: oregon
     buildCommand: ./build.sh
     startCommand: ./start.sh
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: sgdic.settings
       - key: PYTHON_VERSION
-        value: 3.12
+        value: "3.12"
       - key: SGDIC_DEBUG
         value: "0"
-      - key: SGDIC_SECRET_KEY
-        fromSecret: SGDIC_SECRET_KEY
+      # Todas las variables del Environment Group "ASI-env"
+      # (allí está SGDIC_SECRET_KEY definido en el Dashboard)
+      - fromGroup: ASI-env
       - key: DATABASE_URL
-        fromDatabase: sgdic-db
+        fromDatabase:
+          name: sgdic-db
+          property: connectionString
 
 databases:
   - name: sgdic-db
     region: oregon
     plan: free
     postgresVersion: "16"
+
