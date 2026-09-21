@@ -70,15 +70,18 @@ WSGI_APPLICATION = "sgdic.wsgi.application"
 
 # ---------------------------------------------------------------------
 # Base de datos
-# Por defecto SQLite para desarrollo sin dependencias externas.
-# Para PostgreSQL (arquitectura de producción) exportar:
-#   SGDIC_DB_ENGINE=django.db.backends.postgresql
-#   SGDIC_DB_NAME=sgdic  SGDIC_DB_USER=sgdic  SGDIC_DB_PASSWORD=***
-#   SGDIC_DB_HOST=localhost  SGDIC_DB_PORT=5432
+# - En desarrollo: SQLite por defecto.
+# - En producción (Render): DATABASE_URL inyectado automáticamente.
+# - PostgreSQL manual: via variables SGDIC_DB_*.
 # ---------------------------------------------------------------------
-DB_ENGINE = os.environ.get("SGDIC_DB_ENGINE", "django.db.backends.sqlite3")
 
-if DB_ENGINE == "django.db.backends.postgresql":
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
+if DATABASE_URL:
+    # Producción (Render): usa DATABASE_URL directamente
+    import dj_database_url
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)}
+elif os.environ.get("SGDIC_DB_ENGINE") == "django.db.backends.postgresql":
+    # PostgreSQL manual (arquitectura de producción via variables SGDIC_DB_*)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -90,6 +93,7 @@ if DB_ENGINE == "django.db.backends.postgresql":
         }
     }
 else:
+    # Desarrollo: SQLite sin dependencias externas
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
