@@ -79,3 +79,60 @@ footer.sgdic-footer {
   color: #6c757d;
   font-size: 0.8rem;
 }
+
+/* =====================================================================
+   Pantalla de ingreso (login)
+   Fondo institucional. El degradado azul→verde va por defecto y sirve de
+   respaldo; la imagen (static/img/login-bg.jpg) se inyecta desde el
+   template con {% static %} como variable CSS --login-fondo, de modo que
+   WhiteNoise nunca falla por una url() inexistente en el CSS.
+   ===================================================================== */
+.login-asi {
+  min-height: calc(100vh - 56px);
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sgdic-primario);
+  background-image:
+    linear-gradient(rgba(13, 59, 102, 0.55), rgba(27, 153, 139, 0.55)),
+    var(--login-fondo, url("../img/login-bg.svg"));
+  background-size: cover, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+.login-asi .card {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.28);
+}
+
+.login-asi .login-titulo {
+  color: var(--sgdic-primario);
+  letter-spacing: 0.08em;
+}
+
+.login-asi .login-escudo {
+  font-size: 2.4rem;
+  color: var(--sgdic-acento);
+}
+
+.login-asi .btn-primary {
+  background-color: var(--sgdic-primario);
+  border-color: var(--sgdic-primario);
+}
+
+.login-asi .btn-primary:hover,
+.login-asi .btn-primary:focus {
+  background-color: #0a2e4f;
+  border-color: #0a2e4f;
+}
+
+/* En móvil se reduce la altura útil por la barra del navegador */
+@media (max-width: 767.98px) {
+  .login-asi {
+    min-height: calc(100vh - 56px);
+    background-attachment: scroll;
+  }
+}

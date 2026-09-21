@@ -34,3 +34,6 @@ _diag.py
 _vercel_check.ps1
 _git_push.ps1
 _push.sh
+_smoke_login.py
+_smoke_out.txt
+_svg_out.txt
