@@ -1,0 +1,2 @@
+# Forzar LF en scripts de shell (requerido por los builds de Vercel/Render)
+*.sh text eol=lf
