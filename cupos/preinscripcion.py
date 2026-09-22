@@ -113,6 +113,17 @@ def demanda_historica(materia, periodo):
     return prediccion.demanda_estimada if prediccion else 0
 
 
+def grupos_materia(materia, periodo):
+    """Grupos (OfertaCupo) activos de una materia en un periodo.
+
+    Cada grupo trae su docente, horario y cupo disponible.  Ordenados por
+    día → hora → grupo para presentación consistente en la interfaz.
+    """
+    return list(OfertaCupo.objects.filter(
+        materia=materia, periodo=periodo, activa=True,
+    ).select_related("materia").order_by("dia", "hora_inicio", "grupo"))
+
+
 def calcular_probabilidades(periodo=None, estudiante=None):
     """Calcula la probabilidad de asignación de cada preinscripción.
 

@@ -258,12 +258,17 @@
             <td><span class="badge bg-secondary">{{ item.demanda }} estudiante(s)</span></td>
             <td class="small">{{ item.historico|floatformat:1 }}</td>
             <td>
-              <form method="post" action="{% url 'cupos:preinscribir' item.materia.pk %}">
-                {% csrf_token %}
-                <button class="btn btn-sm btn-primary" {% if item.requiere_docente %}title="Sin docentes activos no se puede abrir grupo"{% endif %}>
-                  <i class="bi bi-plus-lg me-1"></i>Preinscribir
-                </button>
-              </form>
+              {% if item.tiene_grupos %}
+                <a href="{% url 'cupos:grupos_materia' item.materia.pk %}"
+                   class="btn btn-sm btn-primary"
+                   {% if item.requiere_docente %}title="Sin docentes activos no se puede abrir grupo"{% endif %}>
+                  <i class="bi bi-plus-lg me-1"></i>Elegir grupo
+                </a>
+              {% elif item.requiere_docente %}
+                <span class="badge bg-danger">Sin docente activo</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Sin grupos este periodo</span>
+              {% endif %}
             </td>
           </tr>
         {% empty %}

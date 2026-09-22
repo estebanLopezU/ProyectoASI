@@ -22,6 +22,9 @@ urlpatterns = [
          views.mover_prioridad, name="mover_prioridad"),
     path("preinscripcion/preferencias/", views.guardar_preferencias, name="preferencias"),
     path("preinscripcion/enviar/", views.enviar_preinscripcion, name="enviar_preinscripcion"),
+    # Grupos/NRC de una materia (RN-13b: elegir docente y horario del grupo)
+    path("preinscripcion/materia/<int:materia_id>/grupos/",
+         views.grupos_materia_view, name="grupos_materia"),
     # Franja horaria semanal (calendario de clases)
     path("horario/", views.mi_horario, name="mi_horario"),
 ]

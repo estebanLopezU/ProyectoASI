@@ -9,26 +9,54 @@ from django.utils import timezone
 
 
 class OfertaCupo(models.Model):
-    """Oferta de cupos de una materia en un periodo académico."""
+    """Grupo (sección/NRC) de una materia en un periodo académico.
+
+    Una misma materia puede tener varios grupos en el mismo periodo; cada
+    grupo tiene su propio docente responsable, horario («franja») y cupos.
+    El estudiante se inscribe a un grupo concreto, no a la materia.
+    """
 
     materia = models.ForeignKey("materias.Materia", on_delete=models.CASCADE,
                                 related_name="ofertas")
     periodo = models.CharField("periodo académico", max_length=10, db_index=True)
+    grupo = models.CharField("grupo / sección", max_length=10, default="G1",
+                             help_text="Identificador del grupo (ej. G1, G2, NRC).")
+    docente = models.ForeignKey("usuario.Usuario", null=True, blank=True,
+                                on_delete=models.SET_NULL,
+                                related_name="grupos_dictados",
+                                limit_choices_to={"rol": "DOCENTE"},
+                                verbose_name="docente del grupo")
     cupo_maximo = models.PositiveSmallIntegerField("cupo máximo")
     inscritos = models.PositiveSmallIntegerField("inscritos", default=0)
     dia = models.PositiveSmallIntegerField("día (1=lun ... 7=dom)", default=1)
     hora_inicio = models.TimeField("hora inicio", default="07:00")
     hora_fin = models.TimeField("hora fin", default="09:00")
+    aula = models.CharField("aula / salón", max_length=30, blank=True)
     activa = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ("materia", "periodo")
-        ordering = ["periodo", "materia__codigo"]
-        verbose_name = "oferta de cupos"
-        verbose_name_plural = "ofertas de cupos"
+        unique_together = ("materia", "periodo", "grupo")
+        ordering = ["periodo", "materia__codigo", "grupo"]
+        verbose_name = "grupo de cupos"
+        verbose_name_plural = "grupos de cupos"
 
     def __str__(self):
-        return f"{self.materia} · {self.periodo} · {self.cupos_disponibles} disponibles"
+        return (f"{self.materia} · {self.periodo} · {self.grupo} "
+                f"· {self.cupos_disponibles} disponibles")
+
+    @property
+    def etiqueta_grupo(self):
+        """Nombre corto del grupo para las tablas."""
+        return self.grupo or "G1"
+
+    @property
+    def docente_nombre(self):
+        """Nombre del docente responsable del grupo."""
+        if not self.docente:
+            # Respaldo: primer docente activo asignado a la materia
+            docente = self.materia.docentes.filter(is_active=True).first()
+            return (docente.get_full_name() or docente.username) if docente else ""
+        return self.docente.get_full_name() or self.docente.username
 
     @property
     def cupos_disponibles(self):
@@ -37,6 +65,11 @@ class OfertaCupo(models.Model):
     @property
     def tasa_ocupacion(self):
         return self.inscritos / self.cupo_maximo if self.cupo_maximo else 0
+
+    @property
+    def porcentaje_ocupacion(self):
+        """Ocupación del grupo como porcentaje entero para barras de progreso."""
+        return int(round(self.tasa_ocupacion * 100))
 
     @property
     def franja(self):
@@ -167,7 +200,7 @@ class SolicitudCupo(models.Model):
 
 
 class Inscripcion(models.Model):
-    """Cupo confirmado del estudiante en una oferta (matrícula)."""
+    """Cupo confirmado del estudiante en un grupo concreto (matrícula)."""
 
     class Estado(models.TextChoices):
         ACTIVA = "ACTIVA", "Activa"
@@ -187,7 +220,21 @@ class Inscripcion(models.Model):
         verbose_name_plural = "inscripciones"
 
     def __str__(self):
-        return f"{self.estudiante} en {self.oferta.materia} [{self.estado}]"
+        return (f"{self.estudiante} en {self.oferta.materia} "
+                f"[{self.oferta.grupo}] [{self.estado}]")
+
+    # Atajos de grupo -----------------------------------------------
+    @property
+    def grupo(self):
+        return self.oferta.grupo
+
+    @property
+    def docente(self):
+        return self.oferta.docente
+
+    @property
+    def docente_nombre(self):
+        return self.oferta.docente_nombre
 
 
 # =====================================================================
@@ -220,6 +267,10 @@ class Preinscripcion(models.Model):
     demanda_estimada = models.FloatField("demanda estimada del periodo", default=0)
     franja_sugerida = models.CharField("franja sugerida", max_length=60, blank=True)
     docentes_activos = models.PositiveSmallIntegerField("docentes activos", default=0)
+    grupo = models.ForeignKey("cupos.OfertaCupo", null=True, blank=True,
+                              on_delete=models.SET_NULL,
+                              related_name="preinscripciones_grupo",
+                              verbose_name="grupo preferido")
     observacion = models.CharField(max_length=200, blank=True)
     creada = models.DateTimeField(auto_now_add=True)
     actualizada = models.DateTimeField(auto_now=True)

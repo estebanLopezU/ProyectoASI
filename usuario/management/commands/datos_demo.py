@@ -121,15 +121,45 @@ class Command(BaseCommand):
         materias = [intro, estructuras, bases, redes, ia]
 
         ofertas = []
+        # Horario base: (día, hora_inicio, hora_fin) para cada materia
         horarios = [(1, time(7, 0), time(9, 0)), (1, time(9, 0), time(11, 0)),
                     (2, time(7, 0), time(9, 0)), (3, time(14, 0), time(16, 0)),
                     (4, time(10, 0), time(12, 0))]
+        docentes_por_materia = {
+            intro: usuarios["docente1"],
+            estructuras: usuarios["docente1"],
+            bases: usuarios["docente1"],
+            redes: usuarios["docente2"],
+            ia: usuarios["docente2"],
+        }
         for materia, (dia, inicio, fin) in zip(materias, horarios):
-            for periodo, cupo in (("2025-1", 30), ("2025-2", 30), ("2026-1", 25)):
+            # Periodos históricos: 1 grupo por periodo
+            for periodo, cupo in (("2025-1", 30), ("2025-2", 30)):
                 oferta, _ = OfertaCupo.objects.get_or_create(
-                    materia=materia, periodo=periodo,
+                    materia=materia, periodo=periodo, grupo="G1",
                     defaults={"cupo_maximo": cupo, "dia": dia,
-                              "hora_inicio": inicio, "hora_fin": fin},
+                              "hora_inicio": inicio, "hora_fin": fin,
+                              "docente": docentes_por_materia[materia]},
+                )
+                ofertas.append(oferta)
+            # Periodo 2026-1: varios grupos con docentes distintos donde aplica
+            if materia == bases:
+                grupos_def = [
+                    ("G1", usuarios["docente1"], time(8, 0), time(10, 0), 2),  # martes
+                ]
+            elif materia == intro:
+                grupos_def = [
+                    ("G1", usuarios["docente1"], time(7, 0), time(9, 0), 1),
+                    ("G2", usuarios["docente2"], time(9, 0), time(11, 0), 1),  # mismo docente distinto horario
+                ]
+            else:
+                grupos_def = [("G1", docentes_por_materia[materia], inicio, fin, dia)]
+            for grupo, docente, h_inicio, h_fin, d in grupos_def:
+                oferta, _ = OfertaCupo.objects.get_or_create(
+                    materia=materia, periodo="2026-1", grupo=grupo,
+                    defaults={"cupo_maximo": 25, "dia": d,
+                              "hora_inicio": h_inicio, "hora_fin": h_fin,
+                              "docente": docente},
                 )
                 ofertas.append(oferta)
         return materias, ofertas

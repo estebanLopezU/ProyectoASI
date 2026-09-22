@@ -127,12 +127,19 @@ class MateriaDisponibleService:
         self.periodo = periodo
 
     def catalogo(self, excluir=()):
-        """Materias publicadas con docentes activos y su demanda agregada."""
+        """Materias publicadas con docentes activos y su demanda agregada.
+
+        Cada entrada incluye ``grupos``: la lista de ofertas (grupos/NRC) que
+        ofrecen la materia para el periodo, con el docente, horario y cupo de
+        cada uno, para que el estudiante pueda elegir el grupo específico al
+        que preinscribirse (RN-13b).
+        """
         from django.db.models import Count
 
         from materias.models import Materia
 
-        from .preinscripcion import demanda_historica, docentes_activos
+        from .preinscripcion import demanda_historica, docentes_activos, \
+            grupos_materia
 
         materias = (Materia.objects
                     .filter(estado=Materia.Estado.PUBLICADA)
@@ -150,6 +157,7 @@ class MateriaDisponibleService:
         catalogo = []
         for materia in materias:
             docentes = docentes_activos(materia)
+            ofertas = grupos_materia(materia, self.periodo)
             catalogo.append({
                 "materia": materia,
                 "docentes": docentes,
@@ -158,6 +166,8 @@ class MateriaDisponibleService:
                 "historico": round(demanda_historica(materia, self.periodo), 1),
                 "creditos": materia.creditos,
                 "requiere_docente": docentes == 0,
+                "grupos": ofertas,
+                "tiene_grupos": len(ofertas) > 0,
             })
         return catalogo
 
@@ -226,7 +236,13 @@ def _renumerar(estudiante, periodo):
 
 @login_required
 def preinscribir_materia(request, materia_id):
-    """RN-13: agrega una materia a la preinscripción con su prioridad."""
+    """RN-13: agrega una materia a la preinscripción con su prioridad.
+
+    Si el estudiante envía ``grupo_id`` (grupo/NRC específico), se valida que
+    el grupo pertenezca a la materia y al periodo objetivo y se guarda como
+    preferencia; si no se envía, se elige el grupo con mayor cupo disponible
+    (RN-13b).
+    """
     if request.method != "POST":
         return redirect("cupos:preinscripcion")
     if rol_usuario(request.user) != "ESTUDIANTE":
@@ -235,7 +251,8 @@ def preinscribir_materia(request, materia_id):
 
     from materias.models import Materia
 
-    from .preinscripcion import calcular_probabilidades, periodo_objetivo_actual
+    from .preinscripcion import (calcular_probabilidades, grupos_materia,
+                                 periodo_objetivo_actual)
 
     periodo = periodo_objetivo_actual()
     materia = get_object_or_404(Materia, pk=materia_id, estado=Materia.Estado.PUBLICADA)
@@ -243,6 +260,20 @@ def preinscribir_materia(request, materia_id):
     if Preinscripcion.objects.filter(estudiante=request.user, materia=materia,
                                      periodo_objetivo=periodo).exists():
         messages.info(request, f"{materia.nombre} ya está en su preinscripción.")
+        return redirect("cupos:preinscripcion")
+
+    # Elegir el grupo: preferido por el estudiante o el de mayor cupo disponible
+    ofertas = grupos_materia(materia, periodo)
+    grupo_id = request.POST.get("grupo_id")
+    if grupo_id:
+        grupo = get_object_or_404(OfertaCupo, pk=grupo_id, materia=materia,
+                                  periodo=periodo, activa=True)
+    elif ofertas:
+        grupo = max(ofertas, key=lambda o: o.cupos_disponibles)
+    else:
+        grupo = None
+    if not grupo:
+        messages.error(request, "No hay grupos disponibles para esta materia.")
         return redirect("cupos:preinscripcion")
 
     ultima = (Preinscripcion.objects
@@ -253,15 +284,51 @@ def preinscribir_materia(request, materia_id):
     preinscripcion = Preinscripcion.objects.create(
         estudiante=request.user, materia=materia, periodo_objetivo=periodo,
         prioridad=prioridad, estado=Preinscripcion.Estado.ENVIADA,
+        grupo=grupo,
     )
     calcular_probabilidades(periodo, estudiante=request.user)
     preinscripcion.refresh_from_db()
     messages.success(
         request,
         f"{materia.nombre} agregada en la posición {prioridad} "
+        f"grupo {grupo.grupo} ({grupo.docente_nombre}) "
         f"(probabilidad estimada {preinscripcion.porcentaje}%).",
     )
     return redirect("cupos:preinscripcion")
+
+
+@login_required
+def grupos_materia_view(request, materia_id):
+    """RN-13b: lista los grupos/NRC de una materia con docente y horario.
+
+    Consulta el detalle de todos los grupos activos de la materia para el
+    periodo objetivo, incluyendo docente, franja horaria, cupo disponible y la
+    demanda actual.  Usado antes de preinscribir para elegir el grupo.
+    """
+    from materias.models import Materia
+
+    from .preinscripcion import (demanda_historica, docentes_activos,
+                                 grupos_materia, periodo_objetivo_actual)
+
+    if rol_usuario(request.user) != "ESTUDIANTE":
+        messages.info(request, "Detalle de grupos disponible solo para estudiantes.")
+        return redirect("cupos:preinscripcion")
+
+    periodo = periodo_objetivo_actual()
+    materia = get_object_or_404(Materia, pk=materia_id, estado=Materia.Estado.PUBLICADA)
+    ofertas = grupos_materia(materia, periodo)
+    ya = (Preinscripcion.objects.filter(
+        estudiante=request.user, materia=materia, periodo_objetivo=periodo)
+        .select_related("grupo").first())
+    contexto = {
+        "materia": materia,
+        "periodo": periodo,
+        "ofertas": ofertas,
+        "docentes_activos": docentes_activos(materia),
+        "historico": round(demanda_historica(materia, periodo), 1),
+        "ya_preinscrita": ya,
+    }
+    return render(request, "cupos/grupos_materia.html", contexto)
 
 
 @login_required
