@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Franja horaria{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div>
+    <h3 class="mb-0"><i class="bi bi-calendar3-week me-2"></i>
+      {% if resumen.rol == "DOCENTE" %}Horario del docente{% else %}Horario del estudiante{% endif %}
+    </h3>
+    <p class="text-muted small mb-0">
+      {% if resumen.rol == "DOCENTE" %}
+        Materias que dicta y sus horas de clase
+      {% else %}
+        Materias que cursa y las que preinscribió para el próximo periodo
+      {% endif %}
+      {% if periodo %}· Periodo <strong>{{ periodo }}</strong>{% endif %}
+    </p>
+  </div>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'dashboard' %}">
+    <i class="bi bi-speedometer2 me-1"></i>Volver al tablero
+  </a>
+</div>
+
+{# --- Filtros del encabezado --- #}
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-center">
+      <div class="col-auto">
+        <label class="col-form-label col-form-label-sm" for="filtro-materia">Asignaturas</label>
+      </div>
+      <div class="col-md-5">
+        <select class="form-select form-select-sm" name="materia" id="filtro-materia">
+          <option value="">Todas las asignaturas ({{ materias|length }})</option>
+          {% for codigo, nombre in materias %}
+            <option value="{{ codigo }}" {% if solo_materia == codigo %}selected{% endif %}>
+              {{ codigo }} — {{ nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-primary"><i class="bi bi-arrow-clockwise me-1"></i>Refrescar</button>
+      </div>
+      <div class="col-auto">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'cupos:preinscripcion' %}">
+          <i class="bi bi-clipboard-plus me-1"></i>
+          {% if resumen.rol == "DOCENTE" %}Gestionar cupos{% else %}Preinscripción{% endif %}
+        </a>
+      </div>
+      {% if solo_materia %}
+        <div class="col-auto">
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'cupos:mi_horario' %}">
+            <i class="bi bi-x-lg me-1"></i>Limpiar filtro
+          </a>
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+{# --- Barra de la semana --- #}
+<div class="card mb-3">
+  <div class="card-body py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-dark"><i class="bi bi-calendar-check me-1"></i>Hoy</span>
+      <span class="fw-semibold">{{ semana_inicio|date:"d-m-Y" }} — {{ semana_fin|date:"d-m-Y" }}</span>
+    </div>
+    <div class="horario-leyenda">
+      <span><span class="horario-punto" style="background-color:#1f5c99;"></span>Clase confirmada</span>
+      <span><span class="horario-punto" style="background-color:#ffffff;border:1px dashed #adb5bd;"></span>Preinscrita (por confirmar)</span>
+      <span class="text-muted">
+        {{ resumen.total_materias }} materia(s) · {{ resumen.horas_semanales }} h/semana ·
+        {{ resumen.dias_con_clase }} día(s) con clase
+      </span>
+    </div>
+  </div>
+</div>
+
+{% if colisiones %}
+  <div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle me-1"></i>
+    <strong>Conflicto de horario detectado (RN-03):</strong>
+    <ul class="mb-0 small">
+      {% for a, b in colisiones %}
+        <li>{{ a.materia.codigo }} y {{ b.materia.codigo }} se cruzan el día {{ a.dia }} entre {{ a.etiqueta_hora }} y {{ a.fin|time:"H:i" }}.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{# --- Rejilla del calendario semanal --- #}
+<div class="card">
+  <div class="card-body p-0 horario-envoltura">
+    <table class="horario-rejilla">
+      <thead>
+        <tr>
+          <th class="horario-columna-hora">Hora</th>
+          {% for valor_dia, nombre_dia in dias %}
+            <th class="{% if valor_dia == dia_hoy %}horario-hoy{% endif %}">
+              {{ nombre_dia }}
+            </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+          <tr>
+            <td class="horario-columna-hora">{{ fila.hora }}</td>
+            {% for celda in fila.celdas %}
+              {% if not celda.omitida %}
+                {% if celda.bloque %}
+                  <td rowspan="{{ celda.bloque.filas_ocupadas }}"
+                      class="{% if celda.bloque.dia == dia_hoy %}horario-hoy{% endif %}">
+                    <div class="horario-bloque {{ celda.bloque.color }}{% if celda.bloque.preliminar %} horario-bloque-preliminar{% endif %}"
+                         title="{{ celda.bloque.titulo }} · {{ celda.bloque.detalle }}">
+                      <span class="horario-bloque-hora">{{ celda.bloque.etiqueta_hora }}</span>
+                      <span class="horario-bloque-titulo">{{ celda.bloque.materia.nombre }}</span>
+                      {% if celda.bloque.detalle %}
+                        <span class="horario-bloque-detalle">{{ celda.bloque.detalle }}</span>
+                      {% endif %}
+                    </div>
+                  </td>
+                {% else %}
+                  <td class="horario-celda-vacia {% if forloop.counter == dia_hoy %}horario-hoy{% endif %}"></td>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

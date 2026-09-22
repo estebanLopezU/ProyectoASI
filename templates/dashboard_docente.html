@@ -28,12 +28,22 @@
       </div>
     </div>
   </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Materias que dicto</h6>
+        <p class="display-6 mb-0">{{ kpis.materias_dictadas }}</p>
+        <small class="text-muted">{{ kpis.horas_semanales }} h/semana</small>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="row g-3 mt-1">
   <div class="col-lg-6">
     <div class="card h-100">
       <div class="card-header">Tareas del día</div>
       <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action" href="{% url 'cupos:mi_horario' %}">Ver mi horario de clases (franja semanal)</a>
         <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:registrar_asistencia' %}">Registrar asistencia de una sesión</a>
         <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:revisar_lista' %}">Revisar justificaciones de faltas</a>
         <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:panel_inasistencia' %}">Consultar inasistencia de mis materias</a>

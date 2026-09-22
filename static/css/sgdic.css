@@ -136,3 +136,147 @@ footer.sgdic-footer {
     background-attachment: scroll;
   }
 }
+
+/* =====================================================================
+   Franja horaria semanal (calendario de clases)
+   Estilo tipo agenda: eje de horas (filas) × días (columnas) con bloques
+   de color por materia. Usado por estudiantes (materias que cursan) y
+   docentes (materias que dictan).
+   ===================================================================== */
+.horario-envoltura {
+  overflow-x: auto;
+}
+
+.horario-rejilla {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: 760px;
+  table-layout: fixed;
+}
+
+.horario-rejilla th,
+.horario-rejilla td {
+  border: 1px solid #e3e6ea;
+  padding: 0;
+  vertical-align: top;
+}
+
+/* Cabecera de días */
+.horario-rejilla thead th {
+  background-color: var(--sgdic-primario);
+  color: #ffffff;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.5rem 0.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.horario-columna-hora {
+  width: 72px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0 0.4rem 0 0 !important;
+  vertical-align: top !important;
+  border-right: 2px solid #dee2e6 !important;
+}
+
+.horario-celda-hora {
+  height: 26px;
+  background-color: #fcfcfd;
+}
+
+.horario-celda-vacia {
+  height: 26px;
+  background-color: #ffffff;
+}
+
+/* Bloque de clase */
+.horario-bloque {
+  height: 100%;
+  border-radius: 0.35rem;
+  padding: 0.3rem 0.45rem;
+  color: #ffffff;
+  overflow: hidden;
+  border-left: 4px solid rgba(0, 0, 0, 0.25);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  display: block;
+  text-decoration: none;
+  transition: filter 0.15s ease-in-out;
+}
+
+.horario-bloque:hover {
+  filter: brightness(1.15);
+  color: #ffffff;
+}
+
+.horario-bloque .horario-bloque-hora {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: block;
+}
+
+.horario-bloque .horario-bloque-titulo {
+  display: block;
+  margin-top: 0.1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.horario-bloque .horario-bloque-detalle {
+  display: block;
+  opacity: 0.9;
+  font-size: 0.68rem;
+}
+
+/* Paleta de colores por materia (rotación determinista) */
+.horario-color-0 { background-color: #1f5c99; }
+.horario-color-1 { background-color: #2a7d6e; }
+.horario-color-2 { background-color: #7a4f9e; }
+.horario-color-3 { background-color: #b3652a; }
+.horario-color-4 { background-color: #a8304b; }
+.horario-color-5 { background-color: #3a6b35; }
+
+/* Bloque de preinscripción (aún sin cupo confirmado) */
+.horario-bloque-preliminar {
+  background-color: #ffffff !important;
+  border-left-style: dashed !important;
+  color: #495057 !important;
+}
+
+.horario-bloque-preliminar .horario-bloque-titulo {
+  text-shadow: none;
+}
+
+.horario-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.78rem;
+}
+
+.horario-leyenda .horario-punto {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 0.3rem;
+  vertical-align: -1px;
+}
+
+.horario-hoy {
+  background-color: #fff8e1;
+}
+
+@media (max-width: 767.98px) {
+  .horario-columna-hora { width: 56px; font-size: 0.66rem; }
+  .horario-bloque { font-size: 0.68rem; padding: 0.2rem 0.3rem; }
+}
+

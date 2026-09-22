@@ -22,4 +22,6 @@ urlpatterns = [
          views.mover_prioridad, name="mover_prioridad"),
     path("preinscripcion/preferencias/", views.guardar_preferencias, name="preferencias"),
     path("preinscripcion/enviar/", views.enviar_preinscripcion, name="enviar_preinscripcion"),
+    # Franja horaria semanal (calendario de clases)
+    path("horario/", views.mi_horario, name="mi_horario"),
 ]

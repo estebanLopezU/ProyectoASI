@@ -2,6 +2,7 @@
   <li><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Tablero</a></li>
   <li><a class="nav-link" href="{% url 'materias:catalogo' %}"><i class="bi bi-journal-text me-2"></i>Catálogo de materias</a></li>
   {% if user.es_estudiante %}
+    <li><a class="nav-link" href="{% url 'cupos:mi_horario' %}"><i class="bi bi-calendar3-week me-2"></i>Mi horario</a></li>
     <li><a class="nav-link" href="{% url 'cupos:preinscripcion' %}"><i class="bi bi-clipboard-plus me-2"></i>Preinscripción</a></li>
     <li><a class="nav-link" href="{% url 'cupos:ofertas' %}"><i class="bi bi-journal-plus me-2"></i>Ofertas de cupos</a></li>
     <li><a class="nav-link" href="{% url 'cupos:mis_solicitudes' %}"><i class="bi bi-card-checklist me-2"></i>Mis solicitudes</a></li>
@@ -12,6 +13,7 @@
     <li><a class="nav-link" href="{% url 'quejas:mis_quejas' %}"><i class="bi bi-exclamation-octagon me-2"></i>Mis quejas</a></li>
   {% endif %}
   {% if user.es_docente %}
+    <li><a class="nav-link" href="{% url 'cupos:mi_horario' %}"><i class="bi bi-calendar3-week me-2"></i>Mi horario de clases</a></li>
     <li><a class="nav-link" href="{% url 'materias:proponer' %}"><i class="bi bi-lightbulb me-2"></i>Proponer materia</a></li>
     <li><a class="nav-link" href="{% url 'evaluaciones:registrar_asistencia' %}"><i class="bi bi-clipboard-data me-2"></i>Registrar asistencia</a></li>
     <li><a class="nav-link" href="{% url 'evaluaciones:revisar_lista' %}"><i class="bi bi-check2-circle me-2"></i>Justificaciones</a></li>

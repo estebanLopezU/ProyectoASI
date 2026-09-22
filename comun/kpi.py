@@ -156,6 +156,16 @@ def tablero_kpis(usuario=None):
                 RespuestaEvaluacion.objects.filter(docente=usuario).aggregate(
                     v=Avg("puntuacion"))["v"] or 0, 2),
         })
+        from cupos.models import OfertaCupo
+
+        ofertas = OfertaCupo.objects.filter(materia__docentes=usuario).distinct()
+        datos.update({
+            "materias_dictadas": ofertas.values("materia").distinct().count(),
+            "horas_semanales": round(sum(
+                (o.hora_fin.hour * 60 + o.hora_fin.minute)
+                - (o.hora_inicio.hour * 60 + o.hora_inicio.minute)
+                for o in ofertas) / 60, 1),
+        })
     elif rol in ("SECRETARIA", "DEPARTAMENTO", "ADMIN"):
         datos.update(kpi_cupos())
         datos.update(kpi_quejas())

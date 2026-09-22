@@ -390,3 +390,36 @@ def enviar_preinscripcion(request):
             f"Preinscripción de {resumen['total']} materias enviada para {periodo}.",
         )
     return redirect("cupos:preinscripcion")
+
+
+# =====================================================================
+# Franja horaria semanal (calendario de clases)
+# =====================================================================
+@login_required
+def mi_horario(request):
+    """Calendario semanal: materias que cursa (estudiante) o dicta (docente).
+
+    Reutiliza OfertaCupo.dia/hora_inicio/hora_fin y las franjas sugeridas
+    de la preinscripción. Permite filtrar por materia y por periodo.
+    """
+    from .horario import horario_de, periodo_vigente, rango_semana
+
+    rol = rol_usuario(request.user)
+    if rol not in ("ESTUDIANTE", "DOCENTE"):
+        messages.info(request, "La franja horaria está disponible para estudiantes y docentes.")
+        return redirect("dashboard")
+
+    solo_materia = request.GET.get("materia") or None
+    periodo = request.GET.get("periodo") or periodo_vigente(request.user, rol)
+
+    datos = horario_de(request.user, rol, periodo=periodo, solo_materia=solo_materia)
+    lunes, domingo, hoy = rango_semana()
+    datos.update({
+        "periodo": periodo,
+        "solo_materia": solo_materia,
+        "semana_inicio": lunes,
+        "semana_fin": domingo,
+        "hoy": hoy,
+        "dia_hoy": hoy.weekday() + 1,
+    })
+    return render(request, "cupos/mi_horario.html", datos)
