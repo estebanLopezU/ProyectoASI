@@ -2,9 +2,11 @@
 {% load static %}
 {% block titulo %}Ingresar{% endblock %}
 {% block contenido %}
-{# Fondo del login: SVG institucional de respaldo definido en sgdic.css.
-   Para usar una imagen propia, coloca static/img/login-bg.jpg y descomenta
-   la línea siguiente (recuerda ejecutar collectstatic). #}
+{% comment %}
+  Fondo del login: SVG institucional de respaldo definido en sgdic.css.
+  Para usar una imagen propia, coloca static/img/login-bg.jpg y descomenta
+  la línea siguiente (recuerda ejecutar collectstatic).
+{% endcomment %}
 <div class="login-asi">
   <div class="row justify-content-center w-100 m-0">
     <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
