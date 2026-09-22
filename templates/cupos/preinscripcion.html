@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block titulo %}Preinscripción de asignaturas{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h3 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Preinscripción de asignaturas</h3>
+    <p class="text-muted small mb-0">Periodo objetivo <strong>{{ periodo }}</strong> · RN-13 (mínimo {{ minimo }} materias) · RN-14 (franjas horarias)</p>
+  </div>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'dashboard' %}">
+    <i class="bi bi-speedometer2 me-1"></i>Volver al tablero
+  </a>
+</div>
+
+{# --- Indicadores de la preinscripción --- #}
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Materias</h6>
+        <p class="display-6 mb-0">{{ resumen.total }}<span class="fs-6 text-muted">/{{ resumen.minimo }}</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Créditos</h6>
+        <p class="display-6 mb-0">{{ resumen.creditos }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Probabilidad media</h6>
+        <p class="display-6 mb-0">{{ resumen.probabilidad_promedio|floatformat:2 }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">En riesgo</h6>
+        <p class="display-6 mb-0">{{ resumen.en_riesgo|length }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if not resumen.cumple_minimo %}
+  <div class="alert alert-info">
+    Debe preinscribir al menos <strong>{{ minimo }} materias</strong> para enviar su solicitud.
+    Faltan <strong>{{ resumen.faltantes }}</strong>.
+  </div>
+{% endif %}
+{% if alertas %}
+  <div class="alert alert-warning">
+    <strong>Alertas de prerrequisitos (RN-01):</strong>
+    <ul class="mb-0 small">
+      {% for alerta in alertas %}
+        <li>{{ alerta.preinscripcion.materia.codigo }} requiere {% for c in alerta.faltantes %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %} (no aprobado).</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{# --- Materias preinscritas con probabilidad y prioridad --- #}
+<div class="card mb-3">
+  <div class="card-header"><i class="bi bi-list-ol me-2"></i>Mi orden de preferencia</div>
+  <div class="table-responsive">
+    <table class="table table-hover tabla-compacta mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th style="width:70px;">Prioridad</th>
+          <th>Materia</th>
+          <th>Docentes activos</th>
+          <th>Demanda</th>
+          <th>Probabilidad</th>
+          <th>Franja sugerida</th>
+          <th style="width:170px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in preinscripciones %}
+          <tr>
+            <td>
+              <span class="badge bg-dark">{{ p.prioridad }}</span>
+            </td>
+            <td>
+              <strong>{{ p.materia.codigo }}</strong> · {{ p.materia.nombre }}
+              <div class="small text-muted">{{ p.materia.creditos }} créditos</div>
+            </td>
+            <td>
+              {% if p.docentes_activos %}
+                <span class="badge bg-info text-dark">{{ p.docentes_activos }} activo(s)</span>
+                <div class="small text-muted">
+                  {% for d in p.materia.docentes.all %}{{ d.get_full_name|default:d.username }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </div>
+              {% else %}
+                <span class="badge bg-danger">Sin docente</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="small">{{ p.demanda_estimada|floatformat:1 }} estimados</div>
+            </td>
+            <td style="min-width:150px;">
+              <span class="badge bg-{{ p.color_badge }}">{{ p.porcentaje }}% · {{ p.nivel_riesgo }}</span>
+              <div class="progress mt-1" style="height:6px;">
+                <div class="progress-bar bg-{{ p.color_badge }}" style="width: {{ p.porcentaje }}%"></div>
+              </div>
+              {% if p.observacion %}<div class="small text-muted mt-1">{{ p.observacion }}</div>{% endif %}
+            </td>
+            <td class="small">{{ p.franja_sugerida|default:"—" }}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <form method="post" action="{% url 'cupos:mover_prioridad' p.pk 'subir' %}">
+                  {% csrf_token %}<button class="btn btn-outline-secondary" title="Subir">↑</button>
+                </form>
+                <form method="post" action="{% url 'cupos:mover_prioridad' p.pk 'bajar' %}">
+                  {% csrf_token %}<button class="btn btn-outline-secondary" title="Bajar">↓</button>
+                </form>
+                <form method="post" action="{% url 'cupos:quitar_preinscripcion' p.pk %}">
+                  {% csrf_token %}<button class="btn btn-outline-danger" title="Quitar">Quitar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="text-center text-muted py-4">
+            Aún no ha preinscrito materias. Use el catálogo inferior para agregarlas.
+          </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <small class="text-muted">El orden de prioridad se conserva al agregar y quitar materias.</small>
+    <form method="post" action="{% url 'cupos:enviar_preinscripcion' %}">
+      {% csrf_token %}
+      <button class="btn btn-success" {% if not resumen.cumple_minimo %}disabled title="Requiere mínimo {{ minimo }} materias"{% endif %}>
+        <i class="bi bi-send me-1"></i>Enviar preinscripción
+      </button>
+    </form>
+  </div>
+</div>
+
+{# --- RN-14: franjas horarias preferidas --- #}
+<div class="card mb-3">
+  <div class="card-header"><i class="bi bi-clock-history me-2"></i>Mis franjas horarias preferidas (RN-14)</div>
+  <form method="post" action="{% url 'cupos:preferencias' %}">
+    {% csrf_token %}
+    <div class="card-body">
+      <p class="small text-muted">
+        Marque las franjas en que puede asistir a clase. El motor sugiere horarios sin choques
+        con sus inscripciones activas ni entre las materias preinscritas.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-2">
+          <thead class="table-light">
+            <tr>
+              <th>Día</th>
+              {% for valor, etiqueta in franjas %}<th class="text-center small">{{ etiqueta }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for valor_dia, nombre_dia in dias %}
+              <tr>
+                <td class="fw-semibold">{{ nombre_dia }}</td>
+                {% for valor_franja, etiqueta in franjas %}
+                  <td class="text-center">
+                    <input class="form-check-input" type="checkbox" name="franja"
+                           value="{{ valor_dia }}:{{ valor_franja }}"
+                           {% for pref in preferencias %}{% if pref.dia == valor_dia and pref.franja == valor_franja %}checked{% endif %}{% endfor %}>
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <small class="text-muted">Seleccione únicamente las franjas realmente disponibles.</small>
+        <button class="btn btn-sm btn-primary"><i class="bi bi-save me-1"></i>Guardar franjas</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{# --- Rejilla semanal: ocupado vs. libre --- #}
+<div class="card mb-3">
+  <div class="card-header"><i class="bi bi-calendar3 me-2"></i>Disponibilidad semanal</div>
+  <div class="table-responsive">
+    <table class="table table-sm text-center mb-0">
+      <thead class="table-light">
+        <tr>
+          <th class="text-start">Franja</th>
+          {% for valor_dia, nombre_dia in dias %}<th>{{ nombre_dia }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for valor_franja, etiqueta in franjas %}
+          <tr>
+            <td class="text-start small">{{ etiqueta }}</td>
+            {% for valor_dia, nombre_dia in dias %}
+              <td>
+                {% for slot in horario %}
+                  {% if slot.dia == valor_dia and slot.franja == valor_franja %}
+                    {% if slot.reservada %}
+                      <span class="badge bg-primary">Sugerida</span>
+                    {% elif slot.libre %}
+                      <span class="badge bg-success">&nbsp;Libre&nbsp;</span>
+                    {% else %}
+                      <span class="badge bg-secondary">Ocupado</span>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{# --- Catálogo de materias disponibles --- #}
+<div class="card">
+  <div class="card-header"><i class="bi bi-journal-plus me-2"></i>Catálogo disponible · {{ periodo }}</div>
+  <div class="table-responsive">
+    <table class="table table-hover tabla-compacta mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Materia</th>
+          <th>Créditos</th>
+          <th>Docentes activos</th>
+          <th>Demanda actual</th>
+          <th>Histórico estimado</th>
+          <th style="width:140px;">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in disponibles %}
+          <tr>
+            <td>
+              <strong>{{ item.materia.codigo }}</strong> · {{ item.materia.nombre }}
+            </td>
+            <td>{{ item.creditos }}</td>
+            <td>
+              {% if item.requiere_docente %}
+                <span class="badge bg-danger">Sin docente activo</span>
+              {% else %}
+                <span class="badge bg-info text-dark">{{ item.docentes }}</span>
+                <div class="small text-muted">
+                  {% for d in item.docentes_detalle %}{{ d.get_full_name|default:d.username }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </div>
+              {% endif %}
+            </td>
+            <td><span class="badge bg-secondary">{{ item.demanda }} estudiante(s)</span></td>
+            <td class="small">{{ item.historico|floatformat:1 }}</td>
+            <td>
+              <form method="post" action="{% url 'cupos:preinscribir' item.materia.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-primary" {% if item.requiere_docente %}title="Sin docentes activos no se puede abrir grupo"{% endif %}>
+                  <i class="bi bi-plus-lg me-1"></i>Preinscribir
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-center text-muted py-4">
+            No hay materias publicadas disponibles para preinscripción.
+          </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer small text-muted">
+    La probabilidad combina demanda agregada de los estudiantes, orden de preferencia,
+    predicción histórica de cupos y disponibilidad de docentes activos por materia.
+  </div>
+</div>
+{% endblock %}

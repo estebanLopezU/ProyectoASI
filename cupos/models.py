@@ -189,3 +189,102 @@ class Inscripcion(models.Model):
     def __str__(self):
         return f"{self.estudiante} en {self.oferta.materia} [{self.estado}]"
 
+
+# =====================================================================
+# Preinscripción de asignaturas (RF-05 ampliado · RN-13, RN-14)
+# El estudiante registra su intención de cursar un conjunto de materias
+# para el próximo periodo, ordenadas por preferencia. El sistema calcula
+# la probabilidad de apertura/otorgamiento a partir de la demanda
+# agregada de todos los estudiantes, las franjas horarias compatibles y
+# los docentes activos asignados a cada materia.
+# =====================================================================
+class Preinscripcion(models.Model):
+    """Intención de cursar una materia en el próximo periodo (RN-13)."""
+
+    class Estado(models.TextChoices):
+        BORRADOR = "BORRADOR", "Borrador"
+        ENVIADA = "ENVIADA", "Enviada"
+        CONFIRMADA = "CONFIRMADA", "Confirmada en oferta"
+        RECHAZADA = "RECHAZADA", "Rechazada"
+
+    MINIMO_MATERIAS = 5  # RN-13: mínimo de materias por preinscripción
+
+    estudiante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                   related_name="preinscripciones")
+    materia = models.ForeignKey("materias.Materia", on_delete=models.CASCADE,
+                                related_name="preinscripciones")
+    periodo_objetivo = models.CharField("periodo objetivo", max_length=10, db_index=True)
+    prioridad = models.PositiveSmallIntegerField("orden de preferencia", default=1)
+    estado = models.CharField(max_length=12, choices=Estado.choices, default=Estado.ENVIADA)
+    probabilidad = models.FloatField("probabilidad de asignación (0-1)", default=0)
+    demanda_estimada = models.FloatField("demanda estimada del periodo", default=0)
+    franja_sugerida = models.CharField("franja sugerida", max_length=60, blank=True)
+    docentes_activos = models.PositiveSmallIntegerField("docentes activos", default=0)
+    observacion = models.CharField(max_length=200, blank=True)
+    creada = models.DateTimeField(auto_now_add=True)
+    actualizada = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("estudiante", "materia", "periodo_objetivo")
+        ordering = ["periodo_objetivo", "prioridad"]
+        verbose_name = "preinscripción"
+        verbose_name_plural = "preinscripciones"
+
+    def __str__(self):
+        return f"{self.estudiante} → {self.materia} (P{self.prioridad})"
+
+    @property
+    def porcentaje(self):
+        """Probabilidad expresada en porcentaje entero para la interfaz."""
+        return int(round(self.probabilidad * 100))
+
+    @property
+    def nivel_riesgo(self):
+        """Clasificación cualitativa de la probabilidad."""
+        if self.probabilidad >= 0.75:
+            return "ALTA"
+        if self.probabilidad >= 0.5:
+            return "MEDIA"
+        if self.probabilidad >= 0.3:
+            return "BAJA"
+        return "CRITICA"
+
+    @property
+    def color_badge(self):
+        """Clase Bootstrap asociada al nivel de probabilidad."""
+        return {"ALTA": "success", "MEDIA": "info",
+                "BAJA": "warning", "CRITICA": "danger"}[self.nivel_riesgo]
+
+
+class PreferenciaPreinscripcion(models.Model):
+    """Franjas horarias preferidas por el estudiante (RN-14).
+
+    Cada preferencia describe un día y una franja en la que el estudiante
+    puede cursar clases; el motor sugiere horarios que no choquen entre sí
+    ni con sus inscripciones activas.
+    """
+
+    class Franja(models.TextChoices):
+        MANANA = "MANANA", "Mañana (07:00-12:00)"
+        TARDE = "TARDE", "Tarde (12:00-18:00)"
+        NOCHE = "NOCHE", "Noche (18:00-22:00)"
+
+    DIAS = ((1, "Lunes"), (2, "Martes"), (3, "Miércoles"),
+            (4, "Jueves"), (5, "Viernes"), (6, "Sábado"))
+
+    estudiante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                   related_name="preferencias_horario")
+    periodo_objetivo = models.CharField("periodo objetivo", max_length=10, db_index=True)
+    dia = models.PositiveSmallIntegerField("día (1=lun ... 6=sáb)", choices=DIAS, default=1)
+    franja = models.CharField(max_length=6, choices=Franja.choices, default=Franja.MANANA)
+    creada = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("estudiante", "periodo_objetivo", "dia", "franja")
+        ordering = ["dia", "franja"]
+        verbose_name = "preferencia de horario"
+        verbose_name_plural = "preferencias de horario"
+
+    def __str__(self):
+        return f"{self.estudiante} · {self.get_dia_display()} {self.get_franja_display()}"
+

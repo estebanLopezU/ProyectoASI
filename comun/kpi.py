@@ -136,6 +136,7 @@ def tablero_kpis(usuario=None):
     }
     if rol == "ESTUDIANTE":
         from cupos.models import Inscripcion
+        from cupos.preinscripcion import periodo_objetivo_actual, resumen_preinscripcion
         from evaluaciones.models import InvitacionEvaluacion
 
         datos.update({
@@ -143,6 +144,7 @@ def tablero_kpis(usuario=None):
                 estudiante=usuario, estado=Inscripcion.Estado.ACTIVA).count(),
             "evaluaciones_pendientes": InvitacionEvaluacion.objects.filter(
                 estudiante=usuario, completada=False).count(),
+            "preinscripcion": resumen_preinscripcion(usuario, periodo_objetivo_actual()),
         })
     elif rol == "DOCENTE":
         from evaluaciones.models import RespuestaEvaluacion

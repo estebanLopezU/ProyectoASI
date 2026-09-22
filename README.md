@@ -643,6 +643,7 @@ Notas de la plataforma:
 - [x] RBAC de 4 roles + ADMIN con menús y decoradores (RF-02)
 - [x] Auditoría y notificaciones transversales (RF-04, RF-08)
 - [x] Cupos con lista de espera y priorización (RF-05…10, RN-01…04)
+- [x] Preinscripción de asignaturas con probabilidad, horarios y prioridad (RN-13, RN-14)
 - [x] Catálogo con flujo de aprobación y versiones (RF-11…15)
 - [x] Mensajería trazable con intervención (RF-16…20)
 - [x] Faltas, justificaciones y alertas de inasistencia (RF-21…26, RN-07/08)

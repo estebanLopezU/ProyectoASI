@@ -2,6 +2,7 @@
   <li><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Tablero</a></li>
   <li><a class="nav-link" href="{% url 'materias:catalogo' %}"><i class="bi bi-journal-text me-2"></i>Catálogo de materias</a></li>
   {% if user.es_estudiante %}
+    <li><a class="nav-link" href="{% url 'cupos:preinscripcion' %}"><i class="bi bi-clipboard-plus me-2"></i>Preinscripción</a></li>
     <li><a class="nav-link" href="{% url 'cupos:ofertas' %}"><i class="bi bi-journal-plus me-2"></i>Ofertas de cupos</a></li>
     <li><a class="nav-link" href="{% url 'cupos:mis_solicitudes' %}"><i class="bi bi-card-checklist me-2"></i>Mis solicitudes</a></li>
     <li><a class="nav-link" href="{% url 'cupos:inscripciones' %}"><i class="bi bi-check2-square me-2"></i>Mis inscripciones</a></li>

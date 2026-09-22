@@ -27,12 +27,82 @@
       </div>
     </div>
   </div>
+  <div class="col-md-3">
+    <div class="card tarjeta-kpi h-100">
+      <div class="card-body">
+        <h6 class="text-muted">Preinscripción {{ kpis.preinscripcion.periodo }}</h6>
+        <p class="display-6 mb-0">
+          {{ kpis.preinscripcion.total }}<span class="fs-6 text-muted">/{{ kpis.preinscripcion.minimo }}</span>
+        </p>
+        <small class="text-muted">Prob. media {{ kpis.preinscripcion.probabilidad_promedio|floatformat:2 }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-clipboard-plus me-2"></i>Preinscripción de asignaturas · {{ kpis.preinscripcion.periodo }}</span>
+    <a class="btn btn-sm btn-primary" href="{% url 'cupos:preinscripcion' %}">
+      <i class="bi bi-pencil-square me-1"></i>Gestionar preinscripción
+    </a>
+  </div>
+  <div class="card-body">
+    {% if kpis.preinscripcion.total %}
+      <div class="row g-3 mb-2">
+        <div class="col-md-4">
+          <div class="border rounded p-2">
+            <div class="small text-muted">Materias preinscritas</div>
+            <div class="fs-4">{{ kpis.preinscripcion.total }} de {{ kpis.preinscripcion.minimo }} mínimas</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border rounded p-2">
+            <div class="small text-muted">Créditos acumulados</div>
+            <div class="fs-4">{{ kpis.preinscripcion.creditos }}</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border rounded p-2">
+            <div class="small text-muted">Probabilidad promedio</div>
+            <div class="fs-4">{{ kpis.preinscripcion.probabilidad_promedio|floatformat:2 }}</div>
+          </div>
+        </div>
+      </div>
+      {% if kpis.preinscripcion.en_riesgo %}
+        <div class="alert alert-warning small mb-0">
+          <strong>{{ kpis.preinscripcion.en_riesgo|length }}</strong> materia(s) con probabilidad baja:
+          {% for item in kpis.preinscripcion.en_riesgo %}{{ item.materia.codigo }}{% if not forloop.last %}, {% endif %}{% endfor %}.
+          Considere materias alternativas antes de enviar su preinscripción.
+        </div>
+      {% elif not kpis.preinscripcion.cumple_minimo %}
+        <div class="alert alert-info small mb-0">
+          Debe completar el mínimo de {{ kpis.preinscripcion.minimo }} materias
+          (faltan {{ kpis.preinscripcion.faltantes }}) para poder enviar la preinscripción.
+        </div>
+      {% else %}
+        <div class="alert alert-success small mb-0">
+          Su preinscripción cumple el mínimo requerido de {{ kpis.preinscripcion.minimo }} materias.
+        </div>
+      {% endif %}
+    {% else %}
+      <p class="mb-2 text-muted">
+        Aún no ha registrado su preinscripción para el periodo {{ kpis.preinscripcion.periodo }}.
+        El sistema estima la probabilidad de cada materia según la demanda de los demás
+        estudiantes, los docentes activos y las franjas horarias disponibles.
+      </p>
+      <a class="btn btn-primary" href="{% url 'cupos:preinscripcion' %}">
+        <i class="bi bi-clipboard-plus me-1"></i>Comenzar preinscripción (mínimo {{ kpis.preinscripcion.minimo }} materias)
+      </a>
+    {% endif %}
+  </div>
 </div>
 <div class="row g-3 mt-1">
   <div class="col-lg-6">
     <div class="card h-100">
       <div class="card-header">Accesos rápidos</div>
       <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action" href="{% url 'cupos:preinscripcion' %}">Preinscribir asignaturas del próximo periodo</a>
         <a class="list-group-item list-group-item-action" href="{% url 'cupos:ofertas' %}">Solicitar cupos de materias</a>
         <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:mis_invitaciones' %}">Evaluar a mis docentes</a>
         <a class="list-group-item list-group-item-action" href="{% url 'evaluaciones:mis_faltas' %}">Consultar mis faltas y justificar</a>
