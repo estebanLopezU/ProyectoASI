@@ -249,8 +249,96 @@ class PruebasVistas(BaseDatos):
 
         datos = tablero_kpis(usuario=self.estudiante)
         self.assertIn("inscripciones_activas", datos)
+        self.assertIn("malla", datos)
         datos_staff = tablero_kpis(usuario=self.secretaria)
         self.assertIn("abiertos", datos_staff)
         self.assertIn("ocupacion_promedio", datos_staff)
+
+
+class PruebasMallaCurricular(BaseDatos):
+    """Maya curricular: semáforo verde/amarillo/rojo y edición por rol."""
+
+    def test_estado_derivado_desde_inscripciones(self):
+        from materias.models import MallaCurricular
+
+        # Sin inscripción → rojo (pendiente)
+        fila = MallaCurricular.objects.create(
+            estudiante=self.estudiante, materia=self.intro, semestre=1)
+        self.assertEqual(fila.color, "rojo")
+        self.assertEqual(fila.estado_efectivo, MallaCurricular.Estado.PENDIENTE)
+
+        # Con inscripción aprobada → verde (vista)
+        inscripcion = Inscripcion.objects.create(
+            estudiante=self.estudiante, oferta=self.oferta_intro,
+            estado=Inscripcion.Estado.APROBADA)
+        self.assertEqual(fila.color, "verde")
+        self.assertEqual(fila.etiqueta_corta, "Vista")
+
+        # Con inscripción activa → amarillo (en curso)
+        inscripcion.estado = Inscripcion.Estado.ACTIVA
+        inscripcion.save()
+        self.assertEqual(fila.color, "amarillo")
+        self.assertEqual(fila.etiqueta_corta, "Cursando")
+
+    def test_estado_manual_prevalece_sobre_derivado(self):
+        from materias.models import MallaCurricular
+
+        fila = MallaCurricular.objects.create(
+            estudiante=self.estudiante, materia=self.intro, semestre=1,
+            estado=MallaCurricular.Estado.VISTA)
+        # No hay inscripciones, pero el administrativo fijó "vista"
+        self.assertEqual(fila.estado_derivado, MallaCurricular.Estado.PENDIENTE)
+        self.assertEqual(fila.estado_efectivo, MallaCurricular.Estado.VISTA)
+        self.assertEqual(fila.color, "verde")
+
+    def test_estudiante_ve_su_malla_y_no_puede_editar(self):
+        cliente = self.login(self.estudiante)
+        respuesta = cliente.get(reverse("materias:malla", args=[self.estudiante.pk]))
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Malla curricular")
+        # La malla de otro estudiante no es accesible
+        otro = Usuario.objects.create_user(username="otro", password=CLAVE,
+                                            rol="ESTUDIANTE")
+        respuesta = cliente.get(reverse("materias:malla", args=[otro.pk]))
+        self.assertEqual(respuesta.status_code, 403)
+        # El estudiante no puede entrar a editar la malla
+        respuesta = cliente.post(
+            reverse("materias:malla_editar", args=[self.estudiante.pk]),
+            {"materia": self.intro.pk, "semestre": 1, "estado": "VISTA"})
+        self.assertEqual(respuesta.status_code, 403)
+
+    def test_administrativo_edita_la_malla(self):
+        from materias.models import MallaCurricular
+
+        cliente = self.login(self.secretaria)
+        respuesta = cliente.get(reverse("usuario:mallas"))
+        self.assertEqual(respuesta.status_code, 200)
+        respuesta = cliente.post(
+            reverse("materias:malla_editar", args=[self.estudiante.pk]),
+            {"materia": self.intro.pk, "semestre": 2, "estado": "VISTA",
+             "observacion": "Regularizada"})
+        self.assertEqual(respuesta.status_code, 302)
+        fila = MallaCurricular.objects.get(estudiante=self.estudiante,
+                                           materia=self.intro)
+        self.assertEqual(fila.semestre, 2)
+        self.assertEqual(fila.estado, MallaCurricular.Estado.VISTA)
+        self.assertEqual(fila.actualizado_por, self.secretaria)
+        # Queda auditoría y notificación al estudiante
+        from comun.models import AuditoriaLog, Notificacion
+
+        self.assertTrue(AuditoriaLog.objects.filter(
+            accion="EDITAR_MALLA_CURRICULAR").exists())
+        self.assertTrue(Notificacion.objects.filter(
+            destinatario=self.estudiante, titulo__contains="Malla").exists())
+
+    def test_docente_solo_consulta_mallas_de_sus_estudiantes(self):
+        cliente = self.login(self.docente)
+        respuesta = cliente.get(reverse("materias:malla", args=[self.estudiante.pk]))
+        self.assertEqual(respuesta.status_code, 403)
+        # Al inscribirse el estudiante en una materia del docente, ya puede verla
+        Inscripcion.objects.create(estudiante=self.estudiante,
+                                   oferta=self.oferta_intro)
+        respuesta = cliente.get(reverse("materias:malla", args=[self.estudiante.pk]))
+        self.assertEqual(respuesta.status_code, 200)
 
 

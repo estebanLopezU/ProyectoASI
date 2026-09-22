@@ -275,8 +275,165 @@ footer.sgdic-footer {
   background-color: #fff8e1;
 }
 
-@media (max-width: 767.98px) {
-  .horario-columna-hora { width: 56px; font-size: 0.66rem; }
-  .horario-bloque { font-size: 0.68rem; padding: 0.2rem 0.3rem; }
+/* =====================================================================
+   Maya curricular del estudiante
+   Rejilla de 10 columnas (una por semestre) con tarjetas de materia y
+   botones/indicadores que titilan según el estado: verde (vista),
+   amarillo (en curso) y rojo (sin ver).
+   ===================================================================== */
+.malla-envoltura {
+  overflow: hidden;
 }
 
+.malla-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.malla-rejilla {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.85rem;
+  min-width: 1180px;
+  align-items: flex-start;
+}
+
+.malla-columna {
+  flex: 1 0 112px;
+  min-width: 112px;
+}
+
+.malla-columna-titulo {
+  background-color: var(--sgdic-primario);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.4rem 0.25rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.malla-item {
+  border: 1px solid #e3e6ea;
+  border-left-width: 4px;
+  border-radius: 0.4rem;
+  background-color: #ffffff;
+  padding: 0.45rem 0.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.malla-item-verde { border-left-color: #198754; }
+.malla-item-amarillo { border-left-color: #ffc107; }
+.malla-item-rojo { border-left-color: #dc3545; }
+
+.malla-item-estado {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.malla-item-etiqueta {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.malla-item-etiqueta-verde { color: #198754; }
+.malla-item-etiqueta-amarillo { color: #b8860b; }
+.malla-item-etiqueta-rojo { color: #dc3545; }
+
+.malla-item-codigo {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--sgdic-primario);
+}
+
+.malla-item-nombre {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: #343a40;
+}
+
+.malla-item-creditos {
+  font-size: 0.68rem;
+  color: #6c757d;
+  margin-top: 0.15rem;
+}
+
+.malla-item-obs {
+  font-size: 0.66rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+.malla-vacio {
+  font-size: 0.7rem;
+  color: #adb5bd;
+  text-align: center;
+  border: 1px dashed #dee2e6;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.25rem;
+}
+
+.malla-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+/* ---------------------------------------------------------------------
+   Botones/indicadores del semáforo — titilan según el estado
+   Verde: ya visto · Amarillo: viendo · Rojo: sin ver
+   --------------------------------------------------------------------- */
+.malla-boton {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  animation: malla-titilar 1.2s ease-in-out infinite;
+}
+
+.malla-boton-verde {
+  background-color: #198754;
+  box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+}
+
+.malla-boton-amarillo {
+  background-color: #ffc107;
+  box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+  animation-delay: 0.2s;
+}
+
+.malla-boton-rojo {
+  background-color: #dc3545;
+  box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  animation-delay: 0.4s;
+}
+
+@keyframes malla-titilar {
+  0%   { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50%  { opacity: 0.45; }
+  70%  { box-shadow: 0 0 0 7px transparent; opacity: 1; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 1; }
+}
+
+/* Sin animación para quien prefiere reducir el movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .malla-boton {
+    animation: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .malla-rejilla { min-width: 980px; }
+  .malla-columna { flex: 0 0 104px; min-width: 104px; }
+}

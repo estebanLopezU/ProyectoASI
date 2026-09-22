@@ -125,6 +125,32 @@ def notificaciones_no_leidas(user):
     return Notificacion.objects.filter(destinatario=user, leida=False).count()
 
 
+def kpi_malla(usuario):
+    """KPI: avance del estudiante en su malla curricular (semáforo).
+
+    Reutiliza el constructor de la app materias para no duplicar la lógica
+    del estado derivado (verde/amarillo/rojo) por materia.
+    """
+    from materias.views import construir_malla
+
+    columnas = construir_malla(usuario)
+    totales = {"verde": 0, "amarillo": 0, "rojo": 0}
+    for items in columnas.values():
+        for celda in items:
+            totales[celda["color"]] += 1
+    total = sum(totales.values())
+    return {
+        **totales,
+        "total": total,
+        "avance": round((totales["verde"] + totales["amarillo"]) * 100.0 / total, 1)
+        if total else 0,
+        "columnas": [
+            {"semestre": numero, "items": columnas.get(numero, [])}
+            for numero in range(1, 11)
+        ],
+    }
+
+
 def tablero_kpis(usuario=None):
     """RF-50: consolidado de KPIs para el tablero inicial según el rol."""
     from comun.mixins import rol_usuario
@@ -145,6 +171,7 @@ def tablero_kpis(usuario=None):
             "evaluaciones_pendientes": InvitacionEvaluacion.objects.filter(
                 estudiante=usuario, completada=False).count(),
             "preinscripcion": resumen_preinscripcion(usuario, periodo_objetivo_actual()),
+            "malla": kpi_malla(usuario),
         })
     elif rol == "DOCENTE":
         from evaluaciones.models import RespuestaEvaluacion

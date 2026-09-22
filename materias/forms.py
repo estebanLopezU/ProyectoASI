@@ -2,7 +2,7 @@ import json
 
 from django import forms
 
-from .models import Materia, SolicitudMateria
+from .models import MallaCurricular, Materia, SolicitudMateria
 
 
 class SolicitudMateriaForm(forms.Form):
@@ -62,3 +62,33 @@ class SolicitudMateriaForm(forms.Form):
                 cambios[campo] = valor
         return cambios
 
+
+class MallaCurricularForm(forms.ModelForm):
+    """Formulario para que el administrativo ubique la materia en la malla."""
+
+    class Meta:
+        model = MallaCurricular
+        fields = ("semestre", "estado", "observacion")
+        widgets = {
+            "semestre": forms.NumberInput(attrs={
+                "class": "form-control", "min": 1, "max": 10}),
+            "estado": forms.Select(attrs={"class": "form-select"}),
+            "observacion": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ej. Regularizada en 2025-2"}),
+        }
+        labels = {
+            "semestre": "Semestre del plan (1-10)",
+            "estado": "Estado en la malla",
+            "observacion": "Observación",
+        }
+        help_texts = {
+            "estado": ("Automático = derivado de las inscripciones "
+                       "(verde aprobada, amarilla en curso, roja pendiente)."),
+        }
+
+    def clean_semestre(self):
+        semestre = self.cleaned_data.get("semestre")
+        if semestre is None or not 1 <= semestre <= 10:
+            raise forms.ValidationError("El semestre debe estar entre 1 y 10.")
+        return semestre

@@ -4,9 +4,13 @@
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import render
 
+from comun.mixins import rol_usuario
 from .forms import PerfilForm
+from .models import Usuario
 
 
 class LoginView(auth_views.LoginView):
@@ -57,3 +61,30 @@ def perfil(request):
     else:
         form = PerfilForm(instance=request.user)
     return render(request, "usuario/perfil.html", {"form": form})
+
+
+@login_required
+def mallas(request):
+    """Listado de estudiantes para consultar y editar su malla curricular.
+
+    Acceso exclusivo del personal administrativo (secretaría, departamento y
+    administrador): es el único que puede modificar la malla de un estudiante.
+    """
+    if rol_usuario(request.user) not in ("SECRETARIA", "DEPARTAMENTO", "ADMIN"):
+        raise PermissionDenied("Su rol no tiene acceso a las mallas curriculares.")
+
+    busqueda = request.GET.get("q", "").strip()
+    estudiantes = Usuario.objects.filter(rol="ESTUDIANTE")
+    if busqueda:
+        estudiantes = estudiantes.filter(
+            Q(username__icontains=busqueda)
+            | Q(first_name__icontains=busqueda)
+            | Q(last_name__icontains=busqueda)
+            | Q(codigo_institucional__icontains=busqueda)
+        )
+    estudiantes = estudiantes.order_by("last_name", "first_name", "username")
+    return render(request, "usuario/mallas.html", {
+        "estudiantes": estudiantes,
+        "busqueda": busqueda,
+        "total": estudiantes.count(),
+    })

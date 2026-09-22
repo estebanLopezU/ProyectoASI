@@ -18,7 +18,7 @@
     <table class="table table-hover tabla-compacta mb-0">
       <thead class="table-light">
         <tr>
-          <th>Código</th><th>Materia</th><th>Créditos</th><th>Cupo máximo</th>
+          <th>Código</th><th>Materia</th><th>Créditos</th><th>Semestre</th><th>Cupo máximo</th>
           <th>Prerrequisitos</th><th>Docentes</th><th>Ofertas</th>
         </tr>
       </thead>
@@ -28,6 +28,7 @@
             <td>{{ materia.codigo }}</td>
             <td>{{ materia.nombre }}</td>
             <td>{{ materia.creditos }}</td>
+            <td>{{ materia.semestre }}</td>
             <td>{{ materia.cupo_maximo }}</td>
             <td>
               {% for prerrequisito in materia.prerrequisitos.all %}
@@ -42,7 +43,7 @@
             <td><a href="{% url 'cupos:ofertas' %}?materia={{ materia.pk }}" class="btn btn-sm btn-outline-primary">Ver ofertas</a></td>
           </tr>
         {% empty %}
-          <tr><td colspan="7" class="text-center text-muted py-4">No hay materias publicadas.</td></tr>
+          <tr><td colspan="6" class="text-center text-muted py-4">No hay materias publicadas.</td></tr>
         {% endfor %}
       </tbody>
     </table>

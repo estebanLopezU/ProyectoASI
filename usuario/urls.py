@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("perfil/", views.perfil, name="perfil"),
+    path("mallas/", views.mallas, name="mallas"),
     # Recuperación de contraseña (RF-03)
     path("password/", views.PasswordResetView.as_view(), name="password_reset"),
     path("password/hecho/", views.PasswordResetDoneView.as_view(), name="password_reset_done"),
