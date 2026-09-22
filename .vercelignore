@@ -1,0 +1,22 @@
+# Archivos excluidos del despliegue en Vercel (reducen el tamaño del bundle)
+.venv/
+.git/
+media/
+render.yaml
+docs/
+arquitecura/
+*.log
+_vercel_check.ps1
+_valida_render.py
+_valida_render_out.txt
+_diag.ps1
+_env.txt
+_frontend_check.py
+_git_push.bat
+_git_push.ps1
+_pip.txt
+_push.sh
+_quick_check.py
+_quick_run.bat
+_smoke_login.py
+_chk.txt

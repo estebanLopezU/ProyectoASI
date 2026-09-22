@@ -1,33 +1,18 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "id": "sgdic",
-      "src": "sgdic/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "50mb" },
-      "env": {
-        "DJANGO_SETTINGS_MODULE": "sgdic.settings"
-      }
+  "services": {
+    "sgdic-web": {
+      "root": ".",
+      "entrypoint": "sgdic/wsgi.py",
+      "buildCommand": "bash build.sh"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1",
-      "methods": ["GET", "HEAD"]
-    },
-    {
-      "src": "/media/(.*)",
-      "dest": "/media/$1",
-      "methods": ["GET", "HEAD"]
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/sgdic"
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "sgdic-web"
+      }
     }
   ]
 }

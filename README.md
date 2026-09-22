@@ -596,6 +596,34 @@ waitress-serve --port=8000 sgdic.wsgi:application                  # Windows
    lógica equivalente a: ejecutar programaciones de reportes (RF-48), escalar
    quejas vencidas (RN-10) y enviar recordatorios de evaluación (RF-29).
 
+### 13.1 Despliegue en Vercel (implementado)
+
+El proyecto está configurado para desplegarse en Vercel con el formato
+`services` de `vercel.json` (servicio `sgdic-web`, runtime Python, entrypoint
+`sgdic/wsgi.py`, build con `bash build.sh`). Pasos realizados:
+
+```bash
+vercel link --yes --project proyectoasi-sgdic
+vercel env add SGDIC_SECRET_KEY production      # clave larga y aleatoria
+vercel env add SGDIC_DEBUG production           # "0"
+vercel env add SGDIC_ALLOWED_HOSTS production   # ".vercel.app"
+vercel env add SGDIC_CSRF_TRUSTED_ORIGINS production  # "https://*.vercel.app"
+vercel --prod
+```
+
+Notas de la plataforma:
+
+- **Estáticos**: servidos por WhiteNoise (`CompressedManifestStaticFilesStorage`),
+  no requieren CDN adicional.
+- **Base de datos**: sin `DATABASE_URL`, la función copia `db.sqlite3` a `/tmp`
+  al arranque (única ruta escribible). Los datos son **efímeros por instancia**;
+  para persistencia real definir `DATABASE_URL` de un PostgreSQL externo
+  (Neon, Supabase, etc.), el `settings.py` ya lo soporta.
+- **`media/`**: no persiste entre invocaciones (filesystem de solo lectura).
+- Cada push a GitHub conectado con `vercel git connect` genera un despliegue.
+
+---
+
 ---
 
 ## 14. Trazabilidad con la documentación

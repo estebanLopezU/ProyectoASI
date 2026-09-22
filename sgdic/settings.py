@@ -15,7 +15,21 @@ SECRET_KEY = os.environ.get(
     "django-insecure-sgdic-desarrollo-cambiar-en-produccion-1a2b3c4d5e",
 )
 DEBUG = os.environ.get("SGDIC_DEBUG", "1") == "1"
-ALLOWED_HOSTS = ["*"]  # En producción restringir a los dominios reales
+
+# Hosts permitidos: configurable por variable de entorno (despliegue).
+# En Vercel definir SGDIC_ALLOWED_HOSTS con el dominio, ej:
+#   SGDIC_ALLOWED_HOSTS=sgdic-web.vercel.app,proyectoasi.vercel.app
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get("SGDIC_ALLOWED_HOSTS", "*").split(",")
+    if h.strip()
+]
+
+# Orígenes de confianza para CSRF detrás de proxy HTTPS (Vercel/Render).
+# Definir SGDIC_CSRF_TRUSTED_ORIGINS con la URL completa, ej:
+#   SGDIC_CSRF_TRUSTED_ORIGINS=https://sgdic-web.vercel.app
+_csrf_origins = os.environ.get("SGDIC_CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(",") if o.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -77,9 +91,23 @@ WSGI_APPLICATION = "sgdic.wsgi.application"
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 if DATABASE_URL:
-    # Producción (Render): usa DATABASE_URL directamente
+    # Producción (Render/Vercel + Postgres): usa DATABASE_URL directamente
     import dj_database_url
     DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)}
+elif os.environ.get("VERCEL") == "1":
+    # Vercel: el filesystem de la función es de solo lectura; /tmp es lo único
+    # escribible. Copiamos la base demo al arranque (datos efímeros por instancia).
+    import shutil
+    _src = BASE_DIR / "db.sqlite3"
+    _dst = Path("/tmp/sgdic.sqlite3")
+    if _src.exists() and not _dst.exists():
+        shutil.copy2(_src, _dst)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": _dst,
+        }
+    }
 elif os.environ.get("SGDIC_DB_ENGINE") == "django.db.backends.postgresql":
     # PostgreSQL manual (arquitectura de producción via variables SGDIC_DB_*)
     DATABASES = {

@@ -46,3 +46,6 @@ _quick_run.bat
 _pip.txt
 _chk.txt
 _env.txt
+_git_push.bat
+.vercel
+.env*
