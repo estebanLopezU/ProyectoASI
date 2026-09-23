@@ -14,9 +14,14 @@
     <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}" title="Administración de Sistemas Informáticos">
       <i class="bi bi-mortarboard-fill me-1"></i> ASI
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrinc">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrinc" aria-controls="navPrinc" aria-expanded="false" aria-label="Abrir menú principal">
       <span class="navbar-toggler-icon"></span>
     </button>
+    {% if user.is_authenticated %}
+    <button class="navbar-toggler d-lg-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-expanded="false" aria-label="Abrir menú de módulos">
+      <i class="bi bi-list" style="font-size:1.6rem;line-height:1;"></i>
+    </button>
+    {% endif %}
     <div class="collapse navbar-collapse" id="navPrinc">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         {% if user.is_authenticated %}
@@ -52,7 +57,7 @@
 <div class="container-fluid">
   <div class="row">
     {% if user.is_authenticated %}
-    <aside class="col-lg-2 sidebar py-3 d-none d-lg-block">
+    <aside class="col-lg-2 sidebar py-3 collapse d-lg-show" id="menuLateral">
       {% include "comun/_menu_lateral.html" %}
     </aside>
     {% endif %}
@@ -77,6 +82,45 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // Móvil: cerrar el menú de módulos al elegir una opción (escritorio no aplica: no está colapsado)
+  document.querySelectorAll('#menuLateral a.nav-link').forEach(function (enlace) {
+    enlace.addEventListener('click', function () {
+      var el = document.getElementById('menuLateral');
+      if (window.innerWidth < 992 && el && el.classList.contains('show')) {
+        bootstrap.Collapse.getOrCreateInstance(el).hide();
+      }
+    });
+  });
+
+  // Móvil: sincronizar overlay (body::after) con el estado del menú hamburguesa
+  (function () {
+    var menu = document.getElementById('menuLateral');
+    if (!menu) return;
+    menu.addEventListener('show.bs.collapse', function () {
+      document.body.classList.add('menu-lateral-abierto');
+    });
+    menu.addEventListener('hidden.bs.collapse', function () {
+      document.body.classList.remove('menu-lateral-abierto');
+    });
+    // Cerrar tocando el overlay
+    document.addEventListener('click', function (ev) {
+      if (!document.body.classList.contains('menu-lateral-abierto')) return;
+      if (window.innerWidth >= 992) return;
+      var dentro = menu.contains(ev.target);
+      var esToggle = ev.target.closest && ev.target.closest('[data-bs-target="#menuLateral"]');
+      if (!dentro && !esToggle) {
+        bootstrap.Collapse.getOrCreateInstance(menu).hide();
+      }
+    });
+    // Cerrar con la tecla Escape
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && document.body.classList.contains('menu-lateral-abierto')) {
+        bootstrap.Collapse.getOrCreateInstance(menu).hide();
+      }
+    });
+  })();
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -437,3 +437,58 @@ footer.sgdic-footer {
   .malla-rejilla { min-width: 980px; }
   .malla-columna { flex: 0 0 104px; min-width: 104px; }
 }
+
+/* =====================================================================
+   Menú lateral en móvil (menú hamburguesa)
+   Solo aplica fuera de lg (≤991.98px): el sidebar pasa a panel
+   deslizante (off-canvas) con overlay; al abrirlo se le añade la clase
+   .show de Bootstrap Collapse. En lg+ no aplica y el layout queda
+   exactamente igual que antes (col-lg-2 + d-lg-show).
+   ===================================================================== */
+@media (max-width: 991.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: min(82vw, 320px);
+    height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;
+    transform: translateX(-105%);
+    transition: transform 0.28s ease-in-out;
+    box-shadow: none;
+    padding-top: 0.75rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.35);
+  }
+
+  /* Overlay oscuro detrás del panel — tocarlo cierra el menú (ver JS en base.html) */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 59, 102, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+    z-index: 1035;
+    pointer-events: none;
+  }
+
+  body.menu-lateral-abierto::after {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  body.menu-lateral-abierto::after {
+    content: none;
+  }
+}
