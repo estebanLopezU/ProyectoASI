@@ -54,7 +54,9 @@
   </div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid px-0">
+  {% block cuerpo %}
+  <div class="container-fluid">
   <div class="row">
     {% if user.is_authenticated %}
     <aside class="col-lg-2 sidebar py-3 collapse d-lg-show" id="menuLateral">
@@ -74,6 +76,8 @@
       {% block contenido %}{% endblock %}
     </main>
   </div>
+  </div>
+  {% endblock %}
 </div>
 
 <footer class="sgdic-footer text-center py-3">

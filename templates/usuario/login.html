@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 {% load static %}
 {% block titulo %}Ingresar{% endblock %}
-{% block contenido %}
+{% block cuerpo %}
 {% comment %}
-  Fondo del login: SVG institucional de respaldo definido en sgdic.css.
-  Para usar una imagen propia, coloca static/img/login-bg.jpg y descomenta
-  la línea siguiente (recuerda ejecutar collectstatic).
+  Login pantalla completa: usa block cuerpo para salir del container con
+  gutters de base.html y que el fondo llegue borde a borde (RF-01).
 {% endcomment %}
-<div class="login-asi">
-  <div class="row justify-content-center w-100 m-0">
-    <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
-      <div class="card shadow-sm">
-        <div class="card-body p-4">
-          <div class="text-center mb-3">
+<div class="login-asi login-pantalla">
+  <div class="login-tarjeta">
+    <div class="row g-0">
+      {# Panel marca (oculto en móvil) #}
+      <div class="col-md-6 d-none d-md-flex login-marca">
+        <div class="login-marca-contenido">
+          <div class="login-marca-logo">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <h2 class="fw-bold mb-2">ASI</h2>
+          <p class="mb-4 opacity-75">Sistema de Gestión Departamental de Informática y Computación</p>
+          <ul class="list-unstyled login-marca-lista text-start">
+            <li><i class="bi bi-check-circle-fill me-2"></i>Cupos y preinscripción en línea</li>
+            <li><i class="bi bi-check-circle-fill me-2"></i>Malla curricular y horarios</li>
+            <li><i class="bi bi-check-circle-fill me-2"></i>Mensajería y reportes</li>
+          </ul>
+        </div>
+      </div>
+      {# Panel formulario #}
+      <div class="col-12 col-md-6 login-form-col">
+        <div class="login-form-interior">
+          <div class="text-center mb-3 d-md-none">
             <i class="bi bi-mortarboard-fill login-escudo"></i>
           </div>
           <h4 class="mb-1 text-center fw-bold login-titulo">ASI</h4>
@@ -25,24 +40,27 @@
               <div class="alert alert-{{ mensaje.tags|default:'info' }} small">{{ mensaje }}</div>
             {% endfor %}
           {% endif %}
-          <form method="post">
+          <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-3">
               <label class="form-label" for="id_username">Usuario</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                <input type="text" name="username" id="id_username" class="form-control" required autofocus>
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="Ej.: juan.perez" required autofocus autocomplete="username" value="{{ form.username.value|default:'' }}">
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label" for="id_password">Contraseña</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" name="password" id="id_password" class="form-control" required>
+                <input type="password" name="password" id="id_password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                <button class="btn btn-outline-secondary" type="button" id="verClave" title="Mostrar contraseña" aria-label="Mostrar contraseña">
+                  <i class="bi bi-eye" id="iconoClave"></i>
+                </button>
               </div>
             </div>
             <input type="hidden" name="next" value="{{ next }}">
-            <button class="btn btn-primary w-100 py-2">
+            <button class="btn btn-primary w-100 py-2 login-boton">
               <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
             </button>
           </form>
@@ -54,4 +72,20 @@
     </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+  (function () {
+    var btn = document.getElementById('verClave');
+    var campo = document.getElementById('id_password');
+    var icono = document.getElementById('iconoClave');
+    if (!btn || !campo) return;
+    btn.addEventListener('click', function () {
+      var mostrar = campo.type === 'password';
+      campo.type = mostrar ? 'text' : 'password';
+      icono.className = mostrar ? 'bi bi-eye-slash' : 'bi bi-eye';
+      btn.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    });
+  })();
+</script>
 {% endblock %}

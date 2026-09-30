@@ -81,31 +81,134 @@ footer.sgdic-footer {
 }
 
 /* =====================================================================
-   Pantalla de ingreso (login)
-   Fondo institucional. El degradado azul→verde va por defecto y sirve de
-   respaldo; la imagen (static/img/login-bg.jpg) se inyecta desde el
-   template con {% static %} como variable CSS --login-fondo, de modo que
-   WhiteNoise nunca falla por una url() inexistente en el CSS.
+   Pantalla de ingreso (login) · rediseño institucional pantalla completa
+   RF-01 · Sin margen blanco: el template usa block cuerpo y esta clase
+   rompe el gutter del container de base.html con ancho total.
    ===================================================================== */
+:root {
+  --sgdic-azul-900: #0a2e4f;
+  --sgdic-verde-brillo: #22b8a5;
+}
 .login-asi {
-  min-height: calc(100vh - 56px);
-  padding: 2rem 1rem;
+  min-height: calc(100vh - 57px);
+  padding: 2.5rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--sgdic-primario);
   background-image:
-    linear-gradient(rgba(13, 59, 102, 0.55), rgba(27, 153, 139, 0.55)),
+    radial-gradient(1100px 500px at 15% 10%, rgba(255, 255, 255, 0.14), transparent 60%),
+    radial-gradient(900px 480px at 90% 90%, rgba(27, 153, 139, 0.45), transparent 60%),
+    linear-gradient(135deg, rgba(13, 59, 102, 0.92), rgba(18, 104, 143, 0.85) 45%, rgba(27, 153, 139, 0.88)),
     var(--login-fondo, url("../img/login-bg.svg"));
-  background-size: cover, cover;
-  background-position: center center, center center;
-  background-repeat: no-repeat, no-repeat;
+  background-size: auto, auto, auto, cover;
+  background-position: center center, center center, center center, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  position: relative;
+  overflow: hidden;
 }
 
-.login-asi .card {
+/* Trama sutil encima del fondo para darle textura "tech" */
+.login-asi::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(75% 75% at 50% 45%, #000 30%, transparent 100%);
+}
+
+/* Pantalla completa: sale del container de base.html borde a borde */
+.login-pantalla {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: -1.5rem;
+  margin-bottom: -1.5rem;
+  min-height: calc(100vh - 57px);
+}
+
+/* Tarjeta dividida marca + formulario */
+.login-tarjeta {
+  position: relative;
+  z-index: 1;
+  width: min(920px, 100%);
+  background: #ffffff;
   border: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 1.5rem 4rem rgba(4, 20, 38, 0.45);
+}
+
+/* Panel izquierdo institucional */
+.login-marca {
+  background: linear-gradient(160deg, var(--sgdic-primario) 0%, #104e7d 55%, var(--sgdic-acento) 130%);
+  color: #fff;
+  padding: 2.75rem 2.5rem;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-marca::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -140px;
+  top: -140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 65%);
+  pointer-events: none;
+}
+
+.login-marca-contenido {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.login-marca-logo {
+  width: 64px;
+  height: 64px;
   border-radius: 1rem;
-  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.28);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--sgdic-primario);
+  background: #fff;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.25);
+  margin-bottom: 1.25rem;
+}
+
+.login-marca h2 {
+  letter-spacing: 0.12em;
+}
+
+.login-marca-lista li {
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.login-marca-lista i {
+  color: var(--sgdic-verde-brillo);
+}
+
+/* Panel derecho formulario */
+.login-form-col {
+  display: flex;
+  align-items: center;
+}
+
+.login-form-interior {
+  width: 100%;
+  padding: 2.5rem 2.5rem 2.25rem;
 }
 
 .login-asi .login-titulo {
@@ -118,22 +221,64 @@ footer.sgdic-footer {
   color: var(--sgdic-acento);
 }
 
-.login-asi .btn-primary {
-  background-color: var(--sgdic-primario);
-  border-color: var(--sgdic-primario);
+.login-asi .form-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.login-asi .input-group-text {
+  background: #f1f5f9;
+  border-right: 0;
+  color: var(--sgdic-primario);
+}
+
+.login-asi .form-control {
+  border-left: 0;
+  padding: 0.65rem 0.9rem;
+}
+
+.login-asi .form-control:focus {
+  border-color: var(--sgdic-acento);
+  box-shadow: 0 0 0 0.2rem rgba(27, 153, 139, 0.18);
+}
+
+.login-asi .input-group:focus-within .input-group-text {
+  border-color: var(--sgdic-acento);
+  background: #e6f6f3;
+}
+
+.login-asi .btn-primary,
+.login-boton {
+  background: linear-gradient(135deg, var(--sgdic-primario), var(--sgdic-azul-900));
+  border: 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 0.7rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  box-shadow: 0 0.5rem 1.25rem rgba(13, 59, 102, 0.35);
 }
 
 .login-asi .btn-primary:hover,
-.login-asi .btn-primary:focus {
-  background-color: #0a2e4f;
-  border-color: #0a2e4f;
+.login-asi .btn-primary:focus,
+.login-boton:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 0.75rem 1.6rem rgba(13, 59, 102, 0.4);
+  background: linear-gradient(135deg, var(--sgdic-primario), var(--sgdic-azul-900));
 }
 
-/* En móvil se reduce la altura útil por la barra del navegador */
+/* En móvil: tarjeta simple, sin panel marca */
 @media (max-width: 767.98px) {
   .login-asi {
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 57px);
     background-attachment: scroll;
+    padding: 1.25rem 0.9rem;
+  }
+  .login-tarjeta {
+    border-radius: 1rem;
+  }
+  .login-form-interior {
+    padding: 1.75rem 1.35rem;
   }
 }
 
