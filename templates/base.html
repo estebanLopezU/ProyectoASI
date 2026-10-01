@@ -97,6 +97,26 @@
     });
   });
 
+  // Lateral estilo dashboard: marcar activo + buscador de módulos
+  (function () {
+    var actual = window.location.pathname.replace(/\/$/, "") || "/";
+    document.querySelectorAll('#menuLateral a.nav-link').forEach(function (a) {
+      var href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+      if (href === actual) a.classList.add('active');
+    });
+    var buscador = document.getElementById('buscarMenuLateral');
+    var lista = document.getElementById('listaMenuLateral');
+    if (buscador && lista) {
+      buscador.addEventListener('input', function () {
+        var q = buscador.value.toLowerCase().trim();
+        lista.querySelectorAll('li').forEach(function (li) {
+          var txt = (li.textContent || '').toLowerCase();
+          li.style.display = (!q || txt.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+    }
+  })();
+
   // Móvil: sincronizar overlay (body::after) con el estado del menú hamburguesa
   (function () {
     var menu = document.getElementById('menuLateral');

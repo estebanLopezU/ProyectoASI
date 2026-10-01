@@ -4,68 +4,76 @@
 <h3 class="mb-3"><i class="bi bi-speedometer2 me-2"></i>Tablero institucional</h3>
 
 <div class="row g-3">
-  <div class="col-md-3">
-    <div class="card tarjeta-kpi h-100">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card tarjeta-kpi-degradada kpi-azul h-100">
       <div class="card-body">
-        <h6 class="text-muted">Materias ofertadas</h6>
-        <p class="display-6 mb-0">{{ kpis.materias_activas }}</p>
-        <small class="text-muted">Ocupación promedio: {{ kpis.ocupacion_promedio }}%</small>
+        <div class="kpi-etiqueta">Materias ofertadas</div>
+        <p class="kpi-valor">{{ kpis.materias_activas }}</p>
+        <div class="kpi-detalle">Ocupación: {{ kpis.ocupacion_promedio }}%</div>
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card tarjeta-kpi h-100">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card tarjeta-kpi-degradada kpi-celeste h-100">
       <div class="card-body">
-        <h6 class="text-muted">Solicitudes de cupo pendientes</h6>
-        <p class="display-6 mb-0">{{ kpis.solicitudes_pendientes }}</p>
-        <small class="text-muted">En lista de espera: {{ kpis.en_espera }}</small>
+        <div class="kpi-etiqueta">Solicitudes pendientes</div>
+        <p class="kpi-valor">{{ kpis.solicitudes_pendientes }}</p>
+        <div class="kpi-detalle">En espera: {{ kpis.en_espera }}</div>
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card tarjeta-kpi h-100">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card tarjeta-kpi-degradada kpi-turquesa h-100">
       <div class="card-body">
-        <h6 class="text-muted">Quejas abiertas</h6>
-        <p class="display-6 mb-0">{{ kpis.abiertos }}</p>
-        <small class="text-muted">Escaladas: {{ kpis.escalados }} · Cierre medio: {{ kpis.horas_promedio_cierre }} h</small>
+        <div class="kpi-etiqueta">Quejas abiertas</div>
+        <p class="kpi-valor">{{ kpis.abiertos }}</p>
+        <div class="kpi-detalle">Escaladas: {{ kpis.escalados }} · {{ kpis.horas_promedio_cierre }} h</div>
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card tarjeta-kpi h-100">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card tarjeta-kpi-degradada kpi-oscuro h-100">
       <div class="card-body">
-        <h6 class="text-muted">Estudiantes en riesgo por inasistencia</h6>
-        <p class="display-6 mb-0">{{ kpis.en_riesgo }}</p>
-        <small class="text-muted">Promedio institucional: {{ kpis.porcentaje_promedio }}%</small>
+        <div class="kpi-etiqueta">En riesgo</div>
+        <p class="kpi-valor">{{ kpis.en_riesgo }}</p>
+        <div class="kpi-detalle">Promedio: {{ kpis.porcentaje_promedio }}%</div>
       </div>
     </div>
   </div>
 </div>
 
 <div class="row g-3 mt-1">
-  <div class="col-md-4">
-    <div class="card h-100">
+  <div class="col-lg-8">
+    <div class="card panel-suave h-100">
+      <div class="card-header">Ocupación y demanda de cupos</div>
       <div class="card-body">
-        <h6 class="text-muted">Participación en evaluación docente</h6>
-        <p class="mb-1"><strong>{{ kpis.participacion }}%</strong> ({{ kpis.respuestas }} respuestas)</p>
-        <small class="text-muted">Puntaje promedio: {{ kpis.puntaje_promedio }}/5</small>
+        <canvas id="grafOcupacion" class="mini-grafico w-100"></canvas>
+        <div class="row g-3 mt-1">
+          <div class="col-md-6">
+            <div class="border rounded p-2">
+              <div class="small text-muted">Participación docente</div>
+              <div class="fs-5"><strong>{{ kpis.participacion }}%</strong> ({{ kpis.respuestas }})</div>
+              <small class="text-muted">Puntaje: {{ kpis.puntaje_promedio }}/5</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="border rounded p-2">
+              <div class="small text-muted">Solicitudes de materias</div>
+              <div class="fs-5">Pend.: <strong>{{ kpis.pendientes }}</strong></div>
+              <a class="btn btn-sm btn-outline-primary mt-2" href="{% url 'materias:panel' %}">Revisar</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="card h-100">
+  <div class="col-lg-4">
+    <div class="card panel-suave h-100">
+      <div class="card-header">Quejas</div>
       <div class="card-body">
-        <h6 class="text-muted">Solicitudes de materias</h6>
-        <p class="mb-1">Pendientes: <strong>{{ kpis.pendientes }}</strong> · Aprobadas: {{ kpis.aprobadas }}</p>
-        <a class="btn btn-sm btn-outline-primary mt-2" href="{% url 'materias:panel' %}">Revisar solicitudes</a>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <h6 class="text-muted">Notificaciones sin leer</h6>
-        <p class="display-6 mb-0">{{ kpis.notificaciones }}</p>
+        <canvas id="grafQuejas" class="mini-grafico w-100"></canvas>
+        <p class="mb-1 mt-2">En proceso: <strong>{{ kpis.en_proceso }}</strong></p>
+        <p class="mb-0">Resueltos: <strong>{{ kpis.resueltos }}</strong></p>
       </div>
     </div>
   </div>
@@ -73,7 +81,7 @@
 
 <div class="row g-3 mt-1">
   <div class="col-lg-6">
-    <div class="card h-100">
+    <div class="card panel-suave h-100">
       <div class="card-header">Acciones de gestión</div>
       <div class="list-group list-group-flush">
         <a class="list-group-item list-group-item-action" href="{% url 'usuario:mallas' %}">Administrar mallas curriculares de estudiantes</a>
@@ -86,14 +94,38 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <div class="card h-100">
-      <div class="card-header">Indicadores del proceso de quejas</div>
+    <div class="card panel-suave h-100">
+      <div class="card-header">Tendencia de quejas</div>
       <div class="card-body">
-        <p class="mb-1">En proceso: <strong>{{ kpis.en_proceso }}</strong></p>
-        <p class="mb-1">Resueltos: <strong>{{ kpis.resueltos }}</strong></p>
-        <p class="mb-0">Satisfacción promedio: <strong>{{ kpis.satisfaccion_promedio }}/5</strong></p>
+        <canvas id="grafTendencia" class="w-100" style="height:180px"></canvas>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  if (typeof Chart === "undefined") return;
+  var azul = "#2f6bff", celeste = "#22d3ee", turquesa = "#2dd4bf";
+  var g1 = document.getElementById("grafOcupacion");
+  if (g1) new Chart(g1, {type: "bar",
+    data: {labels: ["Ofertas", "Pendientes", "Espera", "Riesgo"],
+    datasets: [{data: [{{ kpis.materias_activas|default:0 }}, {{ kpis.solicitudes_pendientes|default:0 }}, {{ kpis.en_espera|default:0 }}, {{ kpis.en_riesgo|default:0 }}],
+    backgroundColor: [azul, celeste, turquesa, "#1e3a8a"], borderRadius: 6}]},
+    options: {plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}});
+  var g2 = document.getElementById("grafQuejas");
+  if (g2) new Chart(g2, {type: "doughnut",
+    data: {labels: ["Abiertas", "Proceso", "Resueltas"],
+    datasets: [{data: [{{ kpis.abiertos|default:0 }}, {{ kpis.en_proceso|default:0 }}, {{ kpis.resueltos|default:0 }}],
+    backgroundColor: [azul, celeste, turquesa]}]},
+    options: {plugins: {legend: {position: "bottom"}}, cutout: "62%"}});
+  var g3 = document.getElementById("grafTendencia");
+  if (g3) new Chart(g3, {type: "line",
+    data: {labels: ["Abiertas", "Proceso", "Escaladas", "Resueltas"],
+    datasets: [{data: [{{ kpis.abiertos|default:0 }}, {{ kpis.en_proceso|default:0 }}, {{ kpis.escalados|default:0 }}, {{ kpis.resueltos|default:0 }}],
+    borderColor: azul, backgroundColor: "rgba(47,107,255,.18)", fill: true, tension: 0.45}]},
+    options: {plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}});
+})();
+</script>
 {% endblock %}

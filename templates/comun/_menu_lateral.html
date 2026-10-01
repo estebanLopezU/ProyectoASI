@@ -1,5 +1,15 @@
-<ul class="nav flex-column">
-  <li><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Tablero</a></li>
+<div class="sidebar-marca d-flex align-items-center gap-2 px-2 pb-2">
+  <span class="sidebar-avatar"><i class="bi bi-person-fill"></i></span>
+  <span class="sidebar-marca-texto">Lorem Ipsum</span>
+</div>
+<div class="sidebar-buscador px-2 mb-2">
+  <div class="input-group input-group-sm">
+    <input type="search" class="form-control" placeholder="Buscar módulo…" aria-label="Buscar en el menú" id="buscarMenuLateral">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+  </div>
+</div>
+<ul class="nav flex-column" id="listaMenuLateral">
+  <li><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-house me-2"></i>Tablero</a></li>
   <li><a class="nav-link" href="{% url 'materias:catalogo' %}"><i class="bi bi-journal-text me-2"></i>Catálogo de materias</a></li>
   {% if user.es_estudiante %}
     <li><a class="nav-link" href="{% url 'materias:malla' user.pk %}"><i class="bi bi-diagram-3 me-2"></i>Mi malla curricular</a></li>
