@@ -251,6 +251,22 @@ class PruebasAnuncios(BaseDatos):
         self.assertFalse(anuncio.activo)
         self.assertFalse(anuncio.vigente())
 
+    def test_primera_pestana_es_del_anuncio_mas_reciente(self):
+        """El banner abre con el anuncio más reciente y su pestaña activa."""
+        self._anuncio(titulo="Aviso antiguo")
+        self._anuncio(titulo="Imagen nueva", tipo="IMAGEN")
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertEqual(respuesta.context["anuncios_carrusel"][0].titulo,
+                         "Imagen nueva")
+        self.assertEqual(respuesta.context["anuncios_grupos"][0]["clave"], "IMAGEN")
+
+    def test_cartelera_no_filtra_texto_de_comentarios(self):
+        """Los comentarios de la plantilla no deben imprimirse en la página."""
+        self._anuncio(titulo="Visible")
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertContains(respuesta, "cartelera-banner")
+        self.assertNotContains(respuesta, "Espera en el contexto")
+
 
 class PruebasVistas(BaseDatos):
     """Autenticación, RBAC y renderizado de las páginas principales."""

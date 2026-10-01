@@ -65,6 +65,25 @@ class Anuncio(models.Model):
     def roles_lista(self):
         return [r.strip().upper() for r in (self.roles or "").split(",") if r.strip()]
 
+    # Icono de Bootstrap Icons según el tipo: usado por la cartelera (chip)
+    # y por la lista de anuncios, para no repetir {% if %} en las plantillas.
+    ICONOS = {
+        Tipo.TEXTO: "bi-megaphone",
+        Tipo.IMAGEN: "bi-image",
+        Tipo.URL: "bi-link-45deg",
+        Tipo.VIDEO: "bi-play-btn",
+        Tipo.DOCUMENTO: "bi-file-earmark-text",
+    }
+
+    @property
+    def icono(self):
+        return self.ICONOS.get(self.tipo, "bi-megaphone")
+
+    @property
+    def fecha_corta(self):
+        """Fecha compacta para la lista de la cartelera (ej. 24/09)."""
+        return timezone.localtime(self.creado).strftime("%d/%m")
+
     def vigente(self, momento=None):
         momento = momento or timezone.now()
         if not self.activo:

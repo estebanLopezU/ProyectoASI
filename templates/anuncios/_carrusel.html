@@ -1,64 +1,208 @@
-{# Carrusel de anuncios: reutilizable en login (visitantes) y dashboards.
-   Espera la variable `anuncios_carrusel` en el contexto. Si está vacía,
-   no renderiza nada y la página queda como antes. #}
+{% comment %}
+  Cartelera de anuncios (estilo panel de eventos): banner grande con flechas
+  laterales, pestañas por tipo y lista con fechas.
+
+  Reutilizable en login (visitantes) y dashboards. Espera en el contexto
+  `anuncios_carrusel` (lista plana, ya filtrada por vigencia y rol) y
+  `anuncios_grupos` (pestañas por tipo, ver comun/context_processors.py).
+  Si no hay anuncios vigentes no renderiza nada y la página queda igual.
+
+  Se usa el tag de comentario multilínea y no {# ... #} porque los
+  comentarios {# #} de Django son de una sola línea: repartidos en varias
+  líneas, el texto se imprime en la página.
+{% endcomment %}
 {% if anuncios_carrusel %}
-<div id="carruselAnuncios" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-indicators">
+<div class="cartelera" id="carruselAnuncios">
+
+  <div class="cartelera-banner">
     {% for a in anuncios_carrusel %}
-      <button type="button" data-bs-target="#carruselAnuncios" data-bs-slide-to="{{ forloop.counter0 }}"
-              class="{% if forloop.first %}active{% endif %}"
-              aria-label="Anuncio {{ forloop.counter }}"></button>
-    {% endfor %}
-  </div>
-  <div class="carousel-inner">
-    {% for a in anuncios_carrusel %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      <article class="cartelera-diapositiva{% if forloop.first %} activa{% endif %}"
+               data-indice="{{ forloop.counter0 }}" data-grupo="{{ a.tipo }}"
+               aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
         {% if a.tipo == "IMAGEN" %}
           {% if a.archivo %}
-            <img src="{{ a.archivo.url }}" class="d-block w-100 carrusel-img" alt="{{ a.titulo }}">
+            <img class="cartelera-media" src="{{ a.archivo.url }}" alt="{{ a.titulo }}">
           {% elif a.enlace %}
-            <img src="{{ a.enlace }}" class="d-block w-100 carrusel-img" alt="{{ a.titulo }}">
+            <img class="cartelera-media" src="{{ a.enlace }}" alt="{{ a.titulo }}">
           {% endif %}
-        {% elif a.tipo == "VIDEO" and a.archivo %}
-          <video class="d-block w-100 carrusel-img" controls src="{{ a.archivo.url }}"></video>
-        {% elif a.tipo == "VIDEO" and a.enlace %}
-          <div class="ratio ratio-16x9">
-            <iframe src="{{ a.enlace }}" title="{{ a.titulo }}" allowfullscreen></iframe>
-          </div>
-        {% elif a.tipo == "URL" and a.enlace %}
-          <div class="carrusel-texto text-center">
-            <h5>{{ a.titulo }}</h5>
-            <p>{{ a.cuerpo|linebreaksbr }}</p>
-            <a class="btn btn-sm btn-light" href="{{ a.enlace }}" target="_blank" rel="noopener">Abrir enlace</a>
-          </div>
-        {% elif a.tipo == "DOCUMENTO" and a.archivo %}
-          <div class="carrusel-texto text-center">
-            <h5>{{ a.titulo }}</h5>
-            <p>{{ a.cuerpo|linebreaksbr }}</p>
-            <a class="btn btn-sm btn-light" href="{{ a.archivo.url }}" target="_blank" rel="noopener">
-              <i class="bi bi-file-earmark-text me-1"></i>Ver documento</a>
-          </div>
-        {% else %}
-          <div class="carrusel-texto">
-            <h5>{{ a.titulo }}</h5>
-            <p class="mb-0">{{ a.cuerpo|linebreaksbr }}</p>
-          </div>
+        {% elif a.tipo == "VIDEO" %}
+          {% if a.archivo %}
+            <video class="cartelera-media" src="{{ a.archivo.url }}" controls preload="metadata"></video>
+          {% elif a.enlace %}
+            <iframe class="cartelera-media cartelera-marco" src="{{ a.enlace }}"
+                    title="{{ a.titulo }}" allowfullscreen></iframe>
+          {% endif %}
         {% endif %}
-        <div class="carousel-caption d-none d-md-block">
-          <span class="badge bg-dark bg-opacity-50">{{ a.titulo }}</span>
+
+        <span class="cartelera-velo" aria-hidden="true"></span>
+
+        <div class="cartelera-pie">
+          <span class="cartelera-chip">
+            <i class="bi {{ a.icono }} me-1"></i>{{ a.get_tipo_display }}
+          </span>
+          {% if a.visible_hasta %}
+            <span class="cartelera-chip cartelera-chip-aviso">
+              <i class="bi bi-clock me-1"></i>Hasta {{ a.visible_hasta|date:"d/m/Y" }}
+            </span>
+          {% endif %}
+          <h5 class="cartelera-titulo">{{ a.titulo }}</h5>
+          {% if a.cuerpo %}<p class="cartelera-cuerpo">{{ a.cuerpo|linebreaksbr }}</p>{% endif %}
+          {% if a.tipo == "URL" and a.enlace %}
+            <a class="cartelera-boton" href="{{ a.enlace }}" target="_blank" rel="noopener">
+              <i class="bi bi-box-arrow-up-right"></i>Abrir enlace
+            </a>
+          {% elif a.tipo == "DOCUMENTO" and a.archivo %}
+            <a class="cartelera-boton" href="{{ a.archivo.url }}" target="_blank" rel="noopener">
+              <i class="bi bi-file-earmark-text"></i>Ver documento
+            </a>
+          {% endif %}
         </div>
-      </div>
+      </article>
     {% endfor %}
+
+    {% if anuncios_carrusel|length > 1 %}
+      <button class="cartelera-flecha cartelera-flecha-prev" type="button"
+              data-paso="-1" aria-label="Anuncio anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button class="cartelera-flecha cartelera-flecha-next" type="button"
+              data-paso="1" aria-label="Anuncio siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    {% endif %}
   </div>
-  {% if anuncios_carrusel|length > 1 %}
-    <button class="carousel-control-prev" type="button" data-bs-target="#carruselAnuncios" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carruselAnuncios" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Siguiente</span>
-    </button>
-  {% endif %}
+  <div class="cartelera-panel">
+    {% if anuncios_grupos|length > 1 %}
+      <div class="cartelera-pestanas" role="tablist" aria-label="Tipos de anuncio">
+        {% for g in anuncios_grupos %}
+          <button type="button" role="tab"
+                  class="cartelera-pestana{% if forloop.first %} activa{% endif %}"
+                  data-grupo="{{ g.clave }}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+            {{ g.etiqueta }}<span class="cartelera-cuenta">{{ g.total }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <ul class="cartelera-lista">
+      {% for a in anuncios_carrusel %}
+        <li class="cartelera-fila">
+          <button type="button" class="cartelera-item{% if forloop.first %} activo{% endif %}"
+                  data-indice="{{ forloop.counter0 }}" data-grupo="{{ a.tipo }}"
+                  title="{{ a.titulo }}">
+            <i class="bi {{ a.icono }} cartelera-item-icono" aria-hidden="true"></i>
+            <span class="cartelera-item-titulo">{{ a.titulo }}</span>
+            <span class="cartelera-item-fecha" title="{{ a.creado|date:'d/m/Y H:i' }}">
+              {{ a.fecha_corta }}
+            </span>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <script>
+    // Cartelera: un solo banner visible a la vez. Las flechas y la lista
+    // cambian de anuncio; las pestañas filtran por tipo. Sin JavaScript se
+    // ve el primer anuncio con su lista completa (degradado, no roto).
+    (function () {
+      var raiz = document.getElementById('carruselAnuncios');
+      if (!raiz || raiz.dataset.listo) return;
+      raiz.dataset.listo = '1';
+
+      var diapositivas = [].slice.call(raiz.querySelectorAll('.cartelera-diapositiva'));
+      var items = [].slice.call(raiz.querySelectorAll('.cartelera-item'));
+      var pestanas = [].slice.call(raiz.querySelectorAll('.cartelera-pestana'));
+      var flechas = [].slice.call(raiz.querySelectorAll('.cartelera-flecha'));
+      if (!diapositivas.length) return;
+
+      var grupoActivo = pestanas.length ? pestanas[0].getAttribute('data-grupo') : null;
+      var indiceActivo = 0;
+      var temporizador = null;
+
+      function permitidos() {
+        var todos = diapositivas.map(function (d, i) { return i; });
+        if (!grupoActivo) return todos;
+        return todos.filter(function (i) {
+          return diapositivas[i].getAttribute('data-grupo') === grupoActivo;
+        });
+      }
+
+      function pintar(indice) {
+        var listado = permitidos();
+        if (listado.indexOf(indice) === -1) indice = listado[0];
+        indiceActivo = indice;
+
+        diapositivas.forEach(function (d, i) {
+          var activa = i === indice;
+          d.classList.toggle('activa', activa);
+          d.setAttribute('aria-hidden', activa ? 'false' : 'true');
+        });
+
+        items.forEach(function (it) {
+          var i = parseInt(it.getAttribute('data-indice'), 10);
+          it.classList.toggle('activo', i === indice);
+          it.parentNode.hidden = !!grupoActivo && it.getAttribute('data-grupo') !== grupoActivo;
+        });
+
+        pestanas.forEach(function (p) {
+          var activa = p.getAttribute('data-grupo') === grupoActivo;
+          p.classList.toggle('activa', activa);
+          p.setAttribute('aria-selected', activa ? 'true' : 'false');
+        });
+      }
+
+      function mover(paso) {
+        var listado = permitidos();
+        if (listado.length < 2) return;
+        pintar(listado[(listado.indexOf(indiceActivo) + paso + listado.length) % listado.length]);
+      }
+
+      function detener() {
+        if (temporizador) { window.clearInterval(temporizador); temporizador = null; }
+      }
+
+      function arrancar() {
+        if (temporizador || diapositivas.length < 2) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        temporizador = window.setInterval(function () { mover(1); }, 7000);
+      }
+
+      flechas.forEach(function (b) {
+        b.addEventListener('click', function () {
+          detener();
+          mover(parseInt(b.getAttribute('data-paso'), 10) || 1);
+        });
+      });
+
+      items.forEach(function (it) {
+        it.addEventListener('click', function () {
+          detener();
+          pintar(parseInt(it.getAttribute('data-indice'), 10));
+        });
+      });
+
+      pestanas.forEach(function (p) {
+        p.addEventListener('click', function () {
+          detener();
+          grupoActivo = p.getAttribute('data-grupo');
+          pintar(permitidos()[0]);
+        });
+      });
+
+      // La rotación automática se pausa al pasar el cursor o al enfocar.
+      raiz.addEventListener('mouseenter', detener);
+      raiz.addEventListener('focusin', detener);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { detener(); } else { arrancar(); }
+      });
+
+      pintar(0);
+      arrancar();
+    })();
+  </script>
 </div>
 {% endif %}
+
+

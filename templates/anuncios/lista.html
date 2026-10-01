@@ -16,7 +16,9 @@
         <div class="card panel-suave h-100">
           <div class="card-header d-flex justify-content-between align-items-center">
             <span>{{ a.titulo }}</span>
-            <span class="badge bg-light text-dark">{{ a.get_tipo_display }}</span>
+            <span class="badge bg-light text-dark">
+              <i class="bi {{ a.icono }} me-1"></i>{{ a.get_tipo_display }}
+            </span>
           </div>
           <div class="card-body">
             {% if a.tipo == "IMAGEN" %}

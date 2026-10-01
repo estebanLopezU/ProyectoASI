@@ -170,9 +170,10 @@ body {
 }
 
 /* =====================================================================
-   Cartelera de anuncios (carrusel) — login y dashboards
-   Si no hay anuncios vigentes, el bloque no se renderiza y la vista
-   queda igual que antes.
+   Cartelera de anuncios — banner tipo panel de eventos (login y dashboards)
+   Banner con imagen/degradado y flechas laterales, pestañas por tipo y
+   lista de anuncios con fecha. Si no hay anuncios vigentes el bloque no
+   se renderiza y la vista queda igual que antes.
    ===================================================================== */
 .anuncios-dashboard-titulo,
 .login-anuncios-titulo {
@@ -188,58 +189,278 @@ body {
   color: rgba(255, 255, 255, 0.85);
 }
 
-.anuncios-dashboard .carousel,
-.login-anuncios .carousel {
-  border-radius: 1rem;
+.anuncios-dashboard-enlace {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2f6bff;
+  text-decoration: none;
+}
+
+.anuncios-dashboard-enlace:hover { text-decoration: underline; }
+
+.anuncios-dashboard .cartelera,
+.login-anuncios .cartelera {
+  border-radius: 0.9rem;
   overflow: hidden;
-  box-shadow: 0 0.5rem 1.25rem rgba(15, 42, 90, 0.22);
+  background: #0d1b31;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0.6rem 1.5rem rgba(9, 20, 38, 0.35);
 }
 
-.carrusel-img {
-  height: 220px;
+/* ---- Banner: imagen, video o degradado con el anuncio activo ---- */
+.cartelera-banner {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  background: linear-gradient(135deg, #16305c 0%, #0f2445 45%, #0b1a30 100%);
+  overflow: hidden;
+}
+
+.cartelera-diapositiva {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease;
+}
+
+.cartelera-diapositiva.activa {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cartelera-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border: 0;
 }
 
-.carrusel-texto {
-  min-height: 150px;
-  padding: 1.5rem 1.25rem;
-  background: linear-gradient(135deg, #1e3a8a 0%, #2f6bff 55%, #22b8f0 100%);
+.cartelera-marco { object-fit: fill; }
+
+.cartelera-velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(8, 18, 34, 0.12) 0%,
+    rgba(8, 18, 34, 0.45) 45%,
+    rgba(8, 18, 34, 0.9) 100%);
+}
+
+.cartelera-pie {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100%;
+  overflow: hidden;
+  padding: 1rem 3.5rem 1.1rem 1.25rem;
   color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
-.carrusel-texto h5 {
+.cartelera-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.66rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #dce7fb;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  margin: 0 0.35rem 0.4rem 0;
 }
 
-.carrusel-texto p {
-  margin-bottom: 0.5rem;
+.cartelera-chip-aviso {
+  background: rgba(255, 210, 74, 0.22);
+  color: #ffe6a3;
+}
+
+.cartelera-titulo {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.cartelera-cuerpo {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(233, 240, 252, 0.9);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cartelera-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #24190a;
+  background: #ffd24a;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
+}
+
+.cartelera-boton:hover { background: #ffe081; color: #24190a; }
+
+/* ---- Flechas laterales ---- */
+.cartelera-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+  background: rgba(9, 20, 38, 0.45);
+  transition: background 0.2s ease;
+}
+
+.cartelera-flecha:hover,
+.cartelera-flecha:focus-visible { background: rgba(9, 20, 38, 0.85); }
+
+.cartelera-flecha-prev { left: 0.6rem; }
+.cartelera-flecha-next { right: 0.6rem; }
+
+/* ---- Pestañas por tipo de anuncio ---- */
+.cartelera-pestanas {
+  display: flex;
+  gap: 0.15rem;
+  padding: 0 0.6rem;
+  background: #0d1b31;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cartelera-pestanas::-webkit-scrollbar { display: none; }
+
+.cartelera-pestana {
+  flex: 0 0 auto;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: #93a7c6;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.6rem 0.7rem 0.5rem;
+}
+
+.cartelera-pestana:hover { color: #fff; }
+
+.cartelera-pestana.activa {
+  color: #fff;
+  border-bottom-color: #ffd24a;
+}
+
+.cartelera-cuenta {
+  margin-left: 0.35rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #9fb2d1;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+/* ---- Lista de anuncios con fecha ---- */
+.cartelera-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0.15rem 0;
+  max-height: 12.5rem;
+  overflow-y: auto;
+}
+
+.cartelera-lista::-webkit-scrollbar { width: 0.4rem; }
+
+.cartelera-lista::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+}
+
+.cartelera-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: #cbd8ec;
   font-size: 0.9rem;
+  text-align: left;
+  padding: 0.5rem 1.1rem;
 }
 
-.login-anuncios .carrusel-img {
-  height: 150px;
+.cartelera-item:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+
+.cartelera-item.activo {
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 3px 0 0 #ffd24a;
+  color: #fff;
 }
 
-.login-anuncios .carrusel-texto {
-  min-height: 130px;
-  padding: 1rem;
+.cartelera-item-icono { color: #7ea6ff; font-size: 0.9rem; }
+
+.cartelera-item-titulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.login-anuncios .carrusel-texto h5 {
-  font-size: 1rem;
-}
-
-.login-anuncios .carrusel-texto p {
+.cartelera-item-fecha {
+  flex: 0 0 auto;
+  color: #8ea4c5;
   font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
 }
+
+/* ---- Login: columna estrecha, versión compacta ---- */
+.login-anuncios .cartelera-banner { aspect-ratio: 16 / 9; }
+
+.login-anuncios .cartelera-pie { padding: 0.75rem 3rem 0.85rem 0.9rem; }
+
+.login-anuncios .cartelera-titulo { font-size: 1rem; }
+
+.login-anuncios .cartelera-cuerpo { font-size: 0.8rem; }
+
+.login-anuncios .cartelera-flecha {
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 1.1rem;
+}
+
+.login-anuncios .cartelera-pestana { font-size: 0.78rem; padding: 0.5rem 0.55rem 0.45rem; }
+
+.login-anuncios .cartelera-item { font-size: 0.85rem; padding: 0.45rem 0.9rem; }
+
+.login-anuncios .cartelera-lista { max-height: 9.5rem; }
 
 @media (max-width: 767.98px) {
-  .carrusel-img { height: 170px; }
-  .login-anuncios .carrusel-img { height: 130px; }
+  .cartelera-banner,
+  .login-anuncios .cartelera-banner { aspect-ratio: 16 / 10; }
+  .cartelera-pie { padding: 0.75rem 3rem 0.85rem 0.9rem; }
+  .cartelera-titulo { font-size: 1rem; }
+  .cartelera-cuerpo { font-size: 0.8rem; -webkit-line-clamp: 1; }
+  .cartelera-lista { max-height: 10rem; }
 }
 
 /* =====================================================================
