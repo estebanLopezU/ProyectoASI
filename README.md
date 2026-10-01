@@ -620,7 +620,47 @@ Notas de la plataforma:
   para persistencia real definir `DATABASE_URL` de un PostgreSQL externo
   (Neon, Supabase, etc.), el `settings.py` ya lo soporta.
 - **`media/`**: no persiste entre invocaciones (filesystem de solo lectura).
-- Cada push a GitHub conectado con `vercel git connect` genera un despliegue.
+- Cada push a GitHub conectado con `vercel git connect` genera un despliegue
+  (hoy **no** está conectado: requiere vincular la cuenta de GitHub en el
+  dashboard; en su lugar se usa el pipeline local descrito abajo).
+
+### 13.2 Pipeline de despliegue automático (local)
+
+Como `vercel git connect` exige un paso manual de OAuth en el dashboard, el
+despliegue automático se resuelve en la máquina de desarrollo con dos piezas:
+
+| Pieza | Ruta | Qué hace |
+|-------|------|----------|
+| Pipeline | `deploy.ps1` | Tests → commit/push → `vercel --prod` → verificación en producción |
+| Hook | `.githooks/pre-push` | Dispara `deploy.ps1 -SoloDeploy` en segundo plano **en cada `git push`** |
+
+El hook se activa con (una sola vez por clon):
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+Uso:
+
+```powershell
+.\deploy.ps1                    # pipeline completo (recomendado)
+.\deploy.ps1 -Mensaje "fix x"   # commit con mensaje propio
+.\deploy.ps1 -SoloDeploy        # solo desplegar, sin tests ni push
+.\deploy.ps1 -SinTests          # omitir la suite
+git push origin main            # también despliega: lo dispara el hook
+```
+
+Detalles implementados:
+
+- **`vercel --prod` se lanza con `Start-Process`** y se espera leyendo
+  `vercel-deploy-err.log`; ejecutado directo en la terminal se cuelga.
+- **Sin bucles**: `deploy.ps1` exporta `SGDIC_DEPLOY_AUTO=0` antes de hacer
+  `push`, y el hook sale sin desplegar cuando esa variable vale `0`.
+- **El hook nunca bloquea el push** (`exit 0` siempre) y deja su salida en
+  `.githooks-auto.log` (ignorado por `*.log`).
+- **El pipeline no despliega si los tests fallan.**
+- **`.githooks/*` se versiona con LF** (`.gitattributes`): con CRLF git no
+  puede ejecutar el shebang `#!/bin/sh`.
 
 ---
 
