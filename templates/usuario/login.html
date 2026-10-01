@@ -43,9 +43,11 @@
             {% endfor %}
           {% endif %}
           {% if login_bloqueado %}
-            <div class="alert alert-warning small">
+            <div class="alert alert-warning small" id="alertaBloqueo"
+                 data-segundos="{{ login_bloqueo_seg }}">
               Demasiados intentos fallidos. Inténtelo de nuevo en
-              <strong>{{ login_bloqueo_seg }} segundos</strong>.
+              <strong><span id="contadorBloqueo">{{ login_bloqueo_seg }}</span> segundos</strong>.
+              La página se habilitará sola al terminar la cuenta atrás.
             </div>
           {% else %}
             {% if login_intentos %}
@@ -122,6 +124,22 @@
 {% endblock %}
 {% block scripts %}
 <script>
+  // Cuenta atrás del bloqueo por intentos: descuenta cada segundo y al
+  // llegar a 0 recarga sola para habilitar el formulario y el captcha.
+  (function () {
+    var alerta = document.getElementById('alertaBloqueo');
+    var numero = document.getElementById('contadorBloqueo');
+    if (!alerta || !numero) return;
+    var restantes = parseInt(alerta.getAttribute('data-segundos'), 10) || 0;
+    var tick = setInterval(function () {
+      restantes -= 1;
+      numero.textContent = Math.max(restantes, 0);
+      if (restantes <= 0) {
+        clearInterval(tick);
+        window.location.reload();
+      }
+    }, 1000);
+  })();
   (function () {
     var btn = document.getElementById('verClave');
     var campo = document.getElementById('id_password');
