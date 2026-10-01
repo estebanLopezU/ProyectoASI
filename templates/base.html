@@ -81,7 +81,15 @@
     {% endif %}
 
     <main class="{% if user.is_authenticated %}col-lg-10{% else %}col-12{% endif %} py-4 px-lg-4">
-      {% if anuncios_carrusel %}
+      {% comment %}
+        La cartelera solo se muestra en el Tablero (dashboard) y en la página
+        de Anuncios; en el resto de módulos no aparece, en todos los roles.
+        request.resolver_match.view_name da el nombre con namespace:
+        'dashboard' (raíz) o 'anuncios:lista'.
+      {% endcomment %}
+      {% if anuncios_carrusel and request.resolver_match %}
+        {% with ruta_actual=request.resolver_match.view_name %}
+        {% if ruta_actual == 'dashboard' or ruta_actual == 'anuncios:lista' %}
         <div class="mb-3 anuncios-dashboard">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <p class="anuncios-dashboard-titulo mb-0">
@@ -95,6 +103,8 @@
           </div>
           {% include "anuncios/_carrusel.html" with mostrar_tipos=True %}
         </div>
+        {% endif %}
+        {% endwith %}
       {% endif %}
       {% if messages %}
         {% for mensaje in messages %}

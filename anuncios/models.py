@@ -54,7 +54,9 @@ class Anuncio(models.Model):
     creado = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
-        ordering = ["-creado"]
+        # -pk desempata cuando dos anuncios comparten microsegundo en `creado`:
+        # sin él el orden queda indefinido y el más nuevo podría no abrir.
+        ordering = ["-creado", "-pk"]
         verbose_name = "anuncio"
         verbose_name_plural = "anuncios"
 
@@ -110,7 +112,7 @@ class Anuncio(models.Model):
                 models.Q(visible_desde__isnull=True) | models.Q(visible_desde__lte=momento),
                 models.Q(visible_hasta__isnull=True) | models.Q(visible_hasta__gte=momento),
             )
-        anuncios = list(qs.order_by("-creado"))
+        anuncios = list(qs.order_by("-creado", "-pk"))
         if rol:
             anuncios = [a for a in anuncios if a.visible_para(rol, momento)]
         return anuncios

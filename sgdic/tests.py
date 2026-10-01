@@ -59,6 +59,38 @@ class BaseDatos(TestCase):
         return cliente
 
 
+class PruebasCarteleraPorPagina(BaseDatos):
+    """La cartelera solo debe verse en el Tablero y en Anuncios (todos los roles)."""
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.anuncio = Anuncio.objects.create(
+            titulo="Aviso de prueba", tipo=Anuncio.Tipo.TEXTO,
+            cuerpo="Cuerpo del aviso.", creado_por=cls.secretaria)
+
+    def _pagina_tiene_cartelera(self, cliente, url):
+        r = cliente.get(url)
+        return r.status_code == 200 and 'anuncios-dashboard' in r.content.decode()
+
+    def test_cartelera_visible_solo_en_tablero_y_anuncios(self):
+        paginas_sin_cartelera = [
+            reverse("materias:catalogo"),
+            reverse("mensajes:bandeja"),
+            reverse("quejas:mis_quejas"),
+            reverse("cupos:mi_horario"),
+        ]
+        for usuario in (self.estudiante, self.docente, self.secretaria):
+            cliente = self.login(usuario)
+            # Solo Tablero y Anuncios muestran la cartelera.
+            self.assertTrue(self._pagina_tiene_cartelera(cliente, reverse("dashboard")))
+            self.assertTrue(self._pagina_tiene_cartelera(cliente, reverse("anuncios:lista")))
+            for url in paginas_sin_cartelera:
+                self.assertFalse(
+                    self._pagina_tiene_cartelera(cliente, url),
+                    f"La cartelera apareció en {url} para {usuario.username}")
+
+
 class PruebasReglasCupo(BaseDatos):
     """RN-01 a RN-04 en SolicitudCupo.procesar()."""
 
