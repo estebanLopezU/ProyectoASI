@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 {% block titulo %}Ingresar{% endblock %}
+{% block clase_body %}pagina-login{% endblock %}
 {% block cuerpo %}
 {% comment %}
-  Login pantalla completa: usa block cuerpo para salir del container con
-  gutters de base.html y que el fondo llegue borde a borde (RF-01).
+  Login pantalla completa: ocupa todo el viewport por debajo del navbar,
+  sin recortar header ni footer. En móvil la tarjeta se apila y el panel
+  de marca se convierte en franja superior compacta (RF-01).
 {% endcomment %}
 <div class="login-asi login-pantalla">
   <div class="login-tarjeta">
     <div class="row g-0">
-      {# Panel marca (oculto en móvil) #}
-      <div class="col-md-6 d-none d-md-flex login-marca">
+      {# Panel marca (franja superior en móvil, lateral en desktop) #}
+      <div class="col-12 col-md-6 login-marca">
         <div class="login-marca-contenido">
           <div class="login-marca-logo">
             <i class="bi bi-mortarboard-fill"></i>

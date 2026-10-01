@@ -8,16 +8,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="{% static 'css/sgdic.css' %}" rel="stylesheet">
 </head>
-<body>
+<body class="{% block clase_body %}{% endblock %}">
 <nav class="navbar navbar-expand-lg navbar-sgdic">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}" title="Administración de Sistemas Informáticos">
       <i class="bi bi-mortarboard-fill me-1"></i> ASI
     </a>
+    {% if user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrinc" aria-controls="navPrinc" aria-expanded="false" aria-label="Abrir menú principal">
       <span class="navbar-toggler-icon"></span>
     </button>
-    {% if user.is_authenticated %}
     <button class="navbar-toggler d-lg-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-expanded="false" aria-label="Abrir menú de módulos">
       <i class="bi bi-list" style="font-size:1.6rem;line-height:1;"></i>
     </button>

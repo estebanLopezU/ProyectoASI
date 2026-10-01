@@ -89,9 +89,46 @@ footer.sgdic-footer {
   --sgdic-azul-900: #0a2e4f;
   --sgdic-verde-brillo: #22b8a5;
 }
+/* Layout página login: ocupa viewport sin empujar header/footer fuera.
+   body flex column -> navbar arriba, footer abajo, login rellena en medio. */
+body.pagina-login {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sgdic-primario);
+}
+
+body.pagina-login .navbar-sgdic {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+body.pagina-login > .container-fluid.px-0 {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  margin: 0;
+  max-width: none;
+}
+
+body.pagina-login .sgdic-footer {
+  flex: 0 0 auto;
+  background: rgba(6, 24, 42, 0.88);
+  color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
+  margin: 0;
+  padding: 0.65rem 1rem !important;
+  font-size: 0.76rem;
+}
+
 .login-asi {
-  min-height: calc(100vh - 57px);
-  padding: 2.5rem 1.25rem;
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 2rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,17 +158,13 @@ footer.sgdic-footer {
   mask-image: radial-gradient(75% 75% at 50% 45%, #000 30%, transparent 100%);
 }
 
-/* Pantalla completa: sale del container de base.html borde a borde */
+/* Pantalla completa: borde a borde SIN 100vw ni márgenes negativos
+   (esos rompían el ancho y recortaban navbar/footer). El fondo vive
+   en .login-asi que ya es hijo directo del wrapper flex. */
 .login-pantalla {
-  width: 100vw;
+  width: 100%;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: -1.5rem;
-  margin-bottom: -1.5rem;
-  min-height: calc(100vh - 57px);
+  margin: 0;
 }
 
 /* Tarjeta dividida marca + formulario */
@@ -151,6 +184,7 @@ footer.sgdic-footer {
   background: linear-gradient(160deg, var(--sgdic-primario) 0%, #104e7d 55%, var(--sgdic-acento) 130%);
   color: #fff;
   padding: 2.75rem 2.5rem;
+  display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
@@ -267,18 +301,79 @@ footer.sgdic-footer {
   background: linear-gradient(135deg, var(--sgdic-primario), var(--sgdic-azul-900));
 }
 
-/* En móvil: tarjeta simple, sin panel marca */
+/* Móvil / app: tarjeta apilada, marca como franja superior compacta.
+   Nada se oculta con d-none: todo se renderiza en cualquier ancho. */
 @media (max-width: 767.98px) {
   .login-asi {
-    min-height: calc(100vh - 57px);
     background-attachment: scroll;
-    padding: 1.25rem 0.9rem;
+    padding: 1rem 0.85rem 1.25rem;
+    align-items: flex-start;
   }
   .login-tarjeta {
     border-radius: 1rem;
+    width: 100%;
+    max-width: 430px;
+  }
+  .login-marca {
+    padding: 1.5rem 1.35rem 1.25rem;
+    text-align: center;
+    justify-content: center;
+  }
+  .login-marca::after {
+    width: 260px;
+    height: 260px;
+    right: -90px;
+    top: -90px;
+  }
+  .login-marca-logo {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+    margin-bottom: 0.7rem;
+  }
+  .login-marca h2 {
+    font-size: 1.35rem;
+  }
+  .login-marca p {
+    font-size: 0.85rem;
+    margin-bottom: 0 !important;
+  }
+  /* En móvil la lista de beneficios se compacta a una sola línea resumen */
+  .login-marca-lista {
+    display: none;
   }
   .login-form-interior {
-    padding: 1.75rem 1.35rem;
+    padding: 1.6rem 1.3rem 1.5rem;
+  }
+  .login-asi .form-control {
+    font-size: 16px; /* evita zoom automático en iOS/Android */
+  }
+  body.pagina-login .sgdic-footer {
+    font-size: 0.7rem;
+    padding: 0.55rem 0.75rem !important;
+  }
+}
+
+/* Tablet: tarjeta un poco más angosta y centrada */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .login-tarjeta {
+    width: min(720px, 100%);
+  }
+  .login-marca {
+    padding: 2.25rem 2rem;
+  }
+  .login-form-interior {
+    padding: 2rem 1.9rem;
+  }
+}
+
+/* Pantallas bajas (landscape móvil / laptops pequeños): permite scroll
+   interno sin que la tarjeta tape navbar ni footer */
+@media (max-height: 640px) {
+  .login-asi {
+    align-items: flex-start;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
   }
 }
 
