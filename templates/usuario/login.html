@@ -81,17 +81,17 @@
             </div>
             <input type="hidden" name="next" value="{{ next|default:'' }}">
             {% comment %}
-              reCAPTCHA v2 invisible: con claves, Google verifica en silencio y
-              solo muestra el reto de imágenes (bicicletas, pasos, etc.) si
-              sospecha que es un robot. Sin claves (desarrollo) el login
-              funciona igual y muestra el aviso de abajo.
+              reCAPTCHA v2 casilla "No soy un robot": siempre visible. Al
+              marcarla, Google verifica y si sospecha muestra el reto de
+              imágenes (semáforos, bicicletas, pasos, etc.). Sin claves
+              (desarrollo) el login funciona igual y muestra el aviso.
             {% endcomment %}
             {% if recaptcha_site_key %}
               <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-              <button class="btn btn-primary w-100 py-2 login-boton g-recaptcha"
-                      data-sitekey="{{ recaptcha_site_key }}"
-                      data-callback="enviarLoginConCaptcha"
-                      data-size="invisible"
+              <div class="d-flex justify-content-center my-3">
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+              </div>
+              <button class="btn btn-primary w-100 py-2 login-boton"
                       {% if login_bloqueado %}disabled{% endif %}>
                 <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
               </button>
@@ -122,10 +122,6 @@
 {% endblock %}
 {% block scripts %}
 <script>
-  // Callback del reCAPTCHA invisible: Google ya verificó, enviar el login.
-  function enviarLoginConCaptcha() {
-    document.getElementById('formLogin').submit();
-  }
   (function () {
     var btn = document.getElementById('verClave');
     var campo = document.getElementById('id_password');
