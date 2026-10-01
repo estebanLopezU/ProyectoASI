@@ -267,6 +267,22 @@ class PruebasAnuncios(BaseDatos):
         self.assertContains(respuesta, "cartelera-banner")
         self.assertNotContains(respuesta, "Espera en el contexto")
 
+    def test_login_oculta_etiquetas_de_tipo(self):
+        """El visitante ve banner y lista, sin chips ni pestañas de tipo."""
+        self._anuncio(titulo="Aviso general")
+        self._anuncio(titulo="Imagen general", tipo="IMAGEN",
+                      enlace="https://ejemplo.test/foto.png")
+        respuesta = self.cliente.get(reverse("usuario:login"))
+        self.assertContains(respuesta, "cartelera-banner")
+        self.assertContains(respuesta, "cartelera-lista")
+        self.assertNotContains(respuesta, 'class="cartelera-chip"')
+        self.assertNotContains(respuesta, "cartelera-pestanas")
+
+        # Con sesión iniciada sí se muestran las pestañas y los chips.
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertContains(respuesta, "cartelera-pestanas")
+        self.assertContains(respuesta, 'class="cartelera-chip"')
+
 
 class PruebasVistas(BaseDatos):
     """Autenticación, RBAC y renderizado de las páginas principales."""

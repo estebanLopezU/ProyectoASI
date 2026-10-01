@@ -10,6 +10,11 @@
   Se usa el tag de comentario multilínea y no {# ... #} porque los
   comentarios {# #} de Django son de una sola línea: repartidos en varias
   líneas, el texto se imprime en la página.
+
+  Opcional: `mostrar_tipos=False` (login) oculta la taxonomía de tipos, es
+  decir el chip del banner ("Texto", "Imagen", ...) y la barra de pestañas,
+  para no mostrársela a los visitantes. Sin pestañas, las flechas y la lista
+  recorren y muestran todos los anuncios vigentes.
 {% endcomment %}
 {% if anuncios_carrusel %}
 <div class="cartelera" id="carruselAnuncios">
@@ -37,9 +42,11 @@
         <span class="cartelera-velo" aria-hidden="true"></span>
 
         <div class="cartelera-pie">
-          <span class="cartelera-chip">
-            <i class="bi {{ a.icono }} me-1"></i>{{ a.get_tipo_display }}
-          </span>
+          {% if mostrar_tipos %}
+            <span class="cartelera-chip">
+              <i class="bi {{ a.icono }} me-1"></i>{{ a.get_tipo_display }}
+            </span>
+          {% endif %}
           {% if a.visible_hasta %}
             <span class="cartelera-chip cartelera-chip-aviso">
               <i class="bi bi-clock me-1"></i>Hasta {{ a.visible_hasta|date:"d/m/Y" }}
@@ -72,7 +79,7 @@
     {% endif %}
   </div>
   <div class="cartelera-panel">
-    {% if anuncios_grupos|length > 1 %}
+    {% if mostrar_tipos and anuncios_grupos|length > 1 %}
       <div class="cartelera-pestanas" role="tablist" aria-label="Tipos de anuncio">
         {% for g in anuncios_grupos %}
           <button type="button" role="tab"
