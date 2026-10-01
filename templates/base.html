@@ -163,13 +163,19 @@
   // Sesión por inactividad: 2 min sin actividad -> panel rojo con 30 s
   // de cuenta atrás. "Mantener la sesión abierta" renueva vía ping y
   // reinicia los 2 minutos; si llega a 0, cierra sesión (POST logout).
+  // NOTA: mousemove NO reinicia (cualquier micro-movimiento impediría
+  // que el aviso apareciera); solo interacción real: clic, tecla, scroll.
+  // Debug: ?debug_inactividad=1 imprime el conteo en consola;
+  // ?demo_aviso=1 muestra el aviso a los 5 s para probar sin esperar.
   (function () {
     var aviso = document.getElementById('avisoInactividad');
     // Solo existe con sesión iniciada; en login/páginas anónimas no aplica.
     if (!aviso) return;
     var contador = document.getElementById('contadorInactividad');
     var btn = document.getElementById('btnMantenerSesion');
-    var LIMITE_AVISO_MS = 2 * 60 * 1000;  // 2 minutos
+    var params = new URLSearchParams(window.location.search);
+    var DEBUG = params.has('debug_inactividad');
+    var LIMITE_AVISO_MS = params.has('demo_aviso') ? 5000 : 2 * 60 * 1000;
     var GRACIA_SEG = 30;                  // 30 segundos extra
     var temporizadorAviso = null;
     var intervaloCuenta = null;
@@ -229,6 +235,7 @@
       restantes = GRACIA_SEG;
       contador.textContent = restantes;
       aviso.classList.add('visible');
+      if (DEBUG) console.log('[inactividad] aviso visible, gracia 30 s');
       pitar();
       detenerPitido();
       intervaloPitido = setInterval(pitar, 2000);
@@ -243,16 +250,18 @@
       }, 1000);
     }
 
-    function reiniciarTemporizador() {
+    function reiniciarTemporizador(origen) {
       ocultarAviso();
       if (temporizadorAviso) clearTimeout(temporizadorAviso);
+      if (DEBUG) console.log('[inactividad] temporizador reiniciado por:', origen || 'init');
       temporizadorAviso = setTimeout(mostrarAviso, LIMITE_AVISO_MS);
     }
 
-    // Cualquier actividad (clic, tecla, scroll, táctil, mouse) reinicia
-    // los 2 minutos, igual que una navegación (SESSION_SAVE_EVERY_REQUEST).
-    ['click', 'keydown', 'mousemove', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) {
-      document.addEventListener(ev, reiniciarTemporizador, { passive: true });
+    // Solo interacción real reinicia los 2 minutos (sin mousemove/wheel:
+    // el micro-movimiento del mouse impedía que el aviso apareciera).
+    // Igual que una navegación (SESSION_SAVE_EVERY_REQUEST).
+    ['click', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) {
+      document.addEventListener(ev, function () { reiniciarTemporizador(ev); }, { passive: true });
     });
 
     if (btn) {
