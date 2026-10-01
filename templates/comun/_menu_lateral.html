@@ -1,6 +1,9 @@
 <div class="sidebar-marca d-flex align-items-center gap-2 px-2 pb-2">
   <span class="sidebar-avatar"><i class="bi bi-person-fill"></i></span>
-  <span class="sidebar-marca-texto">Lorem Ipsum</span>
+  <span class="sidebar-marca-texto">
+    {{ user.get_full_name|default:user.username }}
+    <small class="d-block fw-normal opacity-75">{{ user.get_rol_display }}</small>
+  </span>
 </div>
 <div class="sidebar-buscador px-2 mb-2">
   <div class="input-group input-group-sm">
