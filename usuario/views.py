@@ -1,6 +1,12 @@
 # =====================================================================
 # Autenticación (RF-01) y perfil (RF-02/RF-03)
 # =====================================================================
+import json
+import time
+import urllib.parse
+import urllib.request
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -16,6 +22,61 @@ from comun.mixins import rol_usuario
 from .forms import PerfilForm
 from .models import Usuario
 
+# Claves oficiales de prueba de Google: siempre pasan sin llamar a Google.
+# Útiles para desarrollo/tests: https://developers.google.com/recaptcha/docs/faq
+CLAVES_PRUEBA_GOOGLE = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+
+
+def verificar_recaptcha(token, ip=None):
+    """Valida el token de reCAPTCHA v2 invisible contra Google.
+
+    Devuelve (ok, motivo). En modo desarrollo (sin claves) u omite la
+    verificación para no bloquear el login local. Con las claves de
+    prueba de Google se acepta directamente.
+    """
+    secreto = getattr(settings, "RECAPTCHA_SECRET_KEY", "")
+    if not secreto:
+        return True, "modo-desarrollo-sin-claves"
+    if secreto.startswith(CLAVES_PRUEBA_GOOGLE[:8]):
+        return True, "claves-de-prueba"
+    if not token:
+        return False, "sin-token"
+    datos = {"secret": secreto, "response": token}
+    if ip:
+        datos["remoteip"] = ip
+    try:
+        peticion = urllib.request.Request(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data=urllib.parse.urlencode(datos).encode(),
+            headers={"User-Agent": "SGDIC/1.0"},
+        )
+        with urllib.request.urlopen(peticion, timeout=8) as respuesta:
+            resultado = json.loads(respuesta.read().decode())
+        if resultado.get("success"):
+            return True, "ok"
+        return False, ",".join(resultado.get("error-codes", ["fallo"] ))
+    except Exception as exc:  # Sin internet: no bloquear, registrar motivo
+        return False, f"error-red:{exc}"
+
+
+def intentos_login(request):
+    """Contador de fallos en sesión: {'fallos': int, 'bloqueado_hasta': ts}."""
+    return request.session.get("login_intentos", {"fallos": 0, "bloqueado_hasta": 0})
+
+
+def registrar_fallo(request):
+    estado = dict(intentos_login(request))
+    estado["fallos"] = estado.get("fallos", 0) + 1
+    if estado["fallos"] >= getattr(settings, "LOGIN_MAX_INTENTOS", 3):
+        estado["bloqueado_hasta"] = time.time() + getattr(
+            settings, "LOGIN_BLOQUEO_SEGUNDOS", 300)
+    request.session["login_intentos"] = estado
+    return estado
+
+
+def limpiar_intentos(request):
+    request.session.pop("login_intentos", None)
+
 
 @method_decorator(never_cache, name="dispatch")
 class LoginView(auth_views.LoginView):
@@ -23,6 +84,54 @@ class LoginView(auth_views.LoginView):
     # Si ya hay sesión (ej. botón "atrás" del navegador), ir al tablero
     # en vez de mostrar de nuevo el formulario (RF-01).
     redirect_authenticated_user = True
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        estado = intentos_login(self.request)
+        bloqueado_hasta = estado.get("bloqueado_hasta", 0)
+        contexto["login_bloqueado"] = time.time() < bloqueado_hasta
+        contexto["login_bloqueo_seg"] = max(0, int(bloqueado_hasta - time.time()))
+        contexto["login_intentos"] = estado.get("fallos", 0)
+        contexto["login_max_intentos"] = getattr(settings, "LOGIN_MAX_INTENTOS", 3)
+        contexto["recaptcha_site_key"] = getattr(settings, "RECAPTCHA_SITE_KEY", "")
+        return contexto
+
+    def post(self, request, *args, **kwargs):
+        estado = intentos_login(request)
+        if time.time() < estado.get("bloqueado_hasta", 0):
+            # Bloqueado por 3 fallos: volver al login sin validar.
+            form = self.get_form(self.get_form_class())
+            form.add_error(
+                None,
+                "Cuenta bloqueada temporalmente por demasiados intentos. "
+                "Espere 5 minutos e inténtelo de nuevo.",
+            )
+            return self.form_invalid(form)
+        ok_captcha, _motivo = verificar_recaptcha(
+            request.POST.get("g-recaptcha-response", ""),
+            request.META.get("REMOTE_ADDR"),
+        )
+        if not ok_captcha:
+            form = self.get_form(self.get_form_class())
+            form.add_error(None, "Verificación anti-robots fallida. Inténtelo de nuevo.")
+            registrar_fallo(request)
+            return self.form_invalid(form)
+        respuesta = super().post(request, *args, **kwargs)
+        if self.request.user.is_authenticated:
+            limpiar_intentos(request)
+        else:
+            # Fallo de credenciales: actualizar el contador Y el contexto ya
+            # renderizado (super().post renderizó con el valor anterior).
+            nuevo = registrar_fallo(request)
+            try:
+                respuesta.context_data["login_intentos"] = nuevo.get("fallos", 0)
+                bloqueado = time.time() < nuevo.get("bloqueado_hasta", 0)
+                respuesta.context_data["login_bloqueado"] = bloqueado
+                respuesta.context_data["login_bloqueo_seg"] = max(
+                    0, int(nuevo.get("bloqueado_hasta", 0) - time.time()))
+            except Exception:
+                pass
+        return respuesta
 
 
 class LogoutView(auth_views.LogoutView):

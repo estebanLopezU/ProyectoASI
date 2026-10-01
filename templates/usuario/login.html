@@ -42,7 +42,25 @@
               <div class="alert alert-{{ mensaje.tags|default:'info' }} small">{{ mensaje }}</div>
             {% endfor %}
           {% endif %}
-          <form method="post" novalidate>
+          {% if login_bloqueado %}
+            <div class="alert alert-warning small">
+              Demasiados intentos fallidos. Inténtelo de nuevo en
+              <strong>{{ login_bloqueo_seg }} segundos</strong>.
+            </div>
+          {% else %}
+            {% if login_intentos %}
+              <div class="alert alert-warning small">
+                Intento {{ login_intentos }} de {{ login_max_intentos }}.
+                Al tercer fallo se bloqueará el acceso por 5 minutos.
+              </div>
+            {% endif %}
+          {% endif %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger small">
+              {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+            </div>
+          {% endif %}
+          <form method="post" novalidate id="formLogin">
             {% csrf_token %}
             <div class="mb-3">
               <label class="form-label" for="id_username">Usuario</label>
@@ -62,9 +80,36 @@
               </div>
             </div>
             <input type="hidden" name="next" value="{{ next|default:'' }}">
-            <button class="btn btn-primary w-100 py-2 login-boton">
-              <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
-            </button>
+            {% comment %}
+              reCAPTCHA v2 invisible: con claves, Google verifica en silencio y
+              solo muestra el reto de imágenes (bicicletas, pasos, etc.) si
+              sospecha que es un robot. Sin claves (desarrollo) el login
+              funciona igual y muestra el aviso de abajo.
+            {% endcomment %}
+            {% if recaptcha_site_key %}
+              <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+              <button class="btn btn-primary w-100 py-2 login-boton g-recaptcha"
+                      data-sitekey="{{ recaptcha_site_key }}"
+                      data-callback="enviarLoginConCaptcha"
+                      data-size="invisible"
+                      {% if login_bloqueado %}disabled{% endif %}>
+                <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
+              </button>
+              <p class="text-muted text-center mt-2" style="font-size:.72rem">
+                Protegido por reCAPTCHA de Google ·
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacidad</a> ·
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Términos</a>
+              </p>
+            {% else %}
+              <button class="btn btn-primary w-100 py-2 login-boton"
+                      {% if login_bloqueado %}disabled{% endif %}>
+                <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
+              </button>
+              <p class="text-muted text-center mt-2" style="font-size:.72rem">
+                Modo desarrollo: configure las claves de reCAPTCHA para activar
+                la verificación anti-robots.
+              </p>
+            {% endif %}
           </form>
           <div class="text-center mt-3">
             <a class="small" href="{% url 'usuario:password_reset' %}">¿Olvidó su contraseña?</a>
@@ -77,6 +122,10 @@
 {% endblock %}
 {% block scripts %}
 <script>
+  // Callback del reCAPTCHA invisible: Google ya verificó, enviar el login.
+  function enviarLoginConCaptcha() {
+    document.getElementById('formLogin').submit();
+  }
   (function () {
     var btn = document.getElementById('verClave');
     var campo = document.getElementById('id_password');

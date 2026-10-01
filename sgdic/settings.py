@@ -156,6 +156,21 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "usuario:login"
 
 # ---------------------------------------------------------------------
+# reCAPTCHA v2 invisible de Google en el login (RF-01).
+# Claves: https://www.google.com/recaptcha/admin (tipo "v2 invisible").
+#   SGDIC_RECAPTCHA_SITE_KEY   -> clave pública (va en el HTML)
+#   SGDIC_RECAPTCHA_SECRET_KEY -> clave privada (verificación servidor)
+# Sin claves: modo desarrollo (login funciona, muestra aviso). Con claves
+# de prueba de Google (6LeIxAcT...) la verificación se omite en tests.
+# ---------------------------------------------------------------------
+RECAPTCHA_SITE_KEY = os.environ.get("SGDIC_RECAPTCHA_SITE_KEY", "")
+RECAPTCHA_SECRET_KEY = os.environ.get("SGDIC_RECAPTCHA_SECRET_KEY", "")
+
+# Intentos de login: a los 3 fallos se bloquea 5 minutos y vuelve al login.
+LOGIN_MAX_INTENTOS = 3
+LOGIN_BLOQUEO_SEGUNDOS = 5 * 60
+
+# ---------------------------------------------------------------------
 # Sesión por inactividad (aviso a los 2 min + cierre a los 2:30)
 # El JS de base.html muestra el panel rojo a los 120 s y cierra a los
 # 150 s si no se pulsa "Mantener la sesión abierta".
