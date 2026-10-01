@@ -1,5 +1,7 @@
 from django import forms
 
+from comun.widgets import CheckboxGrupoWidget
+
 from usuario.models import Usuario
 
 from .models import Falta, InvitacionEvaluacion, PeriodoEvaluacion, Sesion
@@ -22,7 +24,7 @@ class RegistroFaltasForm(forms.Form):
 
     ausentes = forms.ModelMultipleChoiceField(
         queryset=Usuario.objects.none(), required=False,
-        widget=forms.CheckboxSelectMultiple, label="Estudiantes ausentes",
+        widget=CheckboxGrupoWidget(), label="Estudiantes ausentes",
     )
     motivo = forms.CharField(max_length=200, required=False,
                              widget=forms.TextInput(attrs={"class": "form-control"}))

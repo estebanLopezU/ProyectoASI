@@ -1,5 +1,7 @@
 from django import forms
 
+from comun.widgets import CheckboxGrupoWidget, estilizar_campo
+
 from usuario.models import ROLES
 
 from .models import Anuncio
@@ -7,11 +9,7 @@ from .models import Anuncio
 
 def _estilizar(form):
     for campo in form.fields.values():
-        widget = campo.widget
-        if isinstance(widget, (forms.CheckboxInput, forms.RadioSelect)):
-            widget.attrs.setdefault("class", "form-check-input")
-        else:
-            widget.attrs.setdefault("class", "form-control")
+        estilizar_campo(campo.widget)
     return form
 
 
@@ -20,8 +18,9 @@ class AnuncioForm(forms.ModelForm):
 
     roles_destino = forms.MultipleChoiceField(
         choices=ROLES, required=False,
-        widget=forms.CheckboxSelectMultiple(attrs={"class": "form-check-input"}),
+        widget=CheckboxGrupoWidget(),
         label="Visible para (vacío = todos los roles)",
+        help_text="Marque los roles que podrán ver este anuncio en su cartelera.",
     )
 
     class Meta:

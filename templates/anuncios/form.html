@@ -7,16 +7,40 @@
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {% for campo in form %}
-        <div class="mb-3">
-          <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
-          {{ campo }}
-          {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
-          {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-        </div>
+        {% comment %}
+          Tres casos: grupo de casillas (CheckboxGrupoWidget), casilla
+          única (activo) y el resto de controles. El grupo y la casilla
+          única necesitan la estructura .form-check de Bootstrap para que
+          la etiqueta quede alineada y con espaciado.
+        {% endcomment %}
+        {% if campo.field.widget.choices and campo.field.widget.input_type == 'checkbox' %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {{ campo }}
+            {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
+            {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% elif campo.field.widget.input_type == 'checkbox' %}
+          <div class="mb-3 form-check">
+            {{ campo }}
+            <label class="form-check-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
+            {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% else %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {{ campo }}
+            {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
+            {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% endif %}
       {% endfor %}
       {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
-      <button class="btn btn-primary">{{ accion }}</button>
-      <a class="btn btn-outline-secondary" href="{% url 'anuncios:lista' %}">Cancelar</a>
+      <div class="d-flex gap-2 mt-4 pt-3 border-top">
+        <button class="btn btn-primary">{{ accion }}</button>
+        <a class="btn btn-outline-secondary" href="{% url 'anuncios:lista' %}">Cancelar</a>
+      </div>
     </form>
   </div>
 </div>

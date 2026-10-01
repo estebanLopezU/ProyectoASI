@@ -333,6 +333,43 @@ class PruebasAnuncios(BaseDatos):
                     respuesta, 'class="cartelera-chip"',
                     msg_prefix=f"chip en {url} para {usuario.username}")
 
+    def test_grupo_ipsis_no_colapsa_el_contenedor(self):
+        """Regression: el <div> contenedor no debe llevar form-check-input.
+
+        Esa clase es para el <input>: si llega al contenedor, Bootstrap le
+        fija width/height 1em, el panel colapsa y los roles se desbordan
+        encima de los botones.
+        """
+        cliente = self.login(self.docente)
+        respuesta = cliente.get(reverse("anuncios:crear"))
+        self.assertEqual(respuesta.status_code, 200)
+        html = respuesta.content.decode()
+
+        # Contenedor con su propia clase, nunca form-check-input.
+        self.assertIn('id="id_roles_destino" class="grupo-checks"', html)
+        self.assertNotIn('class="form-check-input"><div', html)
+
+        # Cada rol en su propio .form-check, con input y etiqueta.
+        self.assertEqual(html.count("form-check mb-1"), 5)
+        self.assertEqual(html.count('<input class="form-check-input"'), 5)
+        for rol in ("Estudiante", "Docente", "Secretar", "Departamento",
+                    "Administrador"):
+            self.assertIn(rol, html)
+
+        # La casilla única "Activo" y los botones también bien estructurados.
+        self.assertIn("mb-3 form-check", html)
+        self.assertIn("d-flex gap-2 mt-4 pt-3 border-top", html)
+
+    def test_editar_tambien_usa_el_grupo_correcto(self):
+        """La vista de editar comparte plantilla: mismo HTML correcto."""
+        anuncio = self._anuncio(titulo="Editable")
+        respuesta = self.login(self.docente).get(
+            reverse("anuncios:editar", args=[anuncio.pk]))
+        self.assertEqual(respuesta.status_code, 200)
+        html = respuesta.content.decode()
+        self.assertIn('id="id_roles_destino" class="grupo-checks"', html)
+        self.assertNotIn('class="form-check-input"><div', html)
+
 
 class PruebasVistas(BaseDatos):
     """Autenticación, RBAC y renderizado de las páginas principales."""

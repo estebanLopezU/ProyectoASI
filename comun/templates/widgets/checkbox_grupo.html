@@ -1,0 +1,26 @@
+{% comment %}
+  Grupo de casillas con marcado Bootstrap 5 (roles, casos, ausentes...).
+
+  El widget nativo de Django (checkbox_select.html -> multiple_input.html)
+  imprime los attrs del widget en el <div> contenedor. Si ahí hay
+  "form-check-input" —clase pensada para el <input>— Bootstrap le fija
+  width/height: 1em, el contenedor colapsa y las opciones se desbordan
+  fuera del panel, encimándose con los botones del formulario.
+
+  Aquí el contenedor solo lleva su propia clase y cada opción va en su
+  propio .form-check con la casilla .form-check-input y su etiqueta.
+{% endcomment %}
+<div{% if widget.attrs.id %} id="{{ widget.attrs.id }}"{% endif %}{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+  {% for group, options, index in widget.optgroups %}
+    {% for option in options %}
+      <div class="form-check mb-1">
+        <input class="form-check-input" type="{{ option.type|default:'checkbox' }}"
+               name="{{ option.name }}" value="{{ option.value }}"
+               {% if option.attrs.id %} id="{{ option.attrs.id }}"{% endif %}
+               {% if option.selected %} checked{% endif %}
+               {% if option.attrs.disabled %} disabled{% endif %}>
+        <label class="form-check-label" for="{{ option.attrs.id }}">{{ option.label }}</label>
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>

@@ -1,5 +1,7 @@
 from django import forms
 
+from comun.widgets import CheckboxGrupoWidget, estilizar_campo
+
 from usuario.models import Usuario
 
 from .models import CategoriaQueja, Queja
@@ -7,11 +9,7 @@ from .models import CategoriaQueja, Queja
 
 def _estilizar(form):
     for campo in form.fields.values():
-        widget = campo.widget
-        if isinstance(widget, (forms.CheckboxInput, forms.RadioSelect)):
-            widget.attrs.setdefault("class", "form-check-input")
-        else:
-            widget.attrs.setdefault("class", "form-control")
+        estilizar_campo(campo.widget)
     return form
 
 
@@ -74,7 +72,7 @@ class EscalamientoMasivoForm(forms.Form):
 
     casos = forms.ModelMultipleChoiceField(
         queryset=Queja.objects.none(), required=False,
-        widget=forms.CheckboxSelectMultiple, label="Casos a escalar",
+        widget=CheckboxGrupoWidget(), label="Casos a escalar",
     )
 
     def __init__(self, *args, **kwargs):
