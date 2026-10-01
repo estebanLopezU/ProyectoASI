@@ -101,7 +101,9 @@
               </a>
             {% endif %}
           </div>
-          {% include "anuncios/_carrusel.html" with mostrar_tipos=True %}
+          {% comment %} Misma versión que el login: sin chip de tipo ni
+              pestañas, banner compacto (ver .anuncios-dashboard en sgdic.css). {% endcomment %}
+          {% include "anuncios/_carrusel.html" with mostrar_tipos=False %}
         </div>
         {% endif %}
         {% endwith %}

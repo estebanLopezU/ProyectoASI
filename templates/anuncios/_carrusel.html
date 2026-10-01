@@ -11,10 +11,11 @@
   comentarios {# #} de Django son de una sola línea: repartidos en varias
   líneas, el texto se imprime en la página.
 
-  Opcional: `mostrar_tipos=False` (login) oculta la taxonomía de tipos, es
-  decir el chip del banner ("Texto", "Imagen", ...) y la barra de pestañas,
-  para no mostrársela a los visitantes. Sin pestañas, las flechas y la lista
-  recorren y muestran todos los anuncios vigentes.
+  Opcional: `mostrar_tipos=False` (login y Tablero) oculta la taxonomía de
+  tipos, es decir el chip del banner ("Texto", "Imagen", ...) y la barra de
+  pestañas. Sin pestañas, las flechas y la lista recorren y muestran todos
+  los anuncios vigentes. Hoy ambas plantillas usan False: la cartelera se
+  ve igual en el login y en el Tablero, para todos los roles.
 {% endcomment %}
 {% if anuncios_carrusel %}
 <div class="cartelera" id="carruselAnuncios">

@@ -441,30 +441,45 @@ img.cartelera-media {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- Login: columna estrecha, versión compacta ---- */
-.login-anuncios .cartelera-banner { aspect-ratio: 16 / 9; }
+/* ---- Versión compacta compartida: login y dashboards (todos los roles).
+       Ambos usan el mismo include con mostrar_tipos=False, así que el
+       Tablero/Anuncios luce exactamente igual que la cartelera del login. ---- */
+.login-anuncios .cartelera-banner,
+.anuncios-dashboard .cartelera-banner { aspect-ratio: 16 / 9; }
 
-.login-anuncios .cartelera-pie { padding: 0.75rem 3rem 0.85rem 0.9rem; }
+/* El Tablero es mucho más ancho que la columna del login: sin este tope
+   el 16/9 daría un banner gigante y vacío (distinto al del login). */
+.anuncios-dashboard .cartelera-banner { max-height: 17rem; }
 
-.login-anuncios .cartelera-titulo { font-size: 1rem; }
+.login-anuncios .cartelera-pie,
+.anuncios-dashboard .cartelera-pie { padding: 0.75rem 3rem 0.85rem 0.9rem; }
 
-.login-anuncios .cartelera-cuerpo { font-size: 0.8rem; }
+.login-anuncios .cartelera-titulo,
+.anuncios-dashboard .cartelera-titulo { font-size: 1rem; }
 
-.login-anuncios .cartelera-flecha {
+.login-anuncios .cartelera-cuerpo,
+.anuncios-dashboard .cartelera-cuerpo { font-size: 0.8rem; }
+
+.login-anuncios .cartelera-flecha,
+.anuncios-dashboard .cartelera-flecha {
   width: 2.1rem;
   height: 2.1rem;
   font-size: 1.1rem;
 }
 
-.login-anuncios .cartelera-pestana { font-size: 0.78rem; padding: 0.5rem 0.55rem 0.45rem; }
+.login-anuncios .cartelera-pestana,
+.anuncios-dashboard .cartelera-pestana { font-size: 0.78rem; padding: 0.5rem 0.55rem 0.45rem; }
 
-.login-anuncios .cartelera-item { font-size: 0.85rem; padding: 0.45rem 0.9rem; }
+.login-anuncios .cartelera-item,
+.anuncios-dashboard .cartelera-item { font-size: 0.85rem; padding: 0.45rem 0.9rem; }
 
-.login-anuncios .cartelera-lista { max-height: 9.5rem; }
+.login-anuncios .cartelera-lista,
+.anuncios-dashboard .cartelera-lista { max-height: 9.5rem; }
 
 @media (max-width: 767.98px) {
   .cartelera-banner,
-  .login-anuncios .cartelera-banner { aspect-ratio: 16 / 10; }
+  .login-anuncios .cartelera-banner,
+  .anuncios-dashboard .cartelera-banner { aspect-ratio: 16 / 10; }
   .cartelera-pie { padding: 0.75rem 3rem 0.85rem 0.9rem; }
   .cartelera-titulo { font-size: 1rem; }
   .cartelera-cuerpo { font-size: 0.8rem; -webkit-line-clamp: 1; }

@@ -299,21 +299,39 @@ class PruebasAnuncios(BaseDatos):
         self.assertContains(respuesta, "cartelera-banner")
         self.assertNotContains(respuesta, "Espera en el contexto")
 
-    def test_login_oculta_etiquetas_de_tipo(self):
-        """El visitante ve banner y lista, sin chips ni pestañas de tipo."""
+    def test_etiquetas_de_tipo_ocultas_en_toda_la_web(self):
+        """Visitante y usuarios ven la misma cartelera: sin chips ni pestañas.
+
+        El Tablero (y Anuncios) usan la misma versión compacta que el login.
+        """
         self._anuncio(titulo="Aviso general")
         self._anuncio(titulo="Imagen general", tipo="IMAGEN",
                       enlace="https://ejemplo.test/foto.png")
+
         respuesta = self.cliente.get(reverse("usuario:login"))
         self.assertContains(respuesta, "cartelera-banner")
         self.assertContains(respuesta, "cartelera-lista")
         self.assertNotContains(respuesta, 'class="cartelera-chip"')
         self.assertNotContains(respuesta, "cartelera-pestanas")
 
-        # Con sesión iniciada sí se muestran las pestañas y los chips.
-        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
-        self.assertContains(respuesta, "cartelera-pestanas")
-        self.assertContains(respuesta, 'class="cartelera-chip"')
+        # BaseDatos no crea usuario ADMIN: lo damos de alta aquí.
+        admin = Usuario.objects.create_user(
+            username="admin_cartelera", password=CLAVE, rol="ADMIN",
+            email="admin_c@test.co")
+
+        # Todos los roles, en Tablero y en Anuncios: sin chips ni pestañas.
+        for usuario in (self.estudiante, self.docente, self.secretaria, admin):
+            for url in (reverse("dashboard"), reverse("anuncios:lista")):
+                respuesta = self.login(usuario).get(url)
+                self.assertEqual(respuesta.status_code, 200)
+                self.assertContains(respuesta, "cartelera-banner")
+                self.assertContains(respuesta, "cartelera-lista")
+                self.assertNotContains(
+                    respuesta, "cartelera-pestanas",
+                    msg_prefix=f"pestanas en {url} para {usuario.username}")
+                self.assertNotContains(
+                    respuesta, 'class="cartelera-chip"',
+                    msg_prefix=f"chip en {url} para {usuario.username}")
 
 
 class PruebasVistas(BaseDatos):
