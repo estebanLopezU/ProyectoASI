@@ -1,0 +1,18 @@
+#!/bin/sh
+# Despliegue automatico a Vercel: se dispara en cada `git push`.
+# Sale siempre con 0 para no bloquear el push (el deploy corre en
+# segundo plano y queda registrado en .githooks-auto.log).
+#
+# SGDIC_DEPLOY_AUTO=0 lo pone deploy.ps1 para no entrar en bucle
+# (ese script ya despliega por su cuenta en su paso 3).
+
+if [ "$SGDIC_DEPLOY_AUTO" = "0" ]; then
+  exit 0
+fi
+
+echo "[hook] push detectado -> desplegando a Vercel..."
+powershell.exe -NoProfile -ExecutionPolicy Bypass \
+  -File "$(dirname "$0")/../deploy.ps1" -SoloDeploy \
+  > "$(dirname "$0")/../.githooks-auto.log" 2>&1 &
+
+exit 0

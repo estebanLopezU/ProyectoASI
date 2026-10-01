@@ -1,2 +1,4 @@
 # Forzar LF en scripts de shell (requerido por los builds de Vercel/Render)
 *.sh text eol=lf
+# Los hooks de git se ejecutan con sh: CRLF rompe el shebang #!/bin/sh
+.githooks/* text eol=lf
