@@ -7,14 +7,20 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
 from comun.mixins import rol_usuario
 from .forms import PerfilForm
 from .models import Usuario
 
 
+@method_decorator(never_cache, name="dispatch")
 class LoginView(auth_views.LoginView):
     template_name = "usuario/login.html"
+    # Si ya hay sesión (ej. botón "atrás" del navegador), ir al tablero
+    # en vez de mostrar de nuevo el formulario (RF-01).
+    redirect_authenticated_user = True
 
 
 class LogoutView(auth_views.LogoutView):
