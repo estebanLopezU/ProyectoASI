@@ -1,0 +1,64 @@
+{# Carrusel de anuncios: reutilizable en login (visitantes) y dashboards.
+   Espera la variable `anuncios_carrusel` en el contexto. Si está vacía,
+   no renderiza nada y la página queda como antes. #}
+{% if anuncios_carrusel %}
+<div id="carruselAnuncios" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    {% for a in anuncios_carrusel %}
+      <button type="button" data-bs-target="#carruselAnuncios" data-bs-slide-to="{{ forloop.counter0 }}"
+              class="{% if forloop.first %}active{% endif %}"
+              aria-label="Anuncio {{ forloop.counter }}"></button>
+    {% endfor %}
+  </div>
+  <div class="carousel-inner">
+    {% for a in anuncios_carrusel %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        {% if a.tipo == "IMAGEN" %}
+          {% if a.archivo %}
+            <img src="{{ a.archivo.url }}" class="d-block w-100 carrusel-img" alt="{{ a.titulo }}">
+          {% elif a.enlace %}
+            <img src="{{ a.enlace }}" class="d-block w-100 carrusel-img" alt="{{ a.titulo }}">
+          {% endif %}
+        {% elif a.tipo == "VIDEO" and a.archivo %}
+          <video class="d-block w-100 carrusel-img" controls src="{{ a.archivo.url }}"></video>
+        {% elif a.tipo == "VIDEO" and a.enlace %}
+          <div class="ratio ratio-16x9">
+            <iframe src="{{ a.enlace }}" title="{{ a.titulo }}" allowfullscreen></iframe>
+          </div>
+        {% elif a.tipo == "URL" and a.enlace %}
+          <div class="carrusel-texto text-center">
+            <h5>{{ a.titulo }}</h5>
+            <p>{{ a.cuerpo|linebreaksbr }}</p>
+            <a class="btn btn-sm btn-light" href="{{ a.enlace }}" target="_blank" rel="noopener">Abrir enlace</a>
+          </div>
+        {% elif a.tipo == "DOCUMENTO" and a.archivo %}
+          <div class="carrusel-texto text-center">
+            <h5>{{ a.titulo }}</h5>
+            <p>{{ a.cuerpo|linebreaksbr }}</p>
+            <a class="btn btn-sm btn-light" href="{{ a.archivo.url }}" target="_blank" rel="noopener">
+              <i class="bi bi-file-earmark-text me-1"></i>Ver documento</a>
+          </div>
+        {% else %}
+          <div class="carrusel-texto">
+            <h5>{{ a.titulo }}</h5>
+            <p class="mb-0">{{ a.cuerpo|linebreaksbr }}</p>
+          </div>
+        {% endif %}
+        <div class="carousel-caption d-none d-md-block">
+          <span class="badge bg-dark bg-opacity-50">{{ a.titulo }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% if anuncios_carrusel|length > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#carruselAnuncios" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carruselAnuncios" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  {% endif %}
+</div>
+{% endif %}

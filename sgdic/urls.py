@@ -14,6 +14,7 @@ urlpatterns = [
     path("notificaciones/", views.notificaciones, name="notificaciones"),
     path("notificaciones/<int:pk>/", views.notificacion_ir, name="notificacion_ir"),
     path("cuenta/", include("usuario.urls")),
+    path("anuncios/", include("anuncios.urls")),
     path("materias/", include("materias.urls")),
     path("cupos/", include("cupos.urls")),
     path("mensajes/", include("mensajes.urls")),

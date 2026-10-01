@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}{{ accion }} anuncio{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-megaphone me-2"></i>{{ accion }} anuncio</h3>
+<div class="card panel-suave">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for campo in form %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+          {{ campo }}
+          {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
+          {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+      <button class="btn btn-primary">{{ accion }}</button>
+      <a class="btn btn-outline-secondary" href="{% url 'anuncios:lista' %}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

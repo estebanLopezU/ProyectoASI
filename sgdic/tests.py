@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from analitica.models import NecesidadDetectada
 from analitica.servicios import predecir_materia
+from anuncios.models import Anuncio
 from cupos.models import Inscripcion, OfertaCupo, SolicitudCupo
 from quejas.models import CategoriaQueja, Queja
 from usuario.models import Usuario
@@ -176,6 +177,79 @@ class PruebasQuejas(BaseDatos):
                                        categoria=categoria, asunto="B", descripcion="B")
         self.assertNotEqual(primera.consecutivo, segunda.consecutivo)
         self.assertTrue(primera.consecutivo.startswith("Q-"))
+
+
+class PruebasAnuncios(BaseDatos):
+    """Cartelera institucional: vigencia, roles y permisos de publicación."""
+
+    def setUp(self):
+        self.cliente = Client()
+
+    def _anuncio(self, **extra):
+        datos = {"titulo": "Aviso", "tipo": "TEXTO", "cuerpo": "Cuerpo",
+                 "creado_por": self.docente}
+        datos.update(extra)
+        return Anuncio.objects.create(**datos)
+
+    def test_login_sin_anuncios_no_muestra_carrusel(self):
+        respuesta = self.cliente.get(reverse("usuario:login"))
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertNotContains(respuesta, "carruselAnuncios")
+
+    def test_anonimo_ve_anuncio_publico_pero_no_el_restringido(self):
+        self._anuncio(titulo="Publico general")
+        self._anuncio(titulo="Solo docentes", roles="DOCENTE")
+        respuesta = self.cliente.get(reverse("usuario:login"))
+        self.assertContains(respuesta, "Publico general")
+        self.assertNotContains(respuesta, "Solo docentes")
+
+    def test_dashboard_filtra_por_rol(self):
+        self._anuncio(titulo="Para docentes", roles="DOCENTE")
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertNotContains(respuesta, "Para docentes")
+        respuesta = self.login(self.docente).get(reverse("dashboard"))
+        self.assertContains(respuesta, "Para docentes")
+
+    def test_vigencia_expirada_no_se_muestra(self):
+        self._anuncio(titulo="Vencido",
+                      visible_hasta=timezone.now() - timedelta(days=1))
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertNotContains(respuesta, "Vencido")
+
+    def test_vigencia_futura_no_se_muestra(self):
+        self._anuncio(titulo="Futuro",
+                      visible_desde=timezone.now() + timedelta(days=1))
+        self.assertEqual(Anuncio.visibles(), [])
+        respuesta = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertNotContains(respuesta, "Futuro")
+
+    def test_docente_publica_estudiante_no(self):
+        self.assertEqual(self.cliente.get(reverse("anuncios:crear")).status_code, 302)
+        self.assertEqual(
+            self.login(self.estudiante).get(reverse("anuncios:crear")).status_code, 403)
+        self.assertEqual(
+            self.login(self.docente).get(reverse("anuncios:crear")).status_code, 200)
+        self.assertEqual(
+            self.login(self.secretaria).get(reverse("anuncios:lista")).status_code, 200)
+
+    def test_crear_anuncio_desde_vista(self):
+        cliente = self.login(self.docente)
+        respuesta = cliente.post(reverse("anuncios:crear"), {
+            "titulo": "Charla", "tipo": "TEXTO", "cuerpo": "Jueves 10 a.m.",
+            "activo": "on",
+        })
+        self.assertRedirects(respuesta, reverse("anuncios:lista"))
+        anuncio = Anuncio.objects.get(titulo="Charla")
+        self.assertEqual(anuncio.creado_por, self.docente)
+        self.assertTrue(anuncio.activo)
+
+    def test_retirar_anuncio_propio(self):
+        anuncio = self._anuncio(titulo="Temporal")
+        cliente = self.login(self.docente)
+        cliente.post(reverse("anuncios:desactivar", args=[anuncio.pk]))
+        anuncio.refresh_from_db()
+        self.assertFalse(anuncio.activo)
+        self.assertFalse(anuncio.vigente())
 
 
 class PruebasVistas(BaseDatos):

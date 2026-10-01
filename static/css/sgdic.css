@@ -170,6 +170,79 @@ body {
 }
 
 /* =====================================================================
+   Cartelera de anuncios (carrusel) — login y dashboards
+   Si no hay anuncios vigentes, el bloque no se renderiza y la vista
+   queda igual que antes.
+   ===================================================================== */
+.anuncios-dashboard-titulo,
+.login-anuncios-titulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2f6bff;
+  margin-bottom: 0.35rem;
+}
+
+.login-anuncios .login-anuncios-titulo {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.anuncios-dashboard .carousel,
+.login-anuncios .carousel {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 1.25rem rgba(15, 42, 90, 0.22);
+}
+
+.carrusel-img {
+  height: 220px;
+  object-fit: cover;
+}
+
+.carrusel-texto {
+  min-height: 150px;
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2f6bff 55%, #22b8f0 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carrusel-texto h5 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.carrusel-texto p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.login-anuncios .carrusel-img {
+  height: 150px;
+}
+
+.login-anuncios .carrusel-texto {
+  min-height: 130px;
+  padding: 1rem;
+}
+
+.login-anuncios .carrusel-texto h5 {
+  font-size: 1rem;
+}
+
+.login-anuncios .carrusel-texto p {
+  font-size: 0.82rem;
+}
+
+@media (max-width: 767.98px) {
+  .carrusel-img { height: 170px; }
+  .login-anuncios .carrusel-img { height: 130px; }
+}
+
+/* =====================================================================
    Aviso rojo de inactividad (2 min) + cuenta atrás de 30 s
    Panel superior fijo, solo visible con sesión iniciada.
    ===================================================================== */

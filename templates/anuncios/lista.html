@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo %}Anuncios{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0"><i class="bi bi-megaphone me-2"></i>Cartelera de anuncios</h3>
+  {% if puede_publicar %}
+    <a class="btn btn-primary btn-sm" href="{% url 'anuncios:crear' %}">
+      <i class="bi bi-plus-circle me-1"></i>Publicar anuncio
+    </a>
+  {% endif %}
+</div>
+{% if anuncios %}
+  <div class="row g-3">
+    {% for a in anuncios %}
+      <div class="col-md-6 col-xl-4">
+        <div class="card panel-suave h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>{{ a.titulo }}</span>
+            <span class="badge bg-light text-dark">{{ a.get_tipo_display }}</span>
+          </div>
+          <div class="card-body">
+            {% if a.tipo == "IMAGEN" %}
+              {% if a.archivo %}
+                <img src="{{ a.archivo.url }}" class="img-fluid rounded mb-2" alt="{{ a.titulo }}">
+              {% elif a.enlace %}
+                <img src="{{ a.enlace }}" class="img-fluid rounded mb-2" alt="{{ a.titulo }}">
+              {% endif %}
+            {% elif a.tipo == "VIDEO" %}
+              {% if a.archivo %}
+                <video class="w-100 rounded mb-2" controls src="{{ a.archivo.url }}"></video>
+              {% elif a.enlace %}
+                <div class="ratio ratio-16x9 mb-2">
+                  <iframe src="{{ a.enlace }}" title="{{ a.titulo }}" allowfullscreen></iframe>
+                </div>
+              {% endif %}
+            {% elif a.tipo == "URL" and a.enlace %}
+              <p><a href="{{ a.enlace }}" target="_blank" rel="noopener">{{ a.enlace }}</a></p>
+            {% elif a.tipo == "DOCUMENTO" and a.archivo %}
+              <p><a href="{{ a.archivo.url }}" target="_blank" rel="noopener">
+                <i class="bi bi-file-earmark-text me-1"></i>Descargar documento</a></p>
+            {% endif %}
+            {% if a.cuerpo %}<p class="small">{{ a.cuerpo|linebreaksbr }}</p>{% endif %}
+            <p class="text-muted small mb-0">
+              Por {{ a.creado_por|default:"Administración" }} · {{ a.creado|date:"d/m/Y H:i" }}
+              {% if a.visible_hasta %} · Hasta {{ a.visible_hasta|date:"d/m/Y H:i" }}{% endif %}
+            </p>
+          </div>
+          {% if puede_publicar %}
+            <div class="card-footer d-flex gap-2">
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'anuncios:editar' a.pk %}">Editar</a>
+              <form method="post" action="{% url 'anuncios:desactivar' a.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger">Retirar</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted">No hay anuncios publicados por el momento.</p>
+{% endif %}
+{% endblock %}
