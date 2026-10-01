@@ -9,6 +9,10 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("perfil/", views.perfil, name="perfil"),
     path("mallas/", views.mallas, name="mallas"),
+    # Latido de sesión: el botón "Mantener la sesión abierta" lo llama
+    # para renovar el vencimiento (SESSION_SAVE_EVERY_REQUEST) y
+    # reiniciar los 2 minutos sin recargar la página.
+    path("ping-sesion/", views.ping_sesion, name="ping_sesion"),
     # Recuperación de contraseña (RF-03)
     path("password/", views.PasswordResetView.as_view(), name="password_reset"),
     path("password/hecho/", views.PasswordResetDoneView.as_view(), name="password_reset_done"),

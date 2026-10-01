@@ -155,6 +155,17 @@ LOGIN_URL = "usuario:login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "usuario:login"
 
+# ---------------------------------------------------------------------
+# Sesión por inactividad (aviso a los 2 min + cierre a los 2:30)
+# El JS de base.html muestra el panel rojo a los 120 s y cierra a los
+# 150 s si no se pulsa "Mantener la sesión abierta".
+# SESSION_SAVE_EVERY_REQUEST renueva el vencimiento con cada petición,
+# así que cualquier clic/navegación reinicia los 2 minutos.
+# ---------------------------------------------------------------------
+SESSION_COOKIE_AGE = 150  # 2 min + 30 s de gracia
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 # Umbral de inasistencia (RN-08) y horas límite de respuesta (RN-19)
 SGDIC_UMBRAL_INASISTENCIA = 20      # porcentaje
 SGDIC_HORAS_RESPUESTA = 48          # horas

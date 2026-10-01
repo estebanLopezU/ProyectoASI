@@ -6,9 +6,11 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 from comun.mixins import rol_usuario
 from .forms import PerfilForm
@@ -54,6 +56,19 @@ class PasswordChangeView(auth_views.PasswordChangeView):
 
 class PasswordChangeDoneView(auth_views.PasswordChangeDoneView):
     template_name = "usuario/password_change_done.html"
+
+
+@require_POST
+@login_required
+def ping_sesion(request):
+    """Latido de sesión por inactividad.
+
+    El botón "Mantener la sesión abierta" del aviso rojo lo invoca vía
+    fetch POST. Al pasar por SessionMiddleware con
+    SESSION_SAVE_EVERY_REQUEST=True, Django renueva el vencimiento de la
+    cookie (2 min + 30 s), reiniciando el conteo sin recargar la página.
+    """
+    return JsonResponse({"ok": True})
 
 
 @login_required

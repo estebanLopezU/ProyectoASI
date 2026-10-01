@@ -9,6 +9,22 @@
   <link href="{% static 'css/sgdic.css' %}" rel="stylesheet">
 </head>
 <body class="{% block clase_body %}{% endblock %}">
+{% if user.is_authenticated and request.resolver_match and request.resolver_match.url_name != 'login' %}
+<!-- Aviso rojo de inactividad: aparece a los 2 min sin actividad y da
+     30 s para pulsar "Mantener la sesión abierta"; si no, cierra sesión. -->
+<div id="avisoInactividad" role="alert" aria-live="assertive">
+  <div class="aviso-inactividad-caja">
+    <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+    <div class="aviso-inactividad-texto">
+      <strong>Sesión a punto de cerrarse por inactividad</strong>
+      <span>Si continúa inactivo, su sesión se cerrará en <span id="contadorInactividad">30</span> segundos.</span>
+    </div>
+    <button type="button" class="btn btn-light btn-sm fw-bold" id="btnMantenerSesion">
+      <i class="bi bi-clock-history me-1"></i>Mantener la sesión abierta
+    </button>
+  </div>
+</div>
+{% endif %}
 <nav class="navbar navbar-expand-lg navbar-sgdic">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}" title="Administración de Sistemas Informáticos">
@@ -127,7 +143,6 @@
     menu.addEventListener('hidden.bs.collapse', function () {
       document.body.classList.remove('menu-lateral-abierto');
     });
-    // Cerrar tocando el overlay
     document.addEventListener('click', function (ev) {
       if (!document.body.classList.contains('menu-lateral-abierto')) return;
       if (window.innerWidth >= 992) return;
@@ -143,6 +158,85 @@
         bootstrap.Collapse.getOrCreateInstance(menu).hide();
       }
     });
+  })();
+
+  // Sesión por inactividad: 2 min sin actividad -> panel rojo con 30 s
+  // de cuenta atrás. "Mantener la sesión abierta" renueva vía ping y
+  // reinicia los 2 minutos; si llega a 0, cierra sesión (POST logout).
+  (function () {
+    var aviso = document.getElementById('avisoInactividad');
+    // Solo existe con sesión iniciada; en login/páginas anónimas no aplica.
+    if (!aviso) return;
+    var contador = document.getElementById('contadorInactividad');
+    var btn = document.getElementById('btnMantenerSesion');
+    var LIMITE_AVISO_MS = 2 * 60 * 1000;  // 2 minutos
+    var GRACIA_SEG = 30;                  // 30 segundos extra
+    var temporizadorAviso = null;
+    var intervaloCuenta = null;
+    var restantes = GRACIA_SEG;
+
+    function csrfToken() {
+      var m = document.cookie.match(/csrftoken=([^;]+)/);
+      return m ? decodeURIComponent(m[1]) : '';
+    }
+
+    function cerrarSesion() {
+      var form = document.createElement('form');
+      form.method = 'post';
+      form.action = '{% url "usuario:logout" %}?next={% url "usuario:login" %}';
+      var csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = 'csrfmiddlewaretoken';
+      csrf.value = csrfToken();
+      form.appendChild(csrf);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    function ocultarAviso() {
+      aviso.classList.remove('visible');
+      if (intervaloCuenta) { clearInterval(intervaloCuenta); intervaloCuenta = null; }
+    }
+
+    function mostrarAviso() {
+      restantes = GRACIA_SEG;
+      contador.textContent = restantes;
+      aviso.classList.add('visible');
+      intervaloCuenta = setInterval(function () {
+        restantes -= 1;
+        contador.textContent = Math.max(restantes, 0);
+        if (restantes <= 0) {
+          clearInterval(intervaloCuenta);
+          intervaloCuenta = null;
+          cerrarSesion();
+        }
+      }, 1000);
+    }
+
+    function reiniciarTemporizador() {
+      ocultarAviso();
+      if (temporizadorAviso) clearTimeout(temporizadorAviso);
+      temporizadorAviso = setTimeout(mostrarAviso, LIMITE_AVISO_MS);
+    }
+
+    // Cualquier actividad (clic, tecla, scroll, táctil, mouse) reinicia
+    // los 2 minutos, igual que una navegación (SESSION_SAVE_EVERY_REQUEST).
+    ['click', 'keydown', 'mousemove', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) {
+      document.addEventListener(ev, reiniciarTemporizador, { passive: true });
+    });
+
+    if (btn) {
+      btn.addEventListener('click', function () {
+        // Renovar la sesión en el servidor sin recargar, y reiniciar.
+        fetch('{% url "usuario:ping_sesion" %}', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': csrfToken() },
+          credentials: 'same-origin'
+        }).finally(reiniciarTemporizador);
+      });
+    }
+
+    reiniciarTemporizador();
   })();
 </script>
 {% block scripts %}{% endblock %}
