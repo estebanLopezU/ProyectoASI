@@ -17,9 +17,10 @@
       <div class="list-group list-group-flush">
         {% for i in pendientes %}
           <div class="list-group-item">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <strong>{{ i.usuario.get_full_name|default:i.usuario.username }}</strong>
-              <span class="small text-muted">{{ i.usuario.get_rol_display }}</span>
+            {% comment %} Datos completos del interesado: correo institucional, código,
+                 semestre/promedio o área, para que el coordinador pueda contactarlo. {% endcomment %}
+            <div class="mb-2">
+              {% include "investigacion/_persona.html" with usuario=i.usuario %}
             </div>
             <p class="small mb-2">
               Solicita unirse a <strong>{{ i.grupo.nombre }}</strong>.

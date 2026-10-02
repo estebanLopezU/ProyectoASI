@@ -1,0 +1,38 @@
+{% comment %}
+  Datos de una persona (docente o estudiante) para que el coordinador tenga
+  información real de contacto: correo institucional, código, y sus datos
+  académicos. Se usa en el panel de solicitudes y en el detalle del grupo.
+  Espera en el contexto: `usuario`.
+{% endcomment %}
+<div>
+  <strong>{{ usuario.get_full_name|default:usuario.username }}</strong>
+  <span class="badge text-bg-light text-dark ms-1">{{ usuario.get_rol_display }}</span>
+  {% if usuario.codigo_institucional %}
+    <span class="badge text-bg-light text-dark ms-1">
+      <i class="bi bi-upc me-1"></i>{{ usuario.codigo_institucional }}
+    </span>
+  {% endif %}
+  <div class="small">
+    {% if usuario.email %}
+      <a href="mailto:{{ usuario.email }}" class="text-decoration-none">
+        <i class="bi bi-envelope me-1"></i>{{ usuario.email }}
+      </a>
+    {% else %}
+      <span class="text-danger-emphasis">
+        <i class="bi bi-envelope-exclamation me-1"></i>Sin correo registrado
+      </span>
+    {% endif %}
+    {% if usuario.telefono %}
+      <span class="text-muted ms-2"><i class="bi bi-telephone me-1"></i>{{ usuario.telefono }}</span>
+    {% endif %}
+  </div>
+  {% if usuario.es_estudiante %}
+    <div class="small text-muted">
+      Semestre {{ usuario.semestre }}
+      {% if usuario.promedio %} · Promedio {{ usuario.promedio }}{% endif %}
+      {% if usuario.area %} · {{ usuario.area }}{% endif %}
+    </div>
+  {% elif usuario.area %}
+    <div class="small text-muted"><i class="bi bi-mortarboard me-1"></i>{{ usuario.area }}</div>
+  {% endif %}
+</div>

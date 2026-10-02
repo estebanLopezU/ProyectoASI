@@ -45,6 +45,12 @@
     {% endfor %}
   </div>
   <div class="card-footer d-flex gap-2 flex-wrap bg-transparent">
+    {% if inv_mis_grupos %}
+      <span class="small text-muted align-self-center">
+        <i class="bi bi-person-check me-1"></i>Eres miembro de
+        {% for g in inv_mis_grupos %}{{ g.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}.
+      </span>
+    {% endif %}
     <a class="btn btn-sm btn-primary" href="{% url 'investigacion:lista' %}">
       Ver todos los grupos
     </a>

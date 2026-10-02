@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block titulo %}{{ grupo.nombre }}{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+  <div>
+    <h3 class="mb-1"><i class="bi bi-diagram-2 me-2"></i>{{ grupo.nombre }}</h3>
+    <p class="text-muted mb-0">
+      <span class="badge text-bg-secondary">
+        <i class="bi {% if grupo.tipo == 'SEMILLERO' %}bi-seedling{% else %}bi-people{% endif %} me-1"></i>
+        {{ grupo.get_tipo_display }}
+      </span>
+      {% if grupo.linea %}<span class="ms-2">{{ grupo.linea }}</span>{% endif %}
+      {% if grupo.activo %}<span class="badge text-bg-success ms-2">Activo</span>
+      {% else %}<span class="badge text-bg-secondary ms-2">Inactivo</span>{% endif %}
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    {% if puede_solicitar %}
+      <a class="btn btn-primary" href="{% url 'investigacion:solicitar' grupo.pk %}">
+        <i class="bi bi-person-plus me-1"></i>Solicitar inscripción
+      </a>
+    {% elif miembro %}
+      <span class="btn btn-outline-success disabled"><i class="bi bi-check-lg me-1"></i>Eres miembro</span>
+    {% elif mi_solicitud and mi_solicitud.es_pendiente %}
+      <form method="post" action="{% url 'investigacion:cancelar' mi_solicitud.pk %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-secondary">Cancelar solicitud</button>
+      </form>
+    {% endif %}
+    <a class="btn btn-outline-primary" href="{% url 'investigacion:lista' %}">
+      <i class="bi bi-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card panel-suave">
+      <div class="card-header">
+        <i class="bi bi-people me-2"></i>Integrantes
+        <span class="badge text-bg-light text-dark ms-1">{{ grupo.miembros_count }}</span>
+        {% if grupo.cupo %}<span class="small text-muted ms-1">de {{ grupo.cupo }} cupos</span>{% endif %}
+      </div>
+      <div class="list-group list-group-flush">
+        {% if grupo.coordinador %}
+          <div class="list-group-item">
+            <div class="d-flex align-items-center mb-1">
+              <span class="badge text-bg-primary me-2">Coordinador</span>
+            </div>
+            {% include "investigacion/_persona.html" with usuario=grupo.coordinador %}
+          </div>
+        {% endif %}
+        {% for m in miembros %}
+          <div class="list-group-item">
+            {% include "investigacion/_persona.html" with usuario=m.usuario %}
+            {% if es_coordinador %}
+              <div class="small text-muted mt-1">
+                <i class="bi bi-calendar-check me-1"></i>
+                Se unió el {{ m.creada|date:"d/m/Y" }}
+              </div>
+            {% endif %}
+          </div>
+        {% empty %}
+          {% if not grupo.coordinador %}
+            <div class="list-group-item text-muted small">
+              Este grupo aún no tiene integrantes.
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card panel-suave">
+      <div class="card-header"><i class="bi bi-info-circle me-2"></i>Sobre el grupo</div>
+      <div class="card-body">
+        {% if grupo.descripcion %}
+          <p>{{ grupo.descripcion|linebreaksbr }}</p>
+        {% else %}
+          <p class="text-muted">El grupo aún no tiene una descripción.</p>
+        {% endif %}
+        <hr>
+        <p class="small text-muted mb-0">
+          Creado el {{ grupo.creado|date:"d/m/Y" }}
+          {% if grupo.creado_por %}<br>por {{ grupo.creado_por.get_full_name|default:grupo.creado_por.username }}{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -164,6 +164,29 @@ def cancelar(request, pk):
 
 
 @login_required
+def detalle(request, pk):
+    """Ficha del grupo con sus miembros y los datos de contacto de cada uno."""
+    grupo = get_object_or_404(Grupo.objects.select_related("coordinador"), pk=pk)
+    miembros = (grupo.inscripciones
+                .filter(estado=Inscripcion.Estado.ACEPTADA)
+                .select_related("usuario")
+                .order_by("usuario__first_name", "usuario__username"))
+    return render(request, "investigacion/detalle.html", {
+        "grupo": grupo,
+        "miembro": grupo.inscripciones.filter(
+            usuario=request.user, estado=Inscripcion.Estado.ACEPTADA).exists(),
+        "puede_solicitar": grupo.puede_solicitar(request.user),
+        "mi_solicitud": grupo.inscripciones.filter(
+            usuario=request.user,
+            estado__in=(Inscripcion.Estado.PENDIENTE, Inscripcion.Estado.ACEPTADA)
+        ).first(),
+        "es_coordinador": grupo.es_coordinador(request.user),
+        "miembros": miembros,
+        "puede_publicar": _puede_publicar(request.user),
+    })
+
+
+@login_required
 def panel(request):
     """Gestión del coordinador: sus grupos y las solicitudes pendientes."""
     mis_grupos = Grupo.objects.filter(coordinador=request.user)

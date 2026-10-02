@@ -185,6 +185,48 @@ class PruebasInvestigacion(BaseDatos):
     def test_coordinador_no_se_inscribe_en_su_grupo(self):
         self.assertFalse(self.grupo.puede_solicitar(self.docente))
 
+    # ---- Datos de contacto del interesado ----------------------------
+    def test_panel_muestra_el_correo_del_solicitante(self):
+        """El coordinador debe poder contactar a quien solicita."""
+        InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        r = self.login(self.docente).get(reverse("investigacion:panel"))
+        self.assertEqual(r.status_code, 200)
+        # Correo institucional, código y datos académicos del estudiante.
+        self.assertContains(r, self.estudiante.email)
+        self.assertContains(r, "mailto:%s" % self.estudiante.email)
+        self.assertContains(r, "Semestre 6")
+
+    def test_ficha_muestra_los_miembros_con_su_correo(self):
+        InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.ACEPTADA)
+        r = self.login(self.docente).get(
+            reverse("investigacion:detalle", args=[self.grupo.pk]))
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, self.estudiante.email)   # miembro
+        self.assertContains(r, self.docente.email)      # coordinador
+        self.assertContains(r, "Coordinador")
+
+    def test_tablero_muestra_los_grupos_del_usuario(self):
+        InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.ACEPTADA)
+        r = self.login(self.estudiante).get(reverse("dashboard"))
+        self.assertContains(r, "Eres miembro de")
+        self.assertContains(r, self.grupo.nombre)
+
+    def test_correo_del_docente_que_solicita_tambien_se_ve(self):
+        otro = self._doc("doc4")
+        otro.email = "docente.interesado@asi.edu.co"
+        otro.save()
+        InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=otro,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        r = self.login(self.docente).get(reverse("investigacion:panel"))
+        self.assertContains(r, "docente.interesado@asi.edu.co")
+
     # ---- Panel del tablero -------------------------------------------
     def test_panel_aparece_en_el_tablero_de_todos_los_roles(self):
         for u in (self.estudiante, self.docente, self.secretaria,

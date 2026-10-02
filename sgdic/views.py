@@ -50,6 +50,12 @@ def _contexto_investigacion(user):
         "inv_grupos": grupos,
         "inv_pendientes": pendientes,
         "inv_es_coordinador": Grupo.objects.filter(coordinador=user).exists(),
+        "inv_mis_grupos": list(
+            Grupo.activos().filter(
+                inscripciones__usuario=user,
+                inscripciones__estado=Inscripcion.Estado.ACEPTADA,
+            ).distinct()[:4]
+        ),
         "inv_puede_publicar": (rol_usuario(user) in ROLES_PUBLICAN
                                or user.is_superuser),
         "inv_puede_inscribirse": rol_usuario(user) in ROLES_INSCRIBEN,
