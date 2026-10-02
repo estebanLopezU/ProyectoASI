@@ -20,6 +20,7 @@ urlpatterns = [
     path("mensajes/", include("mensajes.urls")),
     path("evaluaciones/", include("evaluaciones.urls")),
     path("quejas/", include("quejas.urls")),
+    path("investigacion/", include("investigacion.urls")),
     path("reportes/", include("reportes.urls")),
     path("analitica/", include("analitica.urls")),
 ]

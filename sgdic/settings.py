@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "mensajes",
     "evaluaciones",
     "quejas",
+    "investigacion",
     "reportes",
     "analitica",
 ]

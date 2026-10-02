@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block titulo %}Gestionar mis grupos{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h3 class="mb-0"><i class="bi bi-inboxes me-2"></i>Gestionar mis grupos</h3>
+  {% if puede_publicar %}
+    <a class="btn btn-primary" href="{% url 'investigacion:crear' %}">
+      <i class="bi bi-plus-circle me-1"></i>Crear grupo
+    </a>
+  {% endif %}
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card panel-suave">
+      <div class="card-header">Solicitudes pendientes de aprobación</div>
+      <div class="list-group list-group-flush">
+        {% for i in pendientes %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong>{{ i.usuario.get_full_name|default:i.usuario.username }}</strong>
+              <span class="small text-muted">{{ i.usuario.get_rol_display }}</span>
+            </div>
+            <p class="small mb-2">
+              Solicita unirse a <strong>{{ i.grupo.nombre }}</strong>.
+              {% if i.respuesta %}<br><span class="text-muted">“{{ i.respuesta }}”</span>{% endif %}
+            </p>
+            <form method="post" action="{% url 'investigacion:responder' i.pk %}"
+                  class="d-flex gap-2 flex-wrap">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-success" name="accion" value="aceptar">
+                <i class="bi bi-check-lg me-1"></i>Aceptar
+              </button>
+              <input type="text" name="motivo" class="form-control form-control-sm flex-grow-1"
+                     placeholder="Motivo del rechazo (opcional)" aria-label="Motivo del rechazo">
+              <button class="btn btn-sm btn-outline-danger" name="accion" value="rechazar">
+                <i class="bi bi-x-lg me-1"></i>Rechazar
+              </button>
+            </form>
+          </div>
+        {% empty %}
+          <div class="list-group-item text-muted small">
+            <i class="bi bi-check2-circle me-1"></i>No hay solicitudes pendientes.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card panel-suave">
+      <div class="card-header">Mis grupos</div>
+      <div class="list-group list-group-flush">
+        {% for g in mis_grupos %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>{{ g.nombre }}</strong>
+                <div class="small text-muted">
+                  {{ g.get_tipo_display }} · {{ g.miembros_count }} miembros
+                  {% if g.cupo %}/ {{ g.cupo }}{% endif %}
+                </div>
+              </div>
+              <div class="d-flex gap-1">
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{% url 'investigacion:editar' g.pk %}" title="Editar">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <form method="post" action="{% url 'investigacion:toggle_activo' g.pk %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm {% if g.activo %}btn-outline-warning{% else %}btn-outline-success{% endif %}"
+                          title="{% if g.activo %}Desactivar{% else %}Activar{% endif %}">
+                    <i class="bi bi-{% if g.activo %}pause{% else %}play{% endif %}"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="small mt-1">
+              {% if g.activo %}<span class="badge text-bg-success">Activo</span>
+              {% else %}<span class="badge text-bg-secondary">Inactivo</span>{% endif %}
+              {% if g.pendientes_count %}<span class="badge text-bg-warning">{{ g.pendientes_count }} por revisar</span>{% endif %}
+            </div>
+          </div>
+        {% empty %}
+          <div class="list-group-item text-muted small">
+            Aún no coordinas ningún grupo.
+            {% if puede_publicar %}
+              <a href="{% url 'investigacion:crear' %}">Crea el primero.</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

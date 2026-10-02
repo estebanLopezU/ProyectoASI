@@ -1,0 +1,67 @@
+{% comment %}
+  Panel de grupos de investigación / semilleros para el tablero.
+  Se incluye en los 4 tableros (estudiante, docente, admin y genérico) y
+  espera del contexto: inv_grupos, inv_pendientes, inv_puede_publicar,
+  inv_puede_inscribirse, inv_es_coordinador (los prepara sgdic/views.py).
+  Visible para todos los roles.
+{% endcomment %}
+<div class="card panel-suave h-100">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-diagram-2 me-2"></i>Grupos de investigación y semilleros</span>
+    {% if inv_pendientes %}
+      <span class="badge text-bg-warning">{{ inv_pendientes }} solicitud(es) por revisar</span>
+    {% endif %}
+  </div>
+  <div class="list-group list-group-flush">
+    {% for g in inv_grupos %}
+      <div class="list-group-item d-flex justify-content-between align-items-center gap-2">
+        <div class="min-w-0">
+          <strong class="d-block text-truncate">{{ g.nombre }}</strong>
+          <small class="text-muted">
+            <i class="bi {% if g.tipo == 'SEMILLERO' %}bi-seedling{% else %}bi-people{% endif %} me-1"></i>
+            {{ g.get_tipo_display }}
+            {% if g.coordinador %} · {{ g.coordinador.get_full_name|default:g.coordinador.username }}{% endif %}
+            · {{ g.miembros_count }} miembros
+          </small>
+        </div>
+        <div class="text-nowrap">
+          {% if g.pendientes_count and inv_es_coordinador %}
+            <a class="btn btn-sm btn-outline-warning"
+               href="{% url 'investigacion:panel' %}">Revisar</a>
+          {% else %}
+            <a class="btn btn-sm btn-outline-primary"
+               href="{% url 'investigacion:lista' %}">Ver</a>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <div class="list-group-item text-muted small">
+        <i class="bi bi-info-circle me-1"></i>
+        Todavía no hay grupos publicados.
+        {% if inv_puede_publicar %}
+          <a href="{% url 'investigacion:crear' %}">Crear el primero.</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="card-footer d-flex gap-2 flex-wrap bg-transparent">
+    <a class="btn btn-sm btn-primary" href="{% url 'investigacion:lista' %}">
+      Ver todos los grupos
+    </a>
+    {% if inv_puede_inscribirse %}
+      <a class="btn btn-sm btn-outline-primary" href="{% url 'investigacion:lista' %}">
+        <i class="bi bi-person-plus me-1"></i>Inscribirme
+      </a>
+    {% endif %}
+    {% if inv_es_coordinador %}
+      <a class="btn btn-sm btn-outline-warning" href="{% url 'investigacion:panel' %}">
+        <i class="bi bi-inboxes me-1"></i>Gestionar solicitudes
+      </a>
+    {% endif %}
+    {% if inv_puede_publicar %}
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'investigacion:crear' %}">
+        <i class="bi bi-plus-circle me-1"></i>Crear grupo
+      </a>
+    {% endif %}
+  </div>
+</div>

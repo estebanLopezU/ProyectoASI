@@ -12,6 +12,8 @@ from analitica.servicios import predecir_materia
 from anuncios.models import Anuncio
 from cupos.models import Inscripcion, OfertaCupo, SolicitudCupo
 from quejas.models import CategoriaQueja, Queja
+# Alias: cupos.models también define "Inscripcion" (a un cupo).
+from investigacion.models import Grupo, Inscripcion as InscripcionGrupo
 from usuario.models import Usuario
 
 CLAVE = "Prueba2026*"
@@ -57,6 +59,140 @@ class BaseDatos(TestCase):
         cliente = Client()
         cliente.login(username=usuario.username, password=CLAVE)
         return cliente
+
+
+class PruebasInvestigacion(BaseDatos):
+    """Grupos de investigación y semilleros.
+
+    Reglas pedidas:
+      * Publican: DOCENTE, SECRETARIA, DEPARTAMENTO, ADMIN.
+      * Ven: todos los roles.
+      * Se inscriben: solo DOCENTE y ESTUDIANTE, y con aprobación.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.departamento = Usuario.objects.create_user(
+            username="depto", password=CLAVE, rol="DEPARTAMENTO")
+        cls.admin = Usuario.objects.create_user(
+            username="admininv", password=CLAVE, rol="ADMIN")
+        cls.grupo = Grupo.objects.create(
+            nombre="Semillero de IA", tipo=Grupo.Tipo.SEMILLERO,
+            linea="Inteligencia Artificial", descripcion="Grupo de Machine Learning.",
+            coordinador=cls.docente, cupo=2, creado_por=cls.docente)
+
+    def _doc(self, nombre="doc2"):
+        return Usuario.objects.create_user(
+            username=nombre, password=CLAVE, rol="DOCENTE")
+
+    # ---- Quién ve ----------------------------------------------------
+    def test_todos_los_roles_ven_los_grupos(self):
+        for u in (self.estudiante, self.docente, self.secretaria,
+                  self.departamento, self.admin):
+            r = self.login(u).get(reverse("investigacion:lista"))
+            self.assertEqual(r.status_code, 200, u.username)
+            self.assertContains(r, "Semillero de IA")
+
+    # ---- Quién publica -----------------------------------------------
+    def test_pueden_publicar_docente_staff_departamento_admin(self):
+        for u in (self.docente, self.secretaria, self.departamento, self.admin):
+            r = self.login(u).get(reverse("investigacion:crear"))
+            self.assertEqual(r.status_code, 200, u.username)
+
+    def test_estudiante_no_puede_publicar(self):
+        r = self.login(self.estudiante).get(reverse("investigacion:crear"))
+        self.assertEqual(r.status_code, 403)
+
+    # ---- Quién se inscribe -------------------------------------------
+    def test_estudiante_y_docente_pueden_solicitar(self):
+        self.assertTrue(self.grupo.puede_solicitar(self.estudiante))
+        self.assertTrue(self.grupo.puede_solicitar(self._doc()))
+
+    def test_staff_no_puede_solicitar(self):
+        for u in (self.secretaria, self.departamento, self.admin):
+            self.assertFalse(self.grupo.puede_solicitar(u), u.username)
+            r = self.login(u).get(
+                reverse("investigacion:solicitar", args=[self.grupo.pk]))
+            self.assertEqual(r.status_code, 403, u.username)
+
+    # ---- Flujo con aprobación del coordinador ------------------------
+    def test_solicitud_queda_pendiente_hasta_aprobacion(self):
+        r = self.login(self.estudiante).post(
+            reverse("investigacion:solicitar", args=[self.grupo.pk]),
+            {"respuesta": "Quiero participar"})
+        self.assertEqual(r.status_code, 302)
+        insc = InscripcionGrupo.objects.get(grupo=self.grupo, usuario=self.estudiante)
+        self.assertEqual(insc.estado, InscripcionGrupo.Estado.PENDIENTE)
+        self.assertEqual(self.grupo.miembros_count, 0)  # aún no es miembro
+
+    def test_coordinador_acepta_y_el_usuario_queda_miembro(self):
+        insc = InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        r = self.login(self.docente).post(
+            reverse("investigacion:responder", args=[insc.pk]),
+            {"accion": "aceptar"})
+        self.assertEqual(r.status_code, 302)
+        insc.refresh_from_db()
+        self.assertEqual(insc.estado, InscripcionGrupo.Estado.ACEPTADA)
+        self.assertEqual(self.grupo.miembros_count, 1)
+
+    def test_coordinador_puede_rechazar(self):
+        insc = InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        self.login(self.docente).post(
+            reverse("investigacion:responder", args=[insc.pk]),
+            {"accion": "rechazar", "motivo": "Cupo completo"})
+        insc.refresh_from_db()
+        self.assertEqual(insc.estado, InscripcionGrupo.Estado.RECHAZADA)
+        self.assertEqual(self.grupo.miembros_count, 0)
+
+    def test_otro_docente_no_responde_solicitudes(self):
+        insc = InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        r = self.login(self._doc("doc3")).post(
+            reverse("investigacion:responder", args=[insc.pk]),
+            {"accion": "aceptar"})
+        self.assertEqual(r.status_code, 403)
+        insc.refresh_from_db()
+        self.assertEqual(insc.estado, InscripcionGrupo.Estado.PENDIENTE)
+
+    # ---- Reglas de la solicitud --------------------------------------
+    def test_no_se_puede_solicitar_dos_veces(self):
+        InscripcionGrupo.objects.create(
+            grupo=self.grupo, usuario=self.estudiante,
+            estado=InscripcionGrupo.Estado.PENDIENTE)
+        self.assertFalse(self.grupo.puede_solicitar(self.estudiante))
+
+    def test_cupo_lleno_bloquea_nuevas_solicitudes(self):
+        for i in range(self.grupo.cupo):
+            InscripcionGrupo.objects.create(
+                grupo=self.grupo,
+                usuario=Usuario.objects.create_user(
+                    username=f"e{i}", password=CLAVE, rol="ESTUDIANTE"),
+                estado=InscripcionGrupo.Estado.ACEPTADA)
+        self.assertTrue(self.grupo.lleno)
+        self.assertFalse(self.grupo.puede_solicitar(self.estudiante))
+
+    def test_grupo_inactivo_no_acepta_solicitudes(self):
+        self.grupo.activo = False
+        self.grupo.save()
+        self.assertFalse(self.grupo.puede_solicitar(self.estudiante))
+
+    def test_coordinador_no_se_inscribe_en_su_grupo(self):
+        self.assertFalse(self.grupo.puede_solicitar(self.docente))
+
+    # ---- Panel del tablero -------------------------------------------
+    def test_panel_aparece_en_el_tablero_de_todos_los_roles(self):
+        for u in (self.estudiante, self.docente, self.secretaria,
+                  self.departamento, self.admin):
+            r = self.login(u).get(reverse("dashboard"))
+            self.assertEqual(r.status_code, 200, u.username)
+            self.assertContains(r, "Grupos de investigación y semilleros")
+            self.assertContains(r, "Semillero de IA")
 
 
 class PruebasCarteleraPorPagina(BaseDatos):

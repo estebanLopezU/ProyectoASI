@@ -18,6 +18,7 @@ def dashboard(request):
         "es_staff": es_staff(request.user),
         "kpis": tablero_kpis(usuario=request.user),
     }
+    contexto.update(_contexto_investigacion(request.user))
     plantilla = "dashboard.html"
     if rol == "ESTUDIANTE":
         plantilla = "dashboard_estudiante.html"
@@ -26,6 +27,33 @@ def dashboard(request):
     elif rol in ("SECRETARIA", "DEPARTAMENTO", "ADMIN"):
         plantilla = "dashboard_admin.html"
     return render(request, plantilla, contexto)
+
+
+def _contexto_investigacion(user):
+    """Datos del panel de grupos/semilleros del tablero (visible para todos).
+
+    Mantiene el tablero usable: si la app no está migrada todavía, el panel
+    simplemente se omite en vez de romper el tablero completo.
+    """
+    from investigacion.models import ROLES_INSCRIBEN, ROLES_PUBLICAN, Grupo, Inscripcion
+
+    try:
+        grupos = list(
+            Grupo.activos().select_related("coordinador")[:4]
+        )
+        pendientes = Inscripcion.objects.filter(
+            grupo__coordinador=user, estado=Inscripcion.Estado.PENDIENTE
+        ).count()
+    except Exception:  # pragma: no cover - app sin migrar
+        return {}
+    return {
+        "inv_grupos": grupos,
+        "inv_pendientes": pendientes,
+        "inv_es_coordinador": Grupo.objects.filter(coordinador=user).exists(),
+        "inv_puede_publicar": (rol_usuario(user) in ROLES_PUBLICAN
+                               or user.is_superuser),
+        "inv_puede_inscribirse": rol_usuario(user) in ROLES_INSCRIBEN,
+    }
 
 
 @login_required

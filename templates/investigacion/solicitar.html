@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Solicitar inscripción{% endblock %}
+{% block contenido %}
+<h3 class="mb-3"><i class="bi bi-person-plus me-2"></i>Solicitar inscripción a un grupo</h3>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card panel-suave">
+      <div class="card-body">
+        <h5 class="mb-1">{{ grupo.nombre }}</h5>
+        <p class="small text-muted mb-3">
+          <span class="badge text-bg-secondary">{{ grupo.get_tipo_display }}</span>
+          {% if grupo.coordinador %}
+            <span class="ms-1"><i class="bi bi-person-badge me-1"></i>Coordina {{ grupo.coordinador.get_full_name|default:grupo.coordinador.username }}</span>
+          {% endif %}
+        </p>
+        {% if grupo.descripcion %}<p class="small mb-3">{{ grupo.descripcion|linebreaksbr }}</p>{% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          {% for campo in form %}
+            <div class="mb-3">
+              <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+              {{ campo }}
+              {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+          {% endfor %}
+          <div class="alert alert-info small">
+            <i class="bi bi-info-circle me-1"></i>
+            Tu solicitud quedará <strong>pendiente</strong> hasta que el coordinador la acepte o la rechace.
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary">Enviar solicitud</button>
+            <a class="btn btn-outline-secondary" href="{% url 'investigacion:lista' %}">Volver</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

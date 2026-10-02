@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block titulo %}Grupos de investigación y semilleros{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div>
+    <h3 class="mb-1"><i class="bi bi-diagram-2 me-2"></i>Grupos de investigación y semilleros</h3>
+    <p class="text-muted mb-0">Todos los roles pueden ver los grupos. Solo docentes y
+      estudiantes se pueden inscribir, y el coordinador aprueba cada solicitud.</p>
+  </div>
+  <div class="d-flex gap-2">
+    {% if es_coordinador %}
+      <a class="btn btn-outline-primary" href="{% url 'investigacion:panel' %}">
+        <i class="bi bi-inboxes me-1"></i>Gestionar mis grupos
+      </a>
+    {% endif %}
+    {% if puede_publicar %}
+      <a class="btn btn-primary" href="{% url 'investigacion:crear' %}">
+        <i class="bi bi-plus-circle me-1"></i>Crear grupo
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% comment %} Filtro por tipo (semilleros / grupos). {% endcomment %}
+<div class="btn-group mb-3">
+  <a class="btn btn-sm {% if not tipo_activo %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
+     href="{% url 'investigacion:lista' %}">Todos</a>
+  {% for valor, etiqueta in tipos %}
+    <a class="btn btn-sm {% if tipo_activo == valor %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
+       href="?tipo={{ valor }}">{{ etiqueta }}</a>
+  {% endfor %}
+</div>
+
+{% if not filas %}
+  <div class="card panel-suave">
+    <div class="card-body text-center text-muted py-5">
+      <i class="bi bi-diagram-2 fs-1 d-block mb-2 opacity-50"></i>
+      Todavía no hay grupos publicados.
+      {% if puede_publicar %} Crea el primero con el botón de arriba.{% endif %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="row g-3">
+  {% for fila in filas %}
+    <div class="col-md-6 col-xl-4">
+      <div class="card panel-suave h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge text-bg-secondary">
+              <i class="bi {% if fila.grupo.tipo == 'SEMILLERO' %}bi-seedling{% else %}bi-people{% endif %} me-1"></i>
+              {{ fila.grupo.get_tipo_display }}
+            </span>
+            {% if fila.es_miembro %}<span class="badge text-bg-success">Eres miembro</span>
+            {% elif fila.solicitud_pendiente %}<span class="badge text-bg-warning">Solicitud enviada</span>{% endif %}
+          </div>
+
+          <h5 class="mb-1">{{ fila.grupo.nombre }}</h5>
+          {% if fila.grupo.linea %}
+            <p class="small text-muted mb-2"><i class="bi bi-tag me-1"></i>{{ fila.grupo.linea }}</p>
+          {% endif %}
+          {% if fila.grupo.descripcion %}
+            <p class="small flex-grow-1">{{ fila.grupo.descripcion|truncatewords:28 }}</p>
+          {% endif %}
+
+          <p class="small text-muted mb-2">
+            <i class="bi bi-person-badge me-1"></i>
+            {% if fila.grupo.coordinador %}{{ fila.grupo.coordinador.get_full_name|default:fila.grupo.coordinador.username }}
+            {% else %}Sin coordinador{% endif %}
+            <br>
+            <i class="bi bi-people me-1"></i>{{ fila.grupo.miembros_count }} miembros
+            {% if fila.grupo.cupo %} / {{ fila.grupo.cupo }}{% endif %}
+          </p>
+
+          <div class="d-flex gap-2 mt-auto">
+            {% if fila.puede_solicitar %}
+              <a class="btn btn-sm btn-primary flex-grow-1"
+                 href="{% url 'investigacion:solicitar' fila.grupo.pk %}">
+                <i class="bi bi-person-plus me-1"></i>Solicitar
+              </a>
+            {% elif fila.es_miembro %}
+              <span class="btn btn-sm btn-outline-success flex-grow-1 disabled">Ya eres miembro</span>
+            {% elif fila.solicitud_pendiente %}
+              <form method="post" action="{% url 'investigacion:cancelar' fila.solicitud.pk %}" class="flex-grow-1">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-secondary w-100">Cancelar solicitud</button>
+              </form>
+            {% endif %}
+            {% if fila.es_coordinador or puede_publicar %}
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{% url 'investigacion:editar' fila.grupo.pk %}" title="Editar">
+                <i class="bi bi-pencil"></i>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
