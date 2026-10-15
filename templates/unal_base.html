@@ -1,0 +1,216 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.5, user-scalable=yes" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="author" content="ASI - Informatica y Computacion" />
+  <link rel="shortcut icon" href="{% static 'unal/images/favicon.ico' %}" type="image/x-icon" />
+  <title>{% block titulo %}Ingresar{% endblock %} : ASI - Universidad Nacional de Colombia</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/frontend.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/accesibilidad.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/bootstrap.min.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/bootstrap-theme.min.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/reset.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/unal.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/base.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/tablet.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/phone.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/small.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/printer.css' %}" media="print" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sgdic.css' %}" media="all" />
+  <link rel="stylesheet" type="text/css" href="{% static 'unal/css/asi-login.css' %}" media="all" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script src="{% static 'unal/js/jquery.js' %}" type="text/javascript"></script>
+  <script src="{% static 'unal/js/unal.js' %}" type="text/javascript"></script>
+  <script src="{% static 'unal/js/accesibilidad.js' %}" type="text/javascript"></script>
+  <script src="{% static 'unal/js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div id="services">
+    <div class="indicator d-none d-md-block"></div>
+    <ul class="dropdown-menu" id="servicios">
+      <li><a href="https://smartkey.xertica.com/cloudkey/a/unal.edu.co/user/login" target="_blank" rel="noopener"><img src="{% static 'unal/images/icnServEmail.png' %}" width="32" height="32" alt="Correo Electronico" />Correo Electrónico</a></li>
+      <li><a href="https://dninfoa.unal.edu.co" target="_blank" rel="noopener"><img src="{% static 'unal/images/icnServSia.png' %}" width="32" height="32" alt="DINARA - SIA" />DINARA - SIA</a></li>
+      <li><a href="https://bibliotecas.unal.edu.co" target="_blank" rel="noopener"><img src="{% static 'unal/images/icnServLibrary.png' %}" width="32" height="32" alt="Biblioteca" />Bibliotecas</a></li>
+      <li><a href="https://personal.unal.edu.co" target="_blank" rel="noopener"><img src="{% static 'unal/images/icnServCall.png' %}" width="32" height="32" alt="Convocatorias" />Convocatorias</a></li>
+      <li><a href="https://identidad.unal.edu.co"><img src="{% static 'unal/images/icnServIdentidad.png' %}" width="32" height="32" alt="Identidad UNAL" />Identidad UNAL</a></li>
+    </ul>
+  </div>
+  <header id="unalTop">
+    <div class="logo">
+      <a href="https://unal.edu.co">
+        <img src="{% static 'unal/images/escudoUnal.svg' %}" width="93%" height="93%" class="hidden-print" alt="Escudo de la Universidad Nacional de Colombia" />
+        <img src="{% static 'unal/images/escudoUnal_black.png' %}" class="d-none d-print-block" alt="Escudo de la Universidad Nacional de Colombia" />
+      </a>
+    </div>
+    <div class="seal">
+      <img class="hidden-print" alt="Escudo de la Republica de Colombia" src="{% static 'unal/images/sealColombia.png' %}" width="66" height="66" />
+      <img class="d-none d-print-block" alt="Escudo de la Republica de Colombia" src="{% static 'unal/images/sealColombia_black.png' %}" width="66" height="66" />
+    </div>
+    <div class="firstMenu d-none d-md-block">
+      <div class="content-fluid">
+        <nav class="navbar navbar-expand-md nav navbar-dark">
+          <div class="collapse navbar-collapse navbar-default" id="navbarSupportedContent">
+            <nav id="profiles">
+              <ul class="mr-auto nav justify-content-end">
+                <li class="nav-item item_Aspirantes"><a href="https://aspirantes.unal.edu.co">Aspirantes</a></li>
+                <li class="nav-item item_Estudiantes"><a href="https://estudiantes.unal.edu.co">Estudiantes</a></li>
+                <li class="nav-item item_Egresados"><a href="https://egresados.unal.edu.co">Egresados</a></li>
+                <li class="nav-item item_Docentes"><a href="https://docentes.unal.edu.co">Docentes</a></li>
+                <li><a href="https://administrativos.unal.edu.co">Administrativos</a></li>
+              </ul>
+            </nav>
+          </div>
+          <ul class="socialLinks d-none d-md-block">
+            <li><a href="https://www.facebook.com/UNALOficial" target="_blank" rel="noopener" class="facebook" title="Facebook"></a></li>
+            <li><a href="https://twitter.com/UNALOficial" target="_blank" rel="noopener" class="twitter" title="Twitter"></a></li>
+            <li><a href="https://www.youtube.com/channel/UCnE6Zj2llVxcvL5I38B0Ceg" target="_blank" rel="noopener" class="youtube" title="Youtube"></a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div id="bs-navbar" class="navigation d-none d-md-block">
+      <div class="site-url" id="subdominio">
+        <a href="{% url 'dashboard' %}">asi.unal.edu.co - Sistema ASI</a>
+      </div>
+      <div class="buscador" id="buscador"></div>
+      <div class="navbar-dark mainMenu" id="main_menu_container">
+        <div class="btn-group menu_sedes">
+          <div class="btn btn-default dropdown-toggle" data-toggle="dropdown">Sedes<span class="caret"></span></div>
+          <ul class="dropdown-menu" id="sedes">
+            <li><a class="dropdown-item" href="https://amazonia.unal.edu.co" target="_blank" rel="noopener">Amazonia</a></li>
+            <li><a class="dropdown-item" href="https://bogota.unal.edu.co" target="_blank" rel="noopener">Bogota</a></li>
+            <li><a class="dropdown-item" href="https://caribe.unal.edu.co" target="_blank" rel="noopener">Caribe</a></li>
+            <li><a class="dropdown-item" href="https://delapaz.unal.edu.co" target="_blank" rel="noopener">De La Paz</a></li>
+            <li><a class="dropdown-item" href="https://manizales.unal.edu.co" target="_blank" rel="noopener">Manizales</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-light light-blue lighten-4 main_menu">
+      <a class="navbar-brand d-block d-md-none" href="#"></a>
+      <button class="navbar-toggler collapsed d-block d-md-none" type="button" data-toggle="collapse" data-target="#navbar_content" aria-controls="navbar_content" aria-expanded="false" aria-label="Abrir navegacion" id="btn_hamburguer"></button>
+      <div class="collapse navbar-collapse" id="navbar_content">
+        <div class="site-url" id="container_subdominio_mobil"></div>
+        <div class="buscador" id="container_buscador_mobil"></div>
+        <div id="container_mainmenu_mobil"></div>
+        <div class="btn-group d-block d-md-none hidden-print">
+          <div class="btn btn-default dropdown-toggle" data-toggle="collapse" data-target="#container_sedes_mobil" aria-controls="container_sedes_mobil">Sedes<span class="caret"> </span></div>
+        </div>
+        <div class="collapse" id="container_sedes_mobil"></div>
+        <div class="btn-group d-block d-md-none hidden-print">
+          <div class="btn btn-default dropdown-toggle" data-toggle="collapse" data-target="#container_servicios_mobil" aria-controls="container_servicios_mobil">Servicios<span class="caret"> </span></div>
+        </div>
+        <div class="collapse" id="container_servicios_mobil"></div>
+      </div>
+    </nav>
+  </header>
+  <div class="tx-unal-accesibilidad">
+    <div id="panel-accesibilidad" style="display: none" class="panel-content container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-3">
+              <h4>Tamano letra</h4>
+              <button class="boton-panel" id="letra-disminuir" onclick="cambiarTamanioLetra('-')" type="button">A<sup>-</sup></button>
+              <button class="boton-panel" id="letra-aumentar" onclick="cambiarTamanioLetra('+')" type="button">A<sup>+</sup></button>
+              <input disabled="1" class="letras-porcentaje" id="letter-percent" type="text" value="100%" />
+            </div>
+            <div class="col-md-3">
+              <h4>Contrastes</h4>
+              <button class="boton-panel" id="contrate-1" onclick="cambiarContrastes(1)" type="button">1</button>
+              <button class="boton-panel" id="contrate-2" onclick="cambiarContrastes(2)" type="button">2</button>
+              <button class="boton-panel" id="contrate-3" onclick="cambiarContrastes(3)" type="button">3</button>
+            </div>
+            <div class="col-md-3">
+              <h4>Invertir</h4>
+              <button class="boton-panel" id="inversor" onclick="invertirColores()" type="button">Aplicar</button>
+            </div>
+            <div class="col-md-3">
+              <h4>Restablecer</h4>
+              <button class="boton-panel" id="defaul-config" onclick="defaultConfig()" type="button">Aplicar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pestania-accesibilidad" class="">Panel de Accesibilidad</div>
+  </div>
+  <main class="detalle">
+    <div class="breadcrumb-class">Esta en:<a href="{% url 'dashboard' %}" title="Inicio">Inicio</a>/<span>{% block miga %}Ingresar{% endblock %}</span></div>
+    {% block contenido %}{% endblock %}
+  </main>
+  <footer class="clear container-fluid">
+    <div class="row">
+      <nav class="col-lg-3 col-md-3 col-sm-4 col-6 gobiernoLinea">
+        <a href="https://legal.unal.edu.co" target="_top">Regimen Legal</a>
+        <a href="https://personal.unal.edu.co" target="_top">Talento humano</a>
+        <a href="https://portaladquisiciones.unal.edu.co/" target="_top">Contratacion</a>
+        <a href="https://personal.unal.edu.co" target="_top">Ofertas de empleo</a>
+        <a href="https://launalcuenta.unal.edu.co/" target="_top">Rendicion de cuentas</a>
+        <a href="https://docentes.unal.edu.co/concurso-profesoral/" target="_top">Concurso docente</a>
+        <a href="https://pagovirtual.unal.edu.co/" target="_top">Pago Virtual</a>
+        <a href="https://controlinterno.unal.edu.co/" target="_top">Control interno</a>
+        <a href="http://siga.unal.edu.co" target="_top">Calidad</a>
+        <a href="https://unal.edu.co/buzon-de-notificaciones/" target="_self">Buzon de notificaciones</a>
+      </nav>
+      <nav class="col-lg-3 col-md-3 col-sm-4 col-6 gobiernoLinea">
+        <a href="https://smartkey.xertica.com/cloudkey/a/unal.edu.co/user/login" target="_top">Correo institucional</a>
+        <a href="#">Mapa del sitio</a>
+        <a href="https://redessociales.unal.edu.co" target="_top">Redes Sociales</a>
+        <a href="#">FAQ</a>
+        <a href="https://quejasyreclamos.unal.edu.co/" target="_self">Quejas y reclamos</a>
+        <a href="https://unal.edu.co/atencion-en-linea/" target="_self">Atencion en linea</a>
+        <a href="https://unal.edu.co/encuesta/" target="_self">Encuesta</a>
+        <a href="https://unal.edu.co/contactenos">Contactenos</a>
+        <a href="https://estadisticas.unal.edu.co/" target="_top">Estadisticas</a>
+        <a href="#">Glosario</a>
+      </nav>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-12 footer-info">
+        <div class="row footer-info-spacing">
+          <p class="col-lg-6 col-md-12 col-sm-12 col-6 contacto">
+            <b>Contacto pagina web:</b><br />
+            {% block contacto_footer %}Sistema ASI - Informatica y Computacion<br />Bogota D.C., Colombia<br />{% endblock %}
+          </p>
+          <p class="col-lg-6 col-md-12 col-sm-12 col-6 derechos">
+            <a href="https://unal.edu.co/archivos/user_upload/docs/legal.pdf" target="_blank" rel="noopener">&copy; Copyright 2026</a><br />
+            Algunos derechos reservados.<br />
+            <a title="Administrador del sitio" href="mailto:correo@unal.edu.co">correo@unal.edu.co</a><br />
+            <a href="#">Acerca de este sitio web</a><br />
+            Actualizacion: 15/10/26
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-12 col-12 logos">
+        <div class="row px-3">
+          <div class="col-lg-6 col-md-12 col-sm-6 col-6 no-padding">
+            <div class="row mx-1">
+              <a class="col-md-12 col-sm-6 col-6" href="https://orgullo.unal.edu.co">
+                <img class="hidden-print" alt="Orgullo UN" src="{% static 'unal/images/log_orgullo.png' %}" width="78" height="21" />
+                <img class="d-none d-print-block" alt="Orgullo UN" src="{% static 'unal/images/log_orgullo_black.png' %}" width="94" height="37" />
+              </a>
+              <a class="col-md-12 col-sm-6 col-6 imgAgencia" href="https://agenciadenoticias.unal.edu.co">
+                <img class="hidden-print" alt="Agencia de Noticias" src="{% static 'unal/images/log_agenc.png' %}" width="94" height="25" />
+                <img class="d-none d-print-block" alt="Agencia de Noticias" src="{% static 'unal/images/log_agenc_black.png' %}" width="94" height="37" />
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 col-sm-6 col-6 no-padding">
+            <div class="row mx-1">
+              <a class="col-md-12 col-sm-6 col-6" href="https://www.gov.co/">
+                <img alt="Portal Unico del Estado" src="{% static 'unal/images/log_gobiern.png' %}" width="67" height="51" />
+              </a>
+              <a class="col-md-12 col-sm-6 col-6" href="http://www.contaduria.gov.co/">
+                <img alt="Contaduria General" src="{% static 'unal/images/log_contra.png' %}" width="67" height="51" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

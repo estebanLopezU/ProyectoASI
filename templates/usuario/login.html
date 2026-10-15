@@ -1,131 +1,89 @@
-{% extends "base.html" %}
+{% extends "unal_base.html" %}
 {% load static %}
 {% block titulo %}Ingresar{% endblock %}
-{% block clase_body %}pagina-login{% endblock %}
-{% block cuerpo %}
-{% comment %}
-  Login pantalla completa: ocupa todo el viewport por debajo del navbar,
-  sin recortar header ni footer. En móvil la tarjeta se apila y el panel
-  de marca se convierte en franja superior compacta (RF-01).
-{% endcomment %}
-<div class="login-asi login-pantalla">
-  <div class="login-tarjeta">
-    <div class="row g-0">
-      {# Panel marca (franja superior en móvil, lateral en desktop) #}
-      <div class="col-12 col-md-6 login-marca">
-        <div class="login-marca-contenido">
-          <div class="login-marca-logo">
-            <i class="bi bi-mortarboard-fill"></i>
-          </div>
-          <h2 class="fw-bold mb-2">ASI</h2>
-          <p class="mb-4 opacity-75">Sistema de Gestión Departamental de Informática y Computación</p>
-          <ul class="list-unstyled login-marca-lista text-start">
-            <li><i class="bi bi-check-circle-fill me-2"></i>Cupos y preinscripción en línea</li>
-            <li><i class="bi bi-check-circle-fill me-2"></i>Malla curricular y horarios</li>
-            <li><i class="bi bi-check-circle-fill me-2"></i>Mensajería y reportes</li>
-          </ul>
-          {% comment %} Cartelera: solo aparece si hay anuncios vigentes. {% endcomment %}
-          {% if anuncios_carrusel %}
-            <div class="login-anuncios mt-4">
-              <p class="login-anuncios-titulo mb-2">
-                <i class="bi bi-megaphone-fill me-1"></i>Anuncios
-              </p>
-              {% include "anuncios/_carrusel.html" with mostrar_tipos=False %}
-            </div>
-          {% endif %}
-        </div>
+{% block miga %}Ingresar{% endblock %}
+{% block contenido %}
+<div class="asi-login-wrap">
+  <div class="asi-login-card">
+    <div class="asi-login-marca">
+      <img class="asi-escudo" src="{% static 'unal/images/escudoUnal.svg' %}" alt="Escudo UNAL" />
+      <h2>ASI</h2>
+      <p class="asi-sigla-sub">Sistema de Gestion Departamental de Informatica y Computacion</p>
+      <ul class="asi-login-lista">
+        <li>Cupos y preinscripcion en linea</li>
+        <li>Malla curricular y horarios</li>
+        <li>Mensajeria y reportes</li>
+      </ul>
+      {% if anuncios_carrusel %}
+      <div class="asi-anuncios">
+        <p class="asi-anuncios-titulo">Anuncios</p>
+        {% include "anuncios/_carrusel.html" with mostrar_tipos=False %}
       </div>
-      {# Panel formulario #}
-      <div class="col-12 col-md-6 login-form-col">
-        <div class="login-form-interior">
-          <div class="text-center mb-3 d-md-none">
-            <i class="bi bi-mortarboard-fill login-escudo"></i>
-          </div>
-          <h4 class="mb-1 text-center fw-bold login-titulo">ASI</h4>
-          <p class="text-muted text-center small mb-4">Sistema de Gestión Departamental de Informática y Computación</p>
-          {% if form.errors %}
-            <div class="alert alert-danger small">Usuario o contraseña incorrectos.</div>
-          {% endif %}
-          {% if messages %}
-            {% for mensaje in messages %}
-              <div class="alert alert-{{ mensaje.tags|default:'info' }} small">{{ mensaje }}</div>
-            {% endfor %}
-          {% endif %}
-          {% if login_bloqueado %}
-            <div class="alert alert-warning small" id="alertaBloqueo"
-                 data-segundos="{{ login_bloqueo_seg }}">
-              Demasiados intentos fallidos. Inténtelo de nuevo en
-              <strong><span id="contadorBloqueo">{{ login_bloqueo_seg }}</span> segundos</strong>.
-              La página se habilitará sola al terminar la cuenta atrás.
-            </div>
-          {% else %}
-            {% if login_intentos %}
-              <div class="alert alert-warning small">
-                Intento {{ login_intentos }} de {{ login_max_intentos }}.
-                Al tercer fallo se bloqueará el acceso por 5 minutos.
-              </div>
-            {% endif %}
-          {% endif %}
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger small">
-              {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
-            </div>
-          {% endif %}
-          <form method="post" novalidate id="formLogin">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label class="form-label" for="id_username">Usuario</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                <input type="text" name="username" id="id_username" class="form-control" placeholder="Ej.: juan.perez" required autofocus autocomplete="username" value="{{ form.username.value|default:'' }}">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="id_password">Contraseña</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" name="password" id="id_password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
-                <button class="btn btn-outline-secondary" type="button" id="verClave" title="Mostrar contraseña" aria-label="Mostrar contraseña">
-                  <i class="bi bi-eye" id="iconoClave"></i>
-                </button>
-              </div>
-            </div>
-            <input type="hidden" name="next" value="{{ next|default:'' }}">
-            {% comment %}
-              reCAPTCHA v2 casilla "No soy un robot": siempre visible. Al
-              marcarla, Google verifica y si sospecha muestra el reto de
-              imágenes (semáforos, bicicletas, pasos, etc.). Sin claves
-              (desarrollo) el login funciona igual y muestra el aviso.
-            {% endcomment %}
-            {% if recaptcha_site_key %}
-              <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-              <div class="d-flex justify-content-center my-3">
-                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-              </div>
-              <button class="btn btn-primary w-100 py-2 login-boton"
-                      {% if login_bloqueado %}disabled{% endif %}>
-                <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
-              </button>
-              <p class="text-muted text-center mt-2" style="font-size:.72rem">
-                Protegido por reCAPTCHA de Google ·
-                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacidad</a> ·
-                <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Términos</a>
-              </p>
-            {% else %}
-              <button class="btn btn-primary w-100 py-2 login-boton"
-                      {% if login_bloqueado %}disabled{% endif %}>
-                <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
-              </button>
-              <p class="text-muted text-center mt-2" style="font-size:.72rem">
-                Modo desarrollo: configure las claves de reCAPTCHA para activar
-                la verificación anti-robots.
-              </p>
-            {% endif %}
-          </form>
-          <div class="text-center mt-3">
-            <a class="small" href="{% url 'usuario:password_reset' %}">¿Olvidó su contraseña?</a>
+      {% endif %}
+    </div>
+    <div class="asi-login-form">
+      <h3>Ingreso al sistema</h3>
+      <p class="asi-login-sub">Use su usuario y contrasena institucional</p>
+      {% if form.errors %}
+      <div class="asi-alerta asi-alerta-error">Usuario o contrasena incorrectos.</div>
+      {% endif %}
+      {% if messages %}
+        {% for mensaje in messages %}
+        <div class="asi-alerta asi-alerta-info">{{ mensaje }}</div>
+        {% endfor %}
+      {% endif %}
+      {% if login_bloqueado %}
+      <div class="asi-alerta asi-alerta-aviso" id="alertaBloqueo" data-segundos="{{ login_bloqueo_seg }}">
+        Demasiados intentos fallidos. Intentelo de nuevo en
+        <strong><span id="contadorBloqueo">{{ login_bloqueo_seg }}</span> segundos</strong>.
+      </div>
+      {% else %}
+        {% if login_intentos %}
+        <div class="asi-alerta asi-alerta-aviso">
+          Intento {{ login_intentos }} de {{ login_max_intentos }}.
+          Al tercer fallo se bloqueara el acceso por 5 minutos.
+        </div>
+        {% endif %}
+      {% endif %}
+      {% if form.non_field_errors %}
+      <div class="asi-alerta asi-alerta-error">
+        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+      </div>
+      {% endif %}
+      <form method="post" novalidate id="formLogin">
+        {% csrf_token %}
+        <div class="asi-campo">
+          <label for="id_username">Usuario</label>
+          <div class="asi-entrada">
+            <input type="text" name="username" id="id_username" placeholder="Ej.: juan.perez" required autofocus autocomplete="username" value="{{ form.username.value|default:'' }}">
           </div>
         </div>
+        <div class="asi-campo">
+          <label for="id_password">Contrasena</label>
+          <div class="asi-entrada">
+            <input type="password" name="password" id="id_password" placeholder="********" required autocomplete="current-password">
+            <button class="asi-ver" type="button" id="verClave" title="Mostrar contrasena" aria-label="Mostrar contrasena">&#128065;</button>
+          </div>
+        </div>
+        <input type="hidden" name="next" value="{{ next|default:'' }}">
+        {% if recaptcha_site_key %}
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <div class="asi-recaptcha">
+          <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        </div>
+        <button class="asi-boton" {% if login_bloqueado %}disabled{% endif %}>Ingresar</button>
+        <p class="asi-centro asi-nota">
+          Protegido por reCAPTCHA de Google -
+          <a class="asi-enlace" href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacidad</a> -
+          <a class="asi-enlace" href="https://policies.google.com/terms" target="_blank" rel="noopener">Terminos</a>
+        </p>
+        {% else %}
+        <button class="asi-boton" {% if login_bloqueado %}disabled{% endif %}>Ingresar</button>
+        <p class="asi-centro asi-nota">Modo desarrollo: configure las claves de reCAPTCHA para activar la verificacion anti-robots.</p>
+        {% endif %}
+      </form>
+      <div class="asi-centro" style="margin-top:.8rem;">
+        <a class="asi-enlace" href="{% url 'usuario:password_reset' %}">Olvido su contrasena?</a>
       </div>
     </div>
   </div>
@@ -133,8 +91,6 @@
 {% endblock %}
 {% block scripts %}
 <script>
-  // Cuenta atrás del bloqueo por intentos: descuenta cada segundo y al
-  // llegar a 0 recarga sola para habilitar el formulario y el captcha.
   (function () {
     var alerta = document.getElementById('alertaBloqueo');
     var numero = document.getElementById('contadorBloqueo');
@@ -143,22 +99,15 @@
     var tick = setInterval(function () {
       restantes -= 1;
       numero.textContent = Math.max(restantes, 0);
-      if (restantes <= 0) {
-        clearInterval(tick);
-        window.location.reload();
-      }
+      if (restantes <= 0) { clearInterval(tick); window.location.reload(); }
     }, 1000);
   })();
   (function () {
     var btn = document.getElementById('verClave');
     var campo = document.getElementById('id_password');
-    var icono = document.getElementById('iconoClave');
     if (!btn || !campo) return;
     btn.addEventListener('click', function () {
-      var mostrar = campo.type === 'password';
-      campo.type = mostrar ? 'text' : 'password';
-      icono.className = mostrar ? 'bi bi-eye-slash' : 'bi bi-eye';
-      btn.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      campo.type = campo.type === 'password' ? 'text' : 'password';
     });
   })();
 </script>
